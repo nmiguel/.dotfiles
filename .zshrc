@@ -70,15 +70,17 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions sudo)
+plugins=(git sudo)
+# plugins=(git zsh-syntax-highlighting zsh-autosuggestions sudo)
 
 source $ZSH/oh-my-zsh.sh
 
+bindkey '^H' backward-kill-word
 
-bindkey '^y'      autosuggest-accept
-ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(buffer-empty bracketed-paste accept-line push-line-or-edit)
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-ZSH_AUTOSUGGEST_USE_ASYNC=true
+# bindkey '^y'      autosuggest-accept
+# ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(buffer-empty bracketed-paste accept-line push-line-or-edit)
+# ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+# ZSH_AUTOSUGGEST_USE_ASYNC=true
 
 # User configuration
 
@@ -111,3 +113,18 @@ alias v="nvim"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# dotnet
+export DOTNET_ROOT=$HOME/.dotnet
+export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools#
+
+# Go
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/.go
+export PATH=$PATH:/usr/local/go/bin
+

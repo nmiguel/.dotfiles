@@ -1,17 +1,25 @@
 format = """\
+$python\
 $directory\
 [](fg:#3D3D3D bg:#42b4ff)\
 $git_branch\
-$git_status\
 $git_metrics\
 [](fg:#42b4ff bg:none)\
 $character\
 """
 
+# [](bg:#3D3D3D fg:#42b4ff)\
 # No new line between shell prompts
 add_newline = false
 
 # No line-break between shell prompts
+[python]
+symbol = '  '
+style = "fg:#3D3D3D bg:#42b4ff"
+format = '[${symbol}(${version} )(\($virtualenv\) )]($style)[](bg:#3D3D3D fg:#42b4ff)'
+
+pyenv_version_name = true
+
 [line_break]
 disabled = true
 
@@ -21,7 +29,7 @@ format = "[  $path ]($style)"
 style = "fg:#ffffff bg:#3D3D3D"
 
 [git_branch]
-format = '[ $symbol$branch(:$remote_branch) ]($style)'
+format = '[ $symbol$branch]($style)'
 symbol = " "
 style = "fg:#303446 bg:#42b4ff"
 
