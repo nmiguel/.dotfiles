@@ -70,7 +70,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git sudo)
+plugins=(sudo)
 # plugins=(git zsh-syntax-highlighting zsh-autosuggestions sudo)
 
 source $ZSH/oh-my-zsh.sh
@@ -101,13 +101,14 @@ bindkey '^H' backward-kill-word
 
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(starship init zsh)"
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-
+# # Set personal aliases, overriding those provided by oh-my-zsh libs,
+# # plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# # users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# # For a full list of active aliases, run `alias`.
+#
 alias v="nvim"
-alias svenv="source $(fd -up '.*/bin/activate$')"
+alias svenv='source $(fd -up ".*/bin/activate$")'
+
 
 #
 # Example aliases
@@ -116,8 +117,10 @@ alias svenv="source $(fd -up '.*/bin/activate$')"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+alias nvm="unalias nvm; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm $@"
+
 
 # dotnet
 export DOTNET_ROOT=$HOME/.dotnet
