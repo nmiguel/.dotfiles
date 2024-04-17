@@ -107,7 +107,7 @@ eval "$(starship init zsh)"
 # For a full list of active aliases, run `alias`.
 
 alias v="nvim"
-
+alias svenv="source $(fd -up '.*/bin/activate$')"
 
 #
 # Example aliases
