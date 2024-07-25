@@ -1,61 +1,187 @@
-format = """\
-$python\
-$directory\
-[](fg:#3D3D3D bg:#42b4ff)\
-$git_branch\
-$git_metrics\
-[](fg:#42b4ff bg:none)\
-$character\
-"""
+[cmd_duration]
+min_time = 500
+show_milliseconds = true
+format = "[ 󱎫 $duration ]($style)"
 
-# [](bg:#3D3D3D fg:#42b4ff)\
-# No new line between shell prompts
-add_newline = false
+[aws]
+symbol = "  "
 
-# No line-break between shell prompts
-[python]
-symbol = '  '
-style = "fg:#3D3D3D bg:#42b4ff"
-format = '[${symbol}(${version} )(\($virtualenv\) )]($style)[](bg:#3D3D3D fg:#42b4ff)'
+[buf]
+symbol = " "
 
-pyenv_version_name = true
+[c]
+symbol = " "
 
-[line_break]
-disabled = true
+[conda]
+symbol = " "
 
+[crystal]
+symbol = " "
+
+[dart]
+symbol = " "
 
 [directory]
-format = "[  $path ]($style)"
-style = "fg:#ffffff bg:#3D3D3D"
+read_only = " 󰌾"
+
+[docker_context]
+symbol = " "
+
+[elixir]
+symbol = " "
+
+[elm]
+symbol = " "
+
+[fennel]
+symbol = " "
+
+[fossil_branch]
+symbol = " "
 
 [git_branch]
-format = '[ $symbol$branch]($style)'
 symbol = " "
-style = "fg:#303446 bg:#42b4ff"
 
 [git_status]
-format = '[$all_status]($style)'
-style = "fg:#303446 bg:#42b4ff"
-ahead = "⇡${count} "
-diverged = "⇡${ahead_count}⇣${behind_count} "
-behind = "⇣${count} "
-modified = "!${count} "
-untracked = "?${count} "
-staged = "+${count} "
+disabled = false
+windows_starship = "/mnt/c/Program\\ Files/starship/bin/starship.exe"
+style = 'purple'
+# conflicted = ' 󰞇 '
+# ahead = ' 󱡮 '
+# behind = ' 󱙷 '
+# diverged = ' 󱡷 '
+# up_to_date = '  '
+# untracked = '  '
+# stashed = '  '
+# modified = '  '
+# renamed = '  '
+# deleted = '  '
+# staged = '[++\($count\)](green)'
+
+[golang]
+symbol = " "
+
+[guix_shell]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[haxe]
+symbol = " "
 
 [hg_branch]
-format = "[ $symbol$branch ]($style)"
 symbol = " "
 
-[cmd_duration]
-format = "[ 󱎫 $duration ]($style)"
-style = "fg:bright-white bg:18"
+[hostname]
+ssh_symbol = " "
 
-[character]
-success_symbol = '[ ➜](#a6d189) '
-error_symbol = '[ ➜](#E78284) '
+[java]
+symbol = " "
 
-[time]
-disabled = false
-time_format = "%R" # Hour:Minute Format
-format = '[[ 󱑍 $time ](bg:#666666 fg:#ffffff)]($style)'
+[julia]
+symbol = " "
+
+[kotlin]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[memory_usage]
+symbol = "󰍛 "
+
+[meson]
+symbol = "󰔷 "
+
+[nim]
+symbol = "󰆥 "
+
+[nix_shell]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[ocaml]
+symbol = " "
+
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+AlmaLinux = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Artix = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "󰛓 "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Kali = " "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = "󰈺 "
+openSUSE = " "
+OracleLinux = "󰌷 "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+RockyLinux = " "
+Redox = "󰀘 "
+Solus = "󰠳 "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Void = " "
+Windows = "󰍲 "
+
+[package]
+disabled = true
+symbol = "󰏗 "
+
+[perl]
+symbol = " "
+
+[php]
+symbol = " "
+
+[pijul_channel]
+symbol = " "
+
+[python]
+style = "fg:#499de4"
+symbol = " "
+
+[rlang]
+symbol = "󰟔 "
+
+[ruby]
+symbol = " "
+
+[rust]
+symbol = " "
+
+[scala]
+symbol = " "
+
+[swift]
+symbol = " "
+
+[zig]
+symbol = " "
