@@ -4,7 +4,7 @@ show_milliseconds = true
 format = "[ 󱎫 $duration ]($style)"
 
 [aws]
-symbol = "  "
+disabled = true
 
 [buf]
 symbol = " "
@@ -44,7 +44,7 @@ symbol = " "
 
 [git_status]
 disabled = false
-windows_starship = "/mnt/c/Program\\ Files/starship/bin/starship.exe"
+windows_starship = "/mnt/c/Program Files/starship/bin/starship"
 style = 'purple'
 # conflicted = ' 󰞇 '
 # ahead = ' 󱡮 '
