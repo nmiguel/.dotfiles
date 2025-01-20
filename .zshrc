@@ -22,9 +22,6 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
-# export NVM_LAZY_LOAD=true
-# export NVM_COMPLETION=true
-# zinit light lukechilds/zsh-nvm
 
 
 # plugins=(docker docker-compose aliases)
@@ -32,9 +29,14 @@ zinit snippet OMZP::docker
 zinit snippet OMZP::docker-compose
 zinit snippet OMZP::aliases
 
+zinit light zsh-users/zsh-autosuggestions
+zinit light zdharma-continuum/fast-syntax-highlighting
+
 source $ZSH/oh-my-zsh.sh
 
 bindkey '^H' backward-kill-word
+bindkey '^Y' autosuggest-accept
+bindkey '^J' autosuggest-accept
 
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(starship init zsh)"
@@ -61,5 +63,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+export PATH=$PATH:/mnt/c/Windows:/mnt/c/Windows/System32:/mnt/c/Windows/System32/wbem:/mnt/c/Windows/System32/Win:/mnt/c/Windows/System32/WindowsPowerShell/v1.0
+
 # Profiling time
 # zprof
+eval "$(tv init zsh)"
