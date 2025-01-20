@@ -43,7 +43,22 @@ eval "$(starship init zsh)"
 
 alias v="nvim"
 alias docker-compose="docker compose"
+
+# Custom commands
 alias svenv='source $(fd -up ".*/bin/activate$")'
+
+function notes() {
+  cd ~/projects/personal/notes
+  selection="$(tv text)"
+  if [[ -n "$selection" ]]; then
+    file="$(echo "$selection" | cut -d: -f1)"
+    line="$(echo "$selection" | cut -d: -f2)"
+    [[ -z "$line" ]] && line=1
+    nvim +"$line" "$file"
+  fi
+  cd -1 >/dev/null 2>&1
+}
+
 
 
 export EDITOR=nvim
