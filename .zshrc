@@ -1,8 +1,7 @@
 # zmodload zsh/zprof
 # Profiling time
 
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/.local/bin:$HOME/.local/scripts:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -51,7 +50,7 @@ function newnote() {
     cd ~/projects/personal/notes
     note_path="$1"
     if [[ -n "$note_path" ]]; then
-        nvim "$note_path"
+        nvim "$note_path".md
     else
         nvim .
     fi
@@ -91,6 +90,7 @@ export NVM_DIR="$HOME/.nvm"
 
 export PATH=$PATH:/mnt/c/Windows:/mnt/c/Windows/System32:/mnt/c/Windows/System32/wbem:/mnt/c/Windows/System32/Win:/mnt/c/Windows/System32/WindowsPowerShell/v1.0
 
+eval "$(tv init zsh)"
+
 # Profiling time
 # zprof
-eval "$(tv init zsh)"
