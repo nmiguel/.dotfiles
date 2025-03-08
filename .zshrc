@@ -42,6 +42,8 @@ eval "$(starship init zsh)"
 
 alias v="nvim"
 alias docker-compose="docker compose"
+alias exp="explorer.exe ."
+alias wiztree="sudo ncdu / --exclude /mnt"
 
 # Custom commands
 alias svenv='source $(fd -up ".*/bin/activate$")'
@@ -72,6 +74,7 @@ function notes() {
 
 
 export EDITOR=nvim
+export MANPAGER='nvim +Man!'
 
 # dotnet
 export DOTNET_ROOT=$HOME/.dotnet
