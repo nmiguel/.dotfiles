@@ -12,7 +12,7 @@ abbr wiztree "sudo ncdu / --exclude /mnt"
 abbr svenv ". (fd -up '.*/bin/activate.fish')"
 
 # Custom functions
-function newnote
+function notes
     cd ~/projects/personal/notes
     if test (count $argv) -gt 0
         nvim $argv[1].md
@@ -22,14 +22,14 @@ function newnote
     cd - > /dev/null 2>&1
 end
 
-function notes
-    cd ~/projects/personal/notes
-    set file (tv files)
-    if test -n "$file"
-        nvim $file
-    end
-    cd - > /dev/null 2>&1
-end
+# function notes
+#     cd ~/projects/personal/notes
+#     set file (tv files)
+#     if test -n "$file"
+#         nvim $file
+#     end
+#     cd - > /dev/null 2>&1
+# end
 
 function bind_bang
     switch (commandline -t)[-1]
