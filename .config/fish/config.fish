@@ -10,6 +10,8 @@ abbr docker-compose "docker compose"
 abbr exp "explorer.exe ."
 abbr wiztree "sudo ncdu / --exclude /mnt"
 abbr svenv ". (fd -up '.*/bin/activate.fish')"
+abbr nixup "nix run nixpkgs#home-manager -- switch --flake /$HOME/.config/nix/#$USER"
+
 
 # Custom functions
 function notes
@@ -71,9 +73,9 @@ set -gx GOBIN $GOPATH/bin
 set -gx PATH $PATH /usr/local/go/bin $GOBIN
 go env -w GOOS=windows
 
-nvm use 23 --default --silent
+# nvm use 23 --default --silent
 
-pyenv init - fish | source
+# pyenv init - fish | source
 
 # Add Windows paths
 set -gx PATH $PATH /home/nomig/.cargo/bin /mnt/c/Windows /mnt/c/Windows/System32 /mnt/c/Windows/System32/wbem /mnt/c/Windows/System32/Win /mnt/c/Windows/System32/WindowsPowerShell/v1.0

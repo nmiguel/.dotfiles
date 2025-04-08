@@ -4,6 +4,7 @@ SETUVAR --export PYENV_ROOT:/home/nomig/\x2epyenv
 SETUVAR __fish_initialized:3100
 SETUVAR _fish_abbr_docker_2D_compose:docker\x20compose
 SETUVAR _fish_abbr_exp:explorer\x2eexe\x20\x2e
+SETUVAR _fish_abbr_nixup:nix\x20run\x20nixpkgs\x23home\x2dmanager\x20\x2d\x2d\x20switch\x20\x2d\x2dflake\x20//home/nomig/\x2econfig/nix/\x23nomig
 SETUVAR _fish_abbr_svenv:\x2e\x20\x28fd\x20\x2dup\x20\x27\x2e\x2a/bin/activate\x2efish\x27\x29
 SETUVAR _fish_abbr_v:nvim
 SETUVAR _fish_abbr_wiztree:sudo\x20ncdu\x20/\x20\x2d\x2dexclude\x20/mnt
