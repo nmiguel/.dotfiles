@@ -1,10 +1,13 @@
 #!/bin/bash
+
 set -euo pipefail
+
+sudo apt update
 
 # Check if Stow exists
 if ! command -v stow >/dev/null 2>&1; then
-    echo "Error: GNU Stow is not installed. Please install it and re-run the script."
-    exit 1
+    echo "Stow not found. Installing Stow..."
+    apt install stow
 fi
 
 echo "Stowing dotfiles..."
@@ -12,10 +15,12 @@ stow -v . -t "$HOME" --ignore '^(README\.md|.*\.sh)$'
 
 # Check for Nix and install it
 if ! command -v nix >/dev/null 2>&1; then
-    echo "Nix not found. Installing nix..."
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
-    # Reload environment variables, adjust path as required
-    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+    echo "Nix not found. Installing as root..."
+    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sudo sh -s -- install
+    # Source nix profile in current shell
+    if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+        . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+    fi
 else
     echo "Nix already installed, skipping installation."
 fi

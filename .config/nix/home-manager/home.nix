@@ -5,34 +5,37 @@
   home.homeDirectory = "/home/nomig";
   home.stateVersion = "23.05";
   home.packages = with pkgs; [
-    fish
-    tmux
-    starship
-
-    uv
-    cargo
-    rustc
-    go
-    python312Full
-    nodejs
-    lua
-
-    fd
-    lazygit
-    lazydocker
-    fzf
-    television
-    neovim
-    neofetch
     bat
+    cargo
+    cmake
     docker
+    fd
+    fish
+    fzf
+    gcc
+    gh
+    gnumake
+    go
     jq
+    lazydocker
+    lazygit
+    lua
+    neofetch
+    neovim
+    nodejs
+    python312Full
     ripgrep
+    rustc
     sqlite
-    tree
+    starship
     stow
+    television
+    tmux
+    tree
+    uv
     xclip
     xsel
+    zoxide
   ];
   programs.home-manager.enable = true;
 }
