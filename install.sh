@@ -11,7 +11,7 @@ if ! command -v stow >/dev/null 2>&1; then
 fi
 
 echo "Stowing dotfiles..."
-stow -v . -t "$HOME" --ignore '^(README\.md|.*\.sh)$'
+stow --no-folding . -t "$HOME"  --ignore '^(README\.md|.*\.sh)$'
 
 # Check for Nix and install it
 if ! command -v nix >/dev/null 2>&1; then
