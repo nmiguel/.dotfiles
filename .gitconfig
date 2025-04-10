@@ -1,0 +1,18 @@
+[credential "https://github.com"]
+        helper =
+        helper = !gh auth git-credential
+
+[init]
+        defaultBranch = master
+
+[alias]
+        readd = update-index --again
+
+[rerere]
+        enabled = true
+
+[user]
+    # Set in ~/.gitconfig_local
+
+[include]
+    path = ~/.gitconfig_local
