@@ -2,11 +2,11 @@
 
 set -euo pipefail
 
-sudo apt update
 
 # Check if Stow exists
 if ! command -v stow >/dev/null 2>&1; then
     echo "Stow not found. Installing Stow..."
+    sudo apt update
     apt install stow
 fi
 
