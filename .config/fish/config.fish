@@ -1,7 +1,7 @@
 # ~/.config/fish/config.fish
 
 # Set PATH
-set -gx PATH $HOME/.local/bin $HOME/.local/scripts $PATH
+set -gx PATH $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin $HOME/.local/bin $HOME/.local/scripts $PATH
 set fish_greeting
 
 # Aliases
