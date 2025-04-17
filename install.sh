@@ -11,7 +11,7 @@ if ! command -v stow >/dev/null 2>&1; then
 fi
 
 echo "Stowing dotfiles..."
-stow --no-folding . -t "$HOME"  --ignore '^(README\.md|.*\.sh)$'
+stow --no-folding home -t "$HOME"
 
 # Check for Nix and install it
 if ! command -v nix >/dev/null 2>&1; then
@@ -26,7 +26,7 @@ else
 fi
 
 echo "Syncing Home-Manager"
-nix run nixpkgs#home-manager -- switch --flake ./.config/nix#$USER
+nix run nixpkgs#home-manager -- switch --flake ./home/.config/nix#$USER
 
 # Install TPM
 tpm_dir="$HOME/.tmux/plugins/tpm"
