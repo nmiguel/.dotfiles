@@ -1,6 +1,7 @@
-[submodule ".config/nvim"]
+[submodule "nvim"]
+    path = home/.config/nvim
 	url = https://github.com/nmiguel/nvim-config
-	path = .config/nvim
-[submodule ".config/wezterm"]
-	path = .config/wezterm
+
+[submodule "wezterm"]
+	path = winhome/.config/wezterm
 	url = https://github.com/nmiguel/wezterm
