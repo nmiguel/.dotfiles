@@ -67,10 +67,6 @@ set -gx DOTNET_ROOT $HOME/.dotnet
 set -gx PATH $PATH $DOTNET_ROOT $DOTNET_ROOT/tools
 
 # Go settings
-set -gx GOROOT /usr/local/go
-set -gx GOPATH $HOME/.go
-set -gx GOBIN $GOPATH/bin
-set -gx PATH $PATH /usr/local/go/bin $GOBIN
 go env -w GOOS=windows
 
 # nvm use 23 --default --silent
