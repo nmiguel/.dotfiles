@@ -7,7 +7,7 @@ set -euo pipefail
 if ! command -v stow >/dev/null 2>&1; then
     echo "Stow not found. Installing Stow..."
     sudo apt update
-    apt install stow
+    sudo apt install stow
 fi
 
 echo "Stowing dotfiles..."
