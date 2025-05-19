@@ -1,0 +1,21 @@
+backend = "kmeans"
+color_space = "labmixed"
+palette = "dark16"
+
+threshold = 11
+
+[templates]
+hypr.template = 'colors-hyprland.conf'
+hypr.target = '~/.config/hypr/wallust/wallust-hyprland.conf'
+
+rofi.template = 'colors-rofi.rasi'
+rofi.target = '~/.config/rofi/wallust/colors-rofi.rasi'
+
+waybar.template = 'colors-waybar.css'
+waybar.target = '~/.config/waybar/wallust/colors-waybar.css'
+
+swaync.template = 'colors-swaync.css'
+swaync.target = '~/.config/swaync/wallust/colors-swaync.css'
+
+wlogout.template = 'colors-wlogout.css'
+wlogout.target = '~/.config/wlogout/wallust/colors-wlogout.css'

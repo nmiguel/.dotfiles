@@ -1,0 +1,183 @@
+/* ========================== */
+/*      BASE COLOR PALETTE    */
+/* ========================== */
+@define-color color0  #161320;
+@define-color color1  #bd93f9;
+@define-color color2  #FAE3B0;
+@define-color color3  #B5E8E0;
+@define-color color4  #F8BD96;
+@define-color color5  #ABE9B3;
+@define-color color6  #DDB6F2;
+@define-color color7  #96CDFB;
+@define-color color8  #F28FAD;
+@define-color color9 #E8A2AF;
+@define-color color10 #89DCEB;
+@define-color color11 #C9CBFF;
+@define-color color12 #F2CDCD;
+@define-color color13 #BF616A;
+
+/* ========================== */
+/*     NAMED COLOR MAPPINGS   */
+/* ========================== */
+@define-color background-main             @color0;
+
+
+@define-color foreground-cpu              @color7;
+@define-color foreground-ram              @color8;
+@define-color foreground-nvidia           @color5;
+@define-color foreground-media            @color9;
+@define-color foreground-power            @color8;
+@define-color foreground-notification     @color7;
+@define-color foreground-network          @color6;
+@define-color foreground-audio            @color10;
+@define-color foreground-clock            @color5;
+@define-color foreground-launcher         @color3;
+@define-color foreground-default          @color1;
+@define-color foreground-tags             @color3;
+@define-color foreground-tags-occupied    @color9;
+@define-color foreground-tags-focused     @color5;
+@define-color foreground-tags-hover       @color10;
+@define-color foreground-tags-hover-alt   @color2;
+@define-color foreground-tray             @color3;
+@define-color foreground-launcher         @color12;
+@define-color foreground-urgent           @color1;
+@define-color foreground-active           @color5;
+@define-color foreground-hover            @color2;
+@define-color foreground-workspaces-persistent @color7;
+
+/* ========================== */
+/*         BASE STYLES        */
+/* ========================== */
+* {
+	border: none;
+	font-family: "JetbrainsMono Nerd Font";
+	font-size: 15px;
+}
+
+window#waybar {
+	background: transparent;
+}
+
+window#waybar.hidden {
+	opacity: 0.2;
+}
+
+#window {
+	margin-top: 6px;
+	padding: 0 10px;
+	border-radius: 10px;
+	transition: none;
+	color: transparent;
+	background: transparent;
+}
+
+/* ========================== */
+/*         TAGS STYLES        */
+/* ========================== */
+#tags {
+	margin: 6px 0 0 12px;
+	font-size: 4px;
+	border-radius: 10px;
+	background: @background-main;
+	transition: none;
+}
+
+#tags button {
+	transition: none;
+	color: @foreground-tags;
+	background: transparent;
+	font-size: 16px;
+	border-radius: 2px;
+}
+
+#tags button.occupied {
+	color: @foreground-tags-occupied;
+	font-size: 4px;
+}
+
+#tags button.focused {
+	color: @foreground-tags-focused;
+	border-top: 2px solid @foreground-tags-focused;
+	border-bottom: 2px solid @foreground-tags-focused;
+}
+
+#tags button:hover {
+	color: @foreground-tags-hover;
+	border-color: @foreground-tags-hover;
+}
+
+#tags button.focused:hover {
+	color: @foreground-tags-hover;
+}
+
+/* ========================== */
+/*         MODULES            */
+/* ========================== */
+#network            { background: @background-main;        color: @foreground-network; }
+#pulseaudio         { background: @background-main;          color: @foreground-audio; }
+#clock              { background: @background-main;          color: @foreground-clock; }
+#memory             { background: @background-main;         color: @foreground-ram; }
+#cpu                { background: @background-main;            color: @foreground-cpu; }
+#tray               { background: @background-main;           color: @foreground-tray; }
+#custom-launcher    { background: @background-main;       color: @foreground-launcher; font-size: 24px; }
+#custom-notification{ background: @background-main;   color: @foreground-notification; font-size: 20px; }
+#custom-power       { background: @background-main;          color: @foreground-power; font-size: 20px; }
+#custom-nvidia      { background: @background-main;         color: @foreground-nvidia; }
+#custom-media       { background: @background-main;          color: @foreground-media; }
+#custom-fullscreen  { background: @background-main;          color: @foreground-nvidia; }
+
+/* ========================== */
+/*      WORKSPACES/TASKBAR    */
+/* ========================== */
+#taskbar button,
+#workspaces button {
+	background: @background-main;
+	color: @foreground-tray;
+	font-size: 15px;
+}
+
+#taskbar button:hover,
+#workspaces button:hover {
+	color: @foreground-hover;
+}
+
+#workspaces button.persistent {
+	background: @background-main;
+	color: @foreground-workspaces-persistent;
+}
+
+#taskbar button.active,
+#workspaces button.active {
+	background: @background-main;
+	color: @foreground-active;
+	border: 2px solid @foreground-active;
+}
+
+#workspaces button.urgent {
+	background: @background-main;
+	color: @foreground-urgent;
+	font-weight: bold;
+}
+
+/* ========================== */
+/*         MARGINS/PADDING    */
+/* ========================== */
+#network, #pulseaudio, #battery, #backlight, #clock,
+#memory, #cpu, #tray, #custom-launcher, #custom-notification,
+#custom-power, #custom-wallpaper, #custom-updates, #custom-fullscreen,
+#custom-nvidia, #custom-media,
+#taskbar button, #workspaces button {
+	margin: 4px 0 0 4px;
+	padding: 0 15px;
+	margin-bottom: 0;
+	border-radius: 10px;
+	transition: none;
+}
+
+#custom-launcher    { font-size: 24px; }
+#custom-notification{ font-size: 20px; }
+#custom-power       { font-size: 20px; }
+
+#custom-launcher    { padding-right: 18px}
+#custom-power       { padding-right: 22px}
+#custom-notification{ padding-right: 20px}

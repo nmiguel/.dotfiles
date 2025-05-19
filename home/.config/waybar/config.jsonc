@@ -1,0 +1,124 @@
+{
+    "pulseaudio": {
+        "tooltip": false,
+        "scroll-step": 1,
+        "format": "{icon} {volume}%",
+        "on-click":"$HOME/.config/system_scripts/audio_switch.sh",
+        "on-click-right":"pavucontrol",
+        "format-muted": "󰖁 {volume}%",
+        "format-icons": {
+            "alsa_output.usb-1532_Razer_BlackShark_V2_Pro_2.4_O001000007-00.analog-stereo": " ",
+            "alsa_output.usb-Yamaha_Corporation_Digital_Keyboard-00.analog-stereo": "󰜟 ",
+            "default": [" ", " ", " "]
+        }
+    },
+
+    "network": {
+        "tooltip": false,
+        "format-ethernet": " ",
+        "format-disconnected": "󰖪 "
+    },
+
+    "tray":{
+        "icon-size":18,
+        "spacing": 10
+    },
+
+    "clock": {
+        "format": " {:%H:%M  %d-%m-%Y}"
+    },
+
+    "cpu": {
+        "interval": 0.5,
+        "format": " {usage}%",
+        "max-length": 10
+    },
+
+    "memory": {
+        "interval": 1,
+        "format": " {percentage}%",
+        "max-length": 10
+    },
+
+
+    "custom/media": {
+        "format": "{}",
+        "max-length": 85,
+        "exec": "$HOME/.config/waybar/scripts/media.py --player spotify",
+        "return-type": "json",
+        "on-click": "playerctl play-pause",
+        "on-click-middle": "$HOME/.config/system_scripts/focus_window.sh Spotify",
+        "on-click-right": "playerctl next",
+        "scroll-step": 5.0,
+        "smooth-scrolling-threshold": 1,
+    },
+
+    "hyprland/workspaces": {
+        "format": "{name} {icon}",
+        //"format": " {icon} ",
+        "show-special": false,
+        // "on-click": "activate",
+        // "on-scroll-up": "hyprctl dispatch workspace e+1",
+        // "on-scroll-down": "hyprctl dispatch workspace e-1",
+        "all-outputs": true,
+        "sort-by-number": true,
+        "format-icons": {
+            "1": " ",
+            "2": " ",
+            "3": " ",
+            "4": "  ",
+            "5": " ",
+            "6": "  ",
+            "7": "  ",
+            "8": "󰸳 ",
+            "9": "  ",
+            "10": "  ",
+        "focused": "",
+        "default": "",
+        },
+    },
+
+    "custom/notification": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "<span foreground='cyan'><sup></sup></span>",
+            "none": "",
+            "dnd-notification": "<span foreground='cyan'><sup></sup></span>",
+            "dnd-none": "",
+            "inhibited-notification": "<span foreground='cyan'><sup></sup></span>",
+            "inhibited-none": "",
+            "dnd-inhibited-notification": "<span foreground='cyan'><sup></sup></span>",
+            "dnd-inhibited-none": ""
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+
+    "custom/nvidia": {
+        "exec": "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,nounits,noheader | awk -F, '{printf \"󰍹 %s%%   %s/%sMB\\n\", $1, $2, $3}'",
+        "format": "{}",
+        "interval": 0.5
+    },
+
+    "custom/launcher":{
+        "format": "",
+        "on-click": "rofi -show drun -modi drun,calc,filebrowser",
+        "on-click-right": "killall rofi"
+    },
+
+    "custom/fullscreen":{
+        "format": "{}",
+        "exec": "$HOME/.config/system_scripts/is_fullscreen.sh",
+        "interval": 1
+    },
+
+    "custom/power":{
+        "format": "",
+        "on-click": "$HOME/.config/system_scripts/shutdown_menu.sh",
+    },
+}

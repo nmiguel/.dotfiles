@@ -1,0 +1,116 @@
+/* config - Launcher */
+
+configuration {
+	modi:                         "drun";
+    show-icons:                 true;
+    display-calc:               " ";
+    display-drun:               " ";
+  	drun-display-format:        "{name}";
+    font:                        "JetBrains Mono Nerd Font 12";
+
+    hover-select: true;
+    me-select-entry: "";
+    me-accept-entry: [ MousePrimary, MouseDPrimary ];
+    kb-page-prev: "ScrollUp";
+    kb-page-next: "ScrollDown";
+    ml-row-up: "";
+    ml-row-down: "";
+}
+
+/* Config and colors ----------------------------------------------- */
+
+@import "default.rasi"
+
+/* Window ----------------------------------------- */
+window {
+    location:                   center;
+    anchor:                     center;
+    border:                     1px;
+    border-radius:              30px;
+
+    width:                      35%;
+    height:                     50%;
+}
+
+/* Main Box ---------------------------------------- */
+mainbox {
+    children:                   ["listbox"];
+    orientation:                horizontal;
+    background-color:           transparent;
+
+    spacing:                    24px;
+    margin:                     20px;
+}
+
+/* Listbox ------------------------------------------ */
+listbox {
+    spacing:                     20px;
+    background-color:            transparent;
+    orientation:                 vertical;
+    children:                    [ "inputbar", "message", "listview" ];
+}
+
+/* Listview ---------------------------------------- */
+listview {
+    columns:                     1;
+    lines:                       6;
+    cycle:                       true;
+    dynamic:                     true;
+    scrollbar:                   false;
+    layout:                      vertical;
+    reverse:                     false;
+    fixed-height:                true;
+    fixed-columns:               true;
+
+    spacing:                     16px;
+    background-color:            transparent;
+}
+
+
+/* Inputbar --------------------------------------------- */
+inputbar {
+    children:                    [ "textbox-icon", "entry" ];
+
+    border-radius:               12px;
+    background-color:            @shade-bg;
+    text-color:                  @text;
+
+    spacing:                     0px;
+    margin:                      10px;
+    padding:                     14px;
+}
+
+textbox-icon {
+    expand:                      false;
+    background-color:            transparent;
+    text-color:                  inherit;
+    str: "  ";
+}
+
+/* Entry ----------------------------------------------- */
+entry {
+    cursor:                     text;
+    expand:                     true;
+    placeholder-color:          inherit;
+    placeholder:                "";
+
+    background-color:           transparent;
+    text-color:                 inherit;
+    horizontal-align:           0.0;
+}
+
+/* ---- Elements ---- */
+element {
+    cursor:                     pointer;
+    background-color:           transparent;
+    border-radius:              10px;
+    padding:                    12px;
+}
+
+element-text {
+    background-color:            transparent;
+    text-color:                  inherit;
+    cursor:                      inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+}
