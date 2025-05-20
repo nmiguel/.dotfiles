@@ -71,6 +71,12 @@ window#waybar.hidden {
 	background: transparent;
 }
 
+tooltip {
+    background: @background-main;
+    margin: 6px;
+    border-radius: 10px;
+}
+
 /* ========================== */
 /*         TAGS STYLES        */
 /* ========================== */

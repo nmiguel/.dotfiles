@@ -25,7 +25,28 @@
     },
 
     "clock": {
-        "format": " {:%H:%M  %d-%m-%Y}"
+        "format": " {:%H:%M  %d-%m-%Y}",
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode"          : "year",
+            "mode-mon-col"  : 3,
+            "weeks-pos"     : "right",
+            "on-scroll"     : 1,
+            "format": {
+                "months":     "<span color='#BF616A'><b>{}</b></span>",
+                "days":       "<span color='#FAE3B0'><b>{}</b></span>",
+                "weeks":      "<span color='#89DCEB'><b>W{}</b></span>",
+                "weekdays":   "<span color='#F8BD96'><b>{}</b></span>",
+                "today":      "<span color='#F28FAD'><b><u>{}</u></b></span>"
+            }
+        },
+        "actions":  {
+            "on-click-right": "mode",
+            "on-scroll-up": "tz_up",
+            "on-scroll-down": "tz_down",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
     },
 
     "cpu": {
@@ -102,7 +123,7 @@
     "custom/nvidia": {
         "exec": "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,nounits,noheader | awk -F, '{printf \"󰍹 %s%%   %s/%sMB\\n\", $1, $2, $3}'",
         "format": "{}",
-        "interval": 0.5
+        "interval": 1
     },
 
     "custom/launcher":{
