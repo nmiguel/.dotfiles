@@ -66,8 +66,6 @@ set -gx MANPAGER "nvim +Man!"
 set -gx DOTNET_ROOT $HOME/.dotnet
 set -gx PATH $PATH $DOTNET_ROOT $DOTNET_ROOT/tools
 
-# Go settings
-go env -w GOOS=windows
 
 # nvm use 23 --default --silent
 
