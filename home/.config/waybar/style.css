@@ -142,15 +142,15 @@ tooltip {
 	font-size: 15px;
 }
 
-#taskbar button:hover,
-#workspaces button:hover {
-	color: @foreground-hover;
-}
+/* #taskbar button:hover, */
+/* #workspaces button:hover { */
+/* 	color: @foreground-hover; */
+/* } */
 
-#workspaces button.persistent {
-	background: @background-main;
-	color: @foreground-workspaces-persistent;
-}
+/* #workspaces button.persistent { */
+/* 	background: @background-main; */
+/* 	color: @foreground-workspaces-persistent; */
+/* } */
 
 #taskbar button.active,
 #workspaces button.active {
@@ -159,11 +159,11 @@ tooltip {
 	border: 2px solid @foreground-active;
 }
 
-#workspaces button.urgent {
-	background: @background-main;
-	color: @foreground-urgent;
-	font-weight: bold;
-}
+/* #workspaces button.urgent { */
+/* 	background: @background-main; */
+/* 	color: @foreground-urgent; */
+/* 	font-weight: bold; */
+/* } */
 
 /* ========================== */
 /*         MARGINS/PADDING    */

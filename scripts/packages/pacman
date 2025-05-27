@@ -2,6 +2,7 @@
 adobe-source-code-pro-fonts
 base
 base-devel
+bat
 bc
 blueman
 bluetui
@@ -56,8 +57,6 @@ noto-fonts
 noto-fonts-emoji
 nvidia-dkms
 nvidia-settings
-nvtop
-nwg-displays
 nwg-look
 openssh
 otf-font-awesome
@@ -76,8 +75,8 @@ qt5-wayland
 qt5ct
 qt6-wayland
 qt6ct
-rofi-wayland
 rofi-calc
+rofi-wayland
 sddm
 slurp
 smartmontools
@@ -101,6 +100,7 @@ ttf-fira-code
 ttf-jetbrains-mono-nerd
 tumbler
 unzip
+uv
 uwsm
 vim
 vulkan-nouveau
