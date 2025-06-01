@@ -18,7 +18,7 @@ window {
     fullscreen:                  false;
     transparency:                "real";
     cursor:                      "default";
-    background-color:            black / 12%;
+    background-color:            black / 62%;
     border:                      0px;
     border-color:                @selected;
 }

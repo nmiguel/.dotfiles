@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+pkill rofi
+
 # Current Theme
 dir="$HOME/.config/rofi/themes/"
 theme='powermenu'

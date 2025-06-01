@@ -15,7 +15,9 @@
 
     "network": {
         "tooltip": false,
-        "format-ethernet": " ",
+        "interval": 10,
+        "format-ethernet": "{bandwidthDownBytes}   {bandwidthUpBytes}    ",
+        "interface": "e*",
         "format-disconnected": "󰖪 "
     },
 
@@ -128,7 +130,7 @@
 
     "custom/launcher":{
         "format": "",
-        "on-click": "rofi -show drun -modi drun,calc,filebrowser",
+        "on-click": "pkill rofi; rofi -show drun -modi drun,calc,filebrowser",
         "on-click-right": "killall rofi"
     },
 
