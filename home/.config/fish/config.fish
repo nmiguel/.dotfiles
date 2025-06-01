@@ -1,17 +1,17 @@
-# ~/.config/fish/config.fish
-
-# Set PATH
-set -gx PATH $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin $HOME/.local/bin $HOME/.local/scripts $PATH
-set fish_greeting
+function fish_greeting
+    fastfetch
+end
 
 # Aliases
 abbr v nvim
 abbr docker-compose "docker compose"
-abbr exp "explorer.exe ."
+abbr exp "nohup xdg-open . >/dev/null 2>&1 & disown"
 abbr wiztree "sudo ncdu / --exclude /mnt"
 abbr svenv ". (fd -up '.*/bin/activate.fish')"
-abbr nixup "nix run nixpkgs#home-manager -- switch --flake /$HOME/.config/nix/#$USER"
 
+# Key bindings (for autosuggestions, requires a fish autosuggestions plugin)
+bind \cH backward-kill-word
+bind \cY accept-autosuggestion
 
 # Custom functions
 function notes
@@ -24,14 +24,6 @@ function notes
     cd - > /dev/null 2>&1
 end
 
-# function notes
-#     cd ~/projects/personal/notes
-#     set file (tv files)
-#     if test -n "$file"
-#         nvim $file
-#     end
-#     cd - > /dev/null 2>&1
-# end
 
 function bind_bang
     switch (commandline -t)[-1]
@@ -62,18 +54,6 @@ end
 set -gx EDITOR nvim
 set -gx MANPAGER "nvim +Man!"
 
-# .NET settings
-set -gx DOTNET_ROOT $HOME/.dotnet
-set -gx PATH $PATH $DOTNET_ROOT $DOTNET_ROOT/tools
-
-
-# nvm use 23 --default --silent
-
-# pyenv init - fish | source
-
-# Add Windows paths
-set -gx PATH $PATH /home/nomig/.cargo/bin /mnt/c/Windows /mnt/c/Windows/System32 /mnt/c/Windows/System32/wbem /mnt/c/Windows/System32/Win /mnt/c/Windows/System32/WindowsPowerShell/v1.0
-
 # TV initialization for fish
 tv init fish | source
 
@@ -82,8 +62,3 @@ zoxide init fish --cmd cd | source
 
 # Starship prompt initialization for fish
 starship init fish | source
-
-# Key bindings (for autosuggestions, requires a fish autosuggestions plugin)
-bind \cH backward-kill-word
-bind \cY accept-autosuggestion
-
