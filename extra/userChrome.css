@@ -1,0 +1,5 @@
+/* ~/.mozzila/firefox/<user>.default-release/chrome */
+/* Fixes some formatting with firefox */
+#vertical-spacer {
+  display: none !important;
+}
