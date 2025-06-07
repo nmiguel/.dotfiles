@@ -1,0 +1,4 @@
+# /etc/udev/rules.d/50-usb_power_save.rules
+
+# whitelist for usb autosuspend
+ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{idVendor}=="05c6", ATTR{idProduct}=="9205", ATTR{power/control}="auto"
