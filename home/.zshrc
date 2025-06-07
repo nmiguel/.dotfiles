@@ -81,9 +81,7 @@ export DOTNET_ROOT=$HOME/.dotnet
 export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools#
 
 # Go
-export GOBIN=$GOPATH/bin
 export GOROOT=/usr/local/go
-# export GOOS=windows
 export GOPATH=$HOME/.go
 export PATH=$PATH:/usr/local/go/bin:$GOBIN
 

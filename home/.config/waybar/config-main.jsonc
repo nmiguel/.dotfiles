@@ -1,0 +1,9 @@
+{
+	"layer": "top",
+    "include": "~/.config/waybar/config.jsonc",
+    "output": "DP-1",
+    "height": 39,
+	"modules-left": ["custom/power", "custom/launcher", "custom/notification"],
+    "modules-center": ["hyprland/workspaces"],
+	"modules-right": ["tray", "clock"],
+}

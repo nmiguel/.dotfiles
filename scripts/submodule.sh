@@ -1,6 +1,5 @@
 #!/bin/bash
 
 git submodule --recursive
+git submodule update
 
-./ubuntu_install.sh
-./win_install.sh
