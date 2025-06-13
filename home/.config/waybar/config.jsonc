@@ -16,7 +16,8 @@
     "network": {
         "tooltip": false,
         "interval": 10,
-        "format-ethernet": "{bandwidthDownBytes}   {bandwidthUpBytes}    ",
+        // "format-ethernet": "{bandwidthDownBytes}   {bandwidthUpBytes}    ",
+        "format-ethernet": " ",
         "interface": "e*",
         "format-disconnected": "󰖪 "
     },
@@ -66,7 +67,7 @@
 
     "custom/media": {
         "format": "{}",
-        "max-length": 85,
+        "max-length": 30,
         "exec": "$HOME/.config/waybar/scripts/media.py --player spotify",
         "return-type": "json",
         "on-click": "playerctl play-pause",
@@ -123,7 +124,7 @@
     },
 
     "custom/nvidia": {
-        "exec": "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,nounits,noheader | awk -F, '{printf \"󰍹 %s%%   %s/%sMB\\n\", $1, $2, $3}'",
+        "exec": "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,nounits,noheader | awk -F, '{printf \"󰍹 %s%%   %sMB\\n\", $1, $2}'",
         "format": "{}",
         "interval": 1
     },
