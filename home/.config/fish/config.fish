@@ -1,6 +1,4 @@
-function fish_greeting
-    fastfetch
-end
+set fish_greeting
 
 # Aliases
 abbr v nvim
@@ -53,6 +51,16 @@ end
 # Environment variables
 set -gx EDITOR nvim
 set -gx MANPAGER "nvim +Man!"
+
+function add_to_path
+  set -l path $argv[1]
+  if test -d $path
+    set -gx PATH $path $PATH
+  end
+end
+add_to_path ~/.local/bin
+add_to_path ~/.cargo/bin
+add_to_path ~/go/bin
 
 # TV initialization for fish
 tv init fish | source

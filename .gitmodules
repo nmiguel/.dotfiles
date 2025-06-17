@@ -3,5 +3,6 @@
 	url = https://github.com/nmiguel/nvim-config
 
 [submodule "wezterm"]
-	path = winhome/.config/wezterm
+    path = home/.config/wezterm
 	url = https://github.com/nmiguel/wezterm
+
