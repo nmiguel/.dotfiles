@@ -5,5 +5,5 @@
     "height": 39,
 	"modules-left": ["custom/power", "custom/launcher", "custom/notification"],
     "modules-center": ["hyprland/workspaces"],
-	"modules-right": ["tray", "clock"],
+	"modules-right": ["network#full", "tray", "clock"],
 }

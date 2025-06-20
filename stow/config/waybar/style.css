@@ -180,9 +180,9 @@ tooltip {
 	transition: none;
 }
 
-/* #network { */
-/*   min-width: 240px; */
-/* } */
+#network.full {
+  min-width: 240px;
+}
 
 
 #custom-launcher    { font-size: 24px; }

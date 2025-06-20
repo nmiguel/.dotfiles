@@ -22,6 +22,14 @@
         "format-disconnected": "󰖪 "
     },
 
+    "network#full": {
+        "tooltip": false,
+        "interval": 10,
+        "format-ethernet": "{bandwidthDownBytes}   {bandwidthUpBytes}    ",
+        "interface": "e*",
+        "format-disconnected": "󰖪 "
+    },
+
     "tray":{
         "icon-size":18,
         "spacing": 10
