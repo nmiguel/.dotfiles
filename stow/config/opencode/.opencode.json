@@ -1,0 +1,58 @@
+{
+  "data": {
+    "directory": ".opencode"
+  },
+  "providers": {
+    "openai": {
+      "apiKey": "your-api-key",
+      "disabled": false
+    },
+    "anthropic": {
+      "apiKey": "your-api-key",
+      "disabled": false
+    },
+    "groq": {
+      "apiKey": "your-api-key",
+      "disabled": false
+    },
+    "openrouter": {
+      "apiKey": "your-api-key",
+      "disabled": false
+    }
+  },
+  "agents": {
+    "coder": {
+      "model": "gemini-2.5-flash",
+      "maxTokens": 5000
+    },
+    "task": {
+      "model": "gemini-2.5-flash",
+      "maxTokens": 5000
+    },
+    "title": {
+      "model": "gemini-2.5-flash",
+      "maxTokens": 80
+    }
+  },
+  "shell": {
+    "path": "/bin/bash",
+    "args": ["-l"]
+  },
+  "mcpServers": {
+    "example": {
+      "type": "stdio",
+      "command": "path/to/mcp-server",
+      "env": [],
+      "args": []
+    }
+  },
+  "lsp": {
+    "go": {
+      "disabled": false,
+      "command": "gopls"
+    }
+  },
+  "debug": false,
+  "debugLSP": false,
+  "autoCompact": true
+}

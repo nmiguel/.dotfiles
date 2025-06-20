@@ -8,4 +8,14 @@ if ! command -v stow >/dev/null 2>&1; then
 fi
 
 echo "Stowing dotfiles..."
-stow --no-folding home -t "$HOME"
+
+cd stow
+stow config -t "$HOME/.config" -v
+stow home -t "$HOME" -v
+
+# for each folder or file in the home/ directory stow it
+# for dir in */; do
+#     echo "Stowing $dir..."
+#       pkg="${pkg%/}"                      # strip trailing slash
+#       stow -n "$CONFIG_DIR" -t "$HOME/.config" "$pkg" -v
+# done

@@ -1,8 +1,8 @@
 [submodule "nvim"]
-    path = home/.config/nvim
+    path = stow/config/nvim
 	url = https://github.com/nmiguel/nvim-config
 
 [submodule "wezterm"]
-    path = home/.config/wezterm
+    path = stow/config/wezterm
 	url = https://github.com/nmiguel/wezterm
 
