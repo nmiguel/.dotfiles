@@ -5,7 +5,14 @@ abbr v nvim
 abbr docker-compose "docker compose"
 abbr exp "nohup xdg-open . >/dev/null 2>&1 & disown"
 abbr wiztree "sudo ncdu / --exclude /mnt"
-abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
+# abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
+
+function select_venv
+    set venv_path (fd --type d --max-depth 2 --unrestricted 'venv' . | head -n 1)
+    if test -n "$venv_path" -a -f "$venv_path/bin/activate.fish"
+        source "$venv_path/bin/activate.fish"
+    end
+end
 
 # Key bindings (for autosuggestions, requires a fish autosuggestions plugin)
 bind \cH backward-kill-word
@@ -70,3 +77,5 @@ zoxide init fish --cmd cd | source
 
 # Starship prompt initialization for fish
 starship init fish | source
+
+select_venv
