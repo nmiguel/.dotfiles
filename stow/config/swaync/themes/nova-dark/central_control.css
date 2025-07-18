@@ -1,37 +1,68 @@
-@define-color text            @foreground;
-@define-color background-sec  alpha(@background-alt, .4);
-@define-color background-alt  alpha(@color1, .4);
-@define-color selected        @color6;
-@define-color hover           alpha(@selected, .4);
-@define-color urgent          @color2;
+@define-color rosewater #f2d5cf;
+@define-color flamingo #eebebe;
+@define-color pink #f4b8e4;
+@define-color mauve #ca9ee6;
+@define-color red #e78284;
+@define-color maroon #ea999c;
+@define-color peach #ef9f76;
+@define-color yellow #e5c890;
+@define-color green #a6d189;
+@define-color teal #81c8be;
+@define-color sky #99d1db;
+@define-color sapphire #85c1dc;
+@define-color blue #8caaee;
+@define-color lavender #babbf1;
+
+/* Frappé Grayscale Colors */
+@define-color text #c6d0f5;
+@define-color subtext1 #b5bfe2;
+@define-color base #303446;
+@define-color mantle #292c3c;
+@define-color crust #232634;
+
+/* Frappé Surface Colors */
+@define-color surface0 #414559;
+@define-color surface1 #51576d;
+@define-color surface2 #626880;
+
+/*
+ * Custom Mappings to Catppuccin Frappé
+ * A nice, soft accent color
+ */
+@define-color background @crust; /* Darker background for the main control center */
+@define-color background-alt @mantle; /* Slightly lighter for notification/widget backgrounds */
+@define-color background-sec @base; /* For elements like volume, mpris player background */
+@define-color selected @mauve;
+@define-color hover @lavender; /* A complementary soft hover */
+@define-color urgent @red; /* For critical notifications */
 
 * {
-  color:            @text;
-
   all: unset;
+  color: @text;
   font-size: 14px;
   font-family: "JetBrains Mono Nerd Font 10";
   transition: 200ms;
-
 }
 
-/* Avoid 'annoying' backgroud */
+/* Avoid 'annoying' background */
 .blank-window {
   background: transparent;
 }
 
-/* CONTROL CENTER ------------------------------------------------------------------------ */
-
+/*
+ * CONTROL CENTER
+ * Main container and notifications
+ */
 .control-center {
-  background: alpha(@background, .55);
+  background: @background;
   border-radius: 24px;
   /* border: 1px solid @selected; */
-  box-shadow: 0 0 10px 0 rgba(0,0,0,.6);
+  /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3); */
   margin: 18px;
   padding: 12px;
 }
 
-/* Notifications  */
+/* Notifications */
 .control-center .notification-row .notification-background,
 .control-center .notification-row .notification-background .notification.critical {
   background-color: @background-alt;
@@ -54,22 +85,21 @@
 }
 
 .control-center .notification-row .notification-background .notification > *:last-child > * .notification-action {
-  background: alpha(@selected, .6);
+  background: @selected;
   color: @text;
   border-radius: 12px;
   margin: 6px;
 }
 
 .control-center .notification-row .notification-background .notification > *:last-child > * .notification-action:hover {
-  background: @selected;
+  background: @hover;
 }
 
 .control-center .notification-row .notification-background .notification > *:last-child > * .notification-action:active {
   background-color: @selected;
 }
 
-/* Buttons */
-
+/* Close button for notifications */
 .control-center .notification-row .notification-background .close-button {
   background: transparent;
   border-radius: 6px;
@@ -79,13 +109,14 @@
 }
 
 .control-center .notification-row .notification-background .close-button:hover {
-  background-color: @selected;
+  background-color: @hover;
 }
 
 .control-center .notification-row .notification-background .close-button:active {
   background-color: @selected;
 }
 
+/* Progress bars */
 progressbar,
 progress,
 trough {
@@ -93,15 +124,14 @@ trough {
 }
 
 progressbar {
-  background-color: rgba(255,255,255,.1);
+  background-color: @surface2;
 }
 
-/* Notifications expanded-group */
-
+/* Notifications expanded group */
 .notification-group {
-  margin: 2px 8px 2px 8px;
-
+  margin: 2px 8px;
 }
+
 .notification-group-headers {
   font-weight: bold;
   font-size: 1.25rem;
@@ -127,9 +157,12 @@ progressbar {
   background: @hover;
 }
 
-/* WIDGETS --------------------------------------------------------------------------- */
+/*
+ * WIDGETS
+ * Clear button, Do Not Disturb, buttons grid, and media player
+ */
 
-  /* Notification clear button */
+/* Notification clear button */
 .widget-title {
   font-size: 1.2em;
   margin: 6px;
@@ -149,7 +182,7 @@ progressbar {
   background-color: @selected;
 }
 
-  /* Do not disturb */
+/* Do not disturb switch */
 .widget-dnd {
   margin: 6px;
   font-size: 1.2rem;
@@ -180,7 +213,7 @@ progressbar {
   border-radius: 6px;
 }
 
-  /* Buttons menu */
+/* Buttons grid menu */
 .widget-buttons-grid {
   font-size: x-large;
   padding: 6px 2px;
@@ -189,32 +222,29 @@ progressbar {
   background: @background-alt;
 }
 
-.widget-buttons-grid>flowbox>flowboxchild>button {
+.widget-buttons-grid > flowbox > flowboxchild > button {
   margin: 4px 10px;
   padding: 6px 12px;
   background: transparent;
   border-radius: 8px;
 }
 
-.widget-buttons-grid>flowbox>flowboxchild>button:hover {
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
   background: @hover;
 }
 
-
-  /* Music player */
+/* Music player */
 .widget-mpris {
-    background: @background-alt;
-    border-radius: 16px;
-    color: @text;
-    margin:  20px 6px;
+  background: @background-alt;
+  border-radius: 16px;
 }
 
-  /* NOTE: Background need *opacity 1* otherwise will turn into the album art blurred  */
+/* Background needs opacity 1 to avoid showing blurred album art */
 .widget-mpris-player {
-    background-color: alpha(@background-sec, 10000.0);
-    border-radius: 22px;
-    padding: 6px 14px;
-    margin: 6px;
+  background-color: @background-sec;
+  border-radius: 16px;
+  padding: 16px 14px;
+  margin: 6px;
 }
 
 .widget-mpris > box > button {
@@ -223,7 +253,7 @@ progressbar {
 }
 
 .widget-mpris button {
-  color: alpha(@text, .6);
+  color: @subtext1; /* Slightly desaturated for inactive buttons */
 }
 
 .widget-mpris button:hover {
@@ -235,19 +265,19 @@ progressbar {
 }
 
 .widget-mpris-title {
-    font-weight: 700;
-    font-size: 1rem;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .widget-mpris-subtitle {
-    font-weight: 500;
-    font-size: 0.8rem;
+  font-weight: 500;
+  font-size: 0.8rem;
 }
 
-/* Volume */
+/* Volume widget */
 .widget-volume {
   background: @background-sec;
-  color: @background;
+  color: @text;
   padding: 4px;
   margin: 6px;
   border-radius: 6px;
