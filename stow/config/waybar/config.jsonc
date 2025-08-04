@@ -7,8 +7,8 @@
         "on-click-right":"pavucontrol",
         "format-muted": "󰖁 {volume}%",
         "format-icons": {
-            "alsa_output.usb-1532_Razer_BlackShark_V2_Pro_2.4_O001000007-00.analog-stereo": " ",
-            "alsa_output.usb-Yamaha_Corporation_Digital_Keyboard-00.analog-stereo": "󰜟 ",
+            "virtual_headphones_sink": " ",
+            "virtual_speakers_sink": "󰜟 ",
             "default": [" ", " ", " "]
         }
     },
@@ -132,8 +132,10 @@
     },
 
     "custom/nvidia": {
-        "exec": "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,nounits,noheader | awk -F, '{printf \"󰍹 %s%%   %sMB\\n\", $1, $2}'",
-        "format": "{}",
+        "exec": "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,nounits,noheader | awk -F, '{printf \"{\\\"text\\\": \\\"󰍹 %s%%\\\", \\\"tooltip\\\": \\\"GPU: %s%%\\rMem: %sMB / %sMB\\\"}\\n\", $1, $1, $2, $3}'",
+        "return-type": "json",
+        "format": "{text}",
+        "tooltip": true,
         "interval": 1
     },
 
