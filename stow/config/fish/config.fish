@@ -17,8 +17,17 @@ end
 # Key bindings (for autosuggestions, requires a fish autosuggestions plugin)
 bind \cH backward-kill-word
 bind \cY accept-autosuggestion
+bind \cR search_history
 
 # Custom functions
+function search_history
+    set cmd (history | fzf)
+    if test -n "$cmd"
+        commandline -r -- $cmd
+        commandline -f execute
+    end
+end
+
 function notes
     cd ~/projects/personal/notes
     if test (count $argv) -gt 0
@@ -58,6 +67,22 @@ end
 # Environment variables
 set -gx EDITOR nvim
 set -gx MANPAGER "nvim +Man!"
+set -gx FZF_DEFAULT_OPTS "
+  --color=fg:-1,fg+:#aac5e6,bg:-1,bg+:-1 \
+  --color=hl:#5f87af,hl+:#5fd7ff,info:#afaf87,marker:#87ff00 \
+  --color=prompt:#d7005f,spinner:#af5fff,pointer:#af5fff,header:#87afaf \
+  --color=border:#262626,label:#aeaeae,query:#d9d9d9 \
+  --preview-window=border-rounded \
+  --prompt='> ' \
+  --marker='>' \
+  --pointer='◆' \
+  --separator='' \
+  --scrollbar='│' \
+  # --layout=reverse \
+  --info=right
+"
+
+
 
 function add_to_path
   set -l path $argv[1]
@@ -65,12 +90,10 @@ function add_to_path
     set -gx PATH $path $PATH
   end
 end
+
 add_to_path ~/.local/bin
 add_to_path ~/.cargo/bin
 add_to_path ~/go/bin
-
-# TV initialization for fish
-tv init fish | source
 
 # Zoxide initialization for fish
 zoxide init fish --cmd cd | source
