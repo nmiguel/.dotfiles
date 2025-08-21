@@ -75,11 +75,11 @@
 
     "custom/media": {
         "format": "{}",
-        "max-length": 30,
-        "exec": "$HOME/.config/waybar/scripts/media.py --player spotify",
+        "max-length": 45,
+        "exec": "$HOME/.config/waybar/scripts/media.py --player chromium",
         "return-type": "json",
         "on-click": "playerctl play-pause",
-        "on-click-middle": "$HOME/.config/system_scripts/focus_window.sh Spotify",
+        "on-click-middle": "$HOME/.config/system_scripts/focus_window.sh youtube",
         "on-click-right": "playerctl next",
         "scroll-step": 5.0,
         "smooth-scrolling-threshold": 1,

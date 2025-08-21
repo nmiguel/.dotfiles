@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-import os
-import sys
 import json
+import os
 import subprocess
+import sys
 
 STEP = "5%"
+
 
 def build_menu():
     # Call pactl and parse JSON
@@ -12,7 +13,7 @@ def build_menu():
         ["pactl", "--format", "json", "list", "sink-inputs"],
         check=True,
         stdout=subprocess.PIPE,
-        text=True
+        text=True,
     )
     sinks = json.loads(proc.stdout)
     entries = []
@@ -20,14 +21,21 @@ def build_menu():
         idx = sink["index"]
         name = sink.get("properties", {}).get("application.name", "unknown")
         vol = sink["volume"]["front-left"]["value_percent"]
-        entries.append({"id": idx, "name": name, "volume": vol})
+        if name.lower() == "chromium" and "youtube" in sink.get("properties", {}).get(
+            "application.process.binary", ""
+        ):
+            name = "Youtube Music"
+        if name.lower() != "unknown" and name not in [e["name"] for e in entries]:
+            entries.append({"id": idx, "name": name, "volume": vol})
     return entries
+
 
 def print_menu(entries):
     for i, entry in enumerate(entries):
         text = f"{entry['name'].title()}: {entry['volume']}"
 
         print(text)
+
 
 def get_selected_id(entries) -> int:
     if len(sys.argv) != 2:
@@ -42,7 +50,6 @@ def get_selected_id(entries) -> int:
 
 
 def main():
-
     # Set rofi options
     print("\0use-hot-keys\x1ftrue")
     print("\0keep-selection\x1ftrue")
@@ -57,7 +64,6 @@ def main():
     # print(entries)
     # print("SEL" + str(sel))
 
-
     if ret in (10, 11):
         # Extract the sink-input index from the selected entry
 
@@ -65,10 +71,7 @@ def main():
 
         # Decie whether to raise or lower volume
         change = f"{'-' if ret == 10 else '+'}{STEP}"
-        subprocess.run(
-            ["pactl", "set-sink-input-volume", idx, change],
-            check=True
-        )
+        subprocess.run(["pactl", "set-sink-input-volume", idx, change], check=True)
 
         # Reprint updated menu
         entries = build_menu()
@@ -77,6 +80,6 @@ def main():
     else:
         print_menu(entries)
 
+
 if __name__ == "__main__":
     sys.exit(main())
-
