@@ -24,7 +24,7 @@ function search_history
     set cmd (history | fzf)
     if test -n "$cmd"
         commandline -r -- $cmd
-        commandline -f execute
+        # commandline -f execute
     end
 end
 
