@@ -1,0 +1,6 @@
+#!/bin/bash
+
+pkill waybar
+setsid uwsm app -- waybar -c ~/.config/waybar/config-main.jsonc >/dev/null 2>&1 &
+setsid uwsm app -- waybar -c ~/.config/waybar/config-second.jsonc >/dev/null 2>&1 &
+

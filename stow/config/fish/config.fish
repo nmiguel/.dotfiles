@@ -94,6 +94,7 @@ end
 
 add_to_path ~/.local/bin
 add_to_path ~/.cargo/bin
+add_to_path ~/.config/bin
 add_to_path ~/go/bin
 
 # Zoxide initialization for fish
