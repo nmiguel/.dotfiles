@@ -1,0 +1,15 @@
+# /etc/systemd/system/wsl-mount.service
+
+[Unit]
+Description=Mount WSL VHDX
+After=local-fs.target mnt-win.mount
+Requires=mnt-win.mount
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/guestmount --add "/mnt/win/Users/Nuno Ramos/AppData/Local/Packages/CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc/LocalState/ext4.vhdx" -i --rw -o allow_other /mnt/wsl/
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+
