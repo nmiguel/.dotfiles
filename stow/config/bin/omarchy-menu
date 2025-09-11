@@ -54,18 +54,6 @@ aur_install_and_launch() {
   present_terminal "echo 'Installing $1 from AUR...'; yay -S --noconfirm $2 && setsid gtk-launch $3"
 }
 
-show_learn_menu() {
-  case $(menu "Learn" "  Keybindings\n  Omarchy\n  Hyprland\n󰣇  Arch\n  Neovim\n󱆃  Bash") in
-  *Keybindings*) omarchy-menu-keybindings ;;
-  *Omarchy*) omarchy-launch-webapp "https://learn.omacom.io/2/the-omarchy-manual" ;;
-  *Hyprland*) omarchy-launch-webapp "https://wiki.hypr.land/" ;;
-  *Arch*) omarchy-launch-webapp "https://wiki.archlinux.org/title/Main_page" ;;
-  *Bash*) omarchy-launch-webapp "https://devhints.io/bash" ;;
-  *Neovim*) omarchy-launch-webapp "https://www.lazyvim.org/keymaps" ;;
-  *) show_main_menu ;;
-  esac
-}
-
 show_style_menu() {
   case $(menu "Style" "󰸌  Theme\n  Font\n  Background\n󱄄  Screensaver\n  About") in
   *Theme*) show_theme_menu ;;
@@ -314,17 +302,6 @@ show_remove_menu() {
   esac
 }
 
-show_update_menu() {
-  case $(menu "Update" " Omarchy\n  Config\n󰸌  Themes\n  Process\n  Timezone") in
-  *Omarchy*) present_terminal omarchy-update ;;
-  *Config*) show_update_config_menu ;;
-  *Themes*) present_terminal omarchy-theme-update ;;
-  *Process*) show_update_process_menu ;;
-  *Timezone*) omarchy-cmd-tzupdate ;;
-  *) show_main_menu ;;
-  esac
-}
-
 show_update_process_menu() {
   case $(menu "Restart" "  Hypridle\n  Hyprsunset\n  Swayosd\n󰌧  Walker\n󰍜  Waybar") in
   *Hypridle*) omarchy-restart-hypridle ;;
@@ -336,26 +313,11 @@ show_update_process_menu() {
   esac
 }
 
-show_update_config_menu() {
-  case $(menu "Use default config" "  Hyprland\n  Hypridle\n  Hyprlock\n  Hyprsunset\n󱣴  Plymouth\n  Swayosd\n󰌧  Walker\n󰍜  Waybar") in
-  *Hyprland*) present_terminal omarchy-refresh-hyprland ;;
-  *Hypridle*) present_terminal omarchy-refresh-hypridle ;;
-  *Hyprlock*) present_terminal omarchy-refresh-hyprlock ;;
-  *Hyprsunset*) present_terminal omarchy-refresh-hyprsunset ;;
-  *Plymouth*) present_terminal omarchy-refresh-plymouth ;;
-  *Swayosd*) present_terminal omarchy-refresh-swayosd ;;
-  *Walker*) present_terminal omarchy-refresh-walker ;;
-  *Waybar*) present_terminal omarchy-refresh-waybar ;;
-  *) show_main_menu ;;
-  esac
-}
-
 show_system_menu() {
-  case $(menu "System" "  Lock\n󱄄  Screensaver\n󰤄  Suspend\n  Relaunch\n󰜉  Restart\n󰐥  Shutdown") in
+  case $(menu "System" "󰐥  Shutdown\n󰜉  Restart\n  Lock\n󱄄  Screensaver\n󰤄  Suspend") in
   *Lock*) omarchy-lock-screen ;;
   *Screensaver*) omarchy-launch-screensaver force ;;
   *Suspend*) systemctl suspend ;;
-  *Relaunch*) uwsm stop ;;
   *Restart*) systemctl reboot ;;
   *Shutdown*) systemctl poweroff ;;
   *) show_main_menu ;;
@@ -363,13 +325,12 @@ show_system_menu() {
 }
 
 show_main_menu() {
-  go_to_menu "$(menu "Go" "󰀻  Apps\n󰧑  Learn\n  Capture\n󰔎  Toggle\n  Style\n  Setup\n󰉉  Install\n󰭌  Remove\n  Update\n  About\n  System")"
+  go_to_menu "$(menu "Go" "󰀻  Apps\n  Capture\n󰔎  Toggle\n  Style\n  Setup\n󰉉  Install\n󰭌  Remove\n  About\n  System")"
 }
 
 go_to_menu() {
   case "${1,,}" in
   *apps*) walker -p "Launch…" ;;
-  *learn*) show_learn_menu ;;
   *style*) show_style_menu ;;
   *theme*) show_theme_menu ;;
   *capture*) show_capture_menu ;;
@@ -380,8 +341,7 @@ go_to_menu() {
   *power*) show_setup_power_menu ;;
   *install*) show_install_menu ;;
   *remove*) show_remove_menu ;;
-  *update*) show_update_menu ;;
-  *about*) alacritty --class Omarchy -o font.size=9 -e bash -c 'fastfetch; read -n 1 -s' ;;
+  *about*) alacritty --class Omarchy -e bash -c 'fastfetch; read -n 1 -s' ;;
   *system*) show_system_menu ;;
   esac
 }
