@@ -1,5 +1,5 @@
 #!/bin/bash
 
-git submodule --recursive
-git submodule update
+git submodule init
+git submodule update --recursive
 
