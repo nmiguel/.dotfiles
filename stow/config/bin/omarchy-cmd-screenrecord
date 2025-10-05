@@ -8,6 +8,10 @@ if [[ ! -d "$OUTPUT_DIR" ]]; then
   exit 1
 fi
 
+get_focused_output() {
+  hyprctl -j monitors | jq -r '.[] | select(.focused==true).name'
+}
+
 screenrecording() {
   filename="$OUTPUT_DIR/screenrecording-$(date +'%Y-%m-%d_%H-%M-%S').mp4"
   notify-send "Screen recording starting..." -t 1000
@@ -25,8 +29,10 @@ if pgrep -x wl-screenrec >/dev/null || pgrep -x wf-recorder >/dev/null; then
   pkill -x wf-recorder
   notify-send "Screen recording saved to $OUTPUT_DIR" -t 2000
 elif [[ "$1" == "output" ]]; then
-  screenrecording
+  output=$(get_focused_output)
+  screenrecording -o "$output"
 else
   region=$(slurp) || exit 1
   screenrecording -g "$region"
 fi
+
