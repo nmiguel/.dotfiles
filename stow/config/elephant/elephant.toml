@@ -1,0 +1,38 @@
+# Elephant
+A service providing various datasources which can be triggered to perform actions.
+
+Run `elephant -h` to get an overview of the available commandline flags and actions.
+## Elephant Configuration
+`~/.config/elephant/Elephant.toml`
+#### ElephantConfig
+| Field | Type | Default | Description |
+| --- | ---- | ---- | --- |
+|argument_delimited|string|#|global delimiter for arguments|
+|auto_detect_launch_prefix|bool|true|automatically detects uwsm, app2unit or systemd-run|
+
+## Provider Configuration
+### Elephant Clipboard
+
+Store clipboard history.
+
+#### Features
+
+- saves images and text history
+- filter to show images only
+- edit saved content
+
+#### Requirements
+
+- `wl-clipboard`
+
+
+`~/.config/elephant/clipboard.toml`
+#### Config
+| Field | Type | Default | Description |
+| --- | ---- | ---- | --- |
+|icon|string|depends on provider|icon for provider|
+|min_score|int32|depends on provider|minimum score for items to be displayed|
+|max_items|int|100|max amount of clipboard history items|
+|image_editor_cmd|string||editor to use for images. use '%FILE%' as placeholder for file path.|
+|text_editor_cmd|string||editor to use for text, otherwise default for mimetype. use '%FILE%' as placeholder for file path.|
+
