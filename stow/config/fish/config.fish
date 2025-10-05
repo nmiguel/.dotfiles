@@ -5,7 +5,27 @@ abbr v nvim
 abbr docker-compose "docker compose"
 abbr exp "nohup xdg-open . >/dev/null 2>&1 & disown"
 abbr wiztree "sudo ncdu / --exclude /mnt"
-# abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
+abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
+
+function ls
+    eza -lh --group-directories-first --icons=auto
+end
+
+function lt
+    eza --tree --level=2 --long --icons --git
+end
+
+function ff
+    ff --preview 'bat --style=numbers --color=always {}'
+end
+
+function sudo
+  if functions -q $argv[1]
+    set argv fish -c "$argv"
+  end
+  command sudo $argv
+end
+
 
 function select_venv
     set venv_path (fd --type d --max-depth 2 --unrestricted 'venv' . | head -n 1)
