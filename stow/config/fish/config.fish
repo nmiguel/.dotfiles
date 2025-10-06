@@ -8,15 +8,15 @@ abbr wiztree "sudo ncdu / --exclude /mnt"
 abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
 
 function ls
-    eza -lh --group-directories-first --icons=auto
+    eza -lh --group-directories-first --icons=auto $argv
 end
 
 function lt
-    eza --tree --level=2 --long --icons --git
+    eza --tree --level=2 --long --icons --git $argv
 end
 
 function ff
-    ff --preview 'bat --style=numbers --color=always {}'
+    fzf --preview 'bat --style=numbers --color=always {}'
 end
 
 function sudo
