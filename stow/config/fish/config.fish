@@ -53,8 +53,7 @@ function notes
     if test (count $argv) -gt 0
         nvim $argv[1].md
     else
-        set file (fzf)
-        nvim "$file"
+        nvim .
     end
     cd - > /dev/null 2>&1
 end
