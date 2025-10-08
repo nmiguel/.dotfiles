@@ -1,1 +1,20 @@
-@theme "~/.config/rofi/themes/nova-dark.rasi"
+/* config - Launcher */
+
+configuration {
+	modi:                         "drun";
+    show-icons:                 true;
+    display-calc:               " ";
+    display-drun:               " ";
+  	drun-display-format:        "{name}";
+    font:                        "JetBrains Mono Nerd Font 12";
+
+    hover-select: true;
+    me-select-entry: "";
+    me-accept-entry: [ MousePrimary, MouseDPrimary ];
+    kb-page-prev: "ScrollUp";
+    kb-page-next: "ScrollDown";
+    ml-row-up: "";
+    ml-row-down: "";
+}
+
+@import "default.rasi"

@@ -1,39 +1,34 @@
-/* config - Wallpaper select */
-
 configuration {
     modi:                        "drun";
     show-icons:                  true;
   	drun-display-format:         "{name}";
     hover-select:                true;
-    font:                        "JetBrains Mono Nerd Font 10";
+    font:                        "JetBrains Mono Nerd Font 12";
 }
-/* Config and colors ----------------------------------------------- */
 
 @import "default.rasi"
 
-/* Main Window ------------------------------------------------ */
 window {
-    width:                       100%;
-    height:                      100%;
-    margin:                      0px;
+    width:                       90%;
+    height:                      90%;
     padding:                     0px;
 }
 
-/* Main Box --------------------------------------------------- */
 mainbox {
     children:                    [ "entry", "listview" ];
     background-color:            transparent;
+    orientation:                 vertical;
 
     spacing:                     24px;
     margin:                      0px;
-    padding:                     64px;
+    padding:                     16px;
 }
 
 entry {
     background-color:            @shade-bg;
     text-color:                  @text;
-    border-radius:               12px;
-    padding:                     14px;
+    border-radius:               2px;
+    padding:                     4px 8px;
     placeholder:                 "Search...";
     placeholder-color:           @text;
     cursor:                      text;
@@ -41,9 +36,8 @@ entry {
 }
 
 
-/* ---- List ---- */
 listview {
-    columns:                     4;
+    columns:                     5;
     lines:                       4;
     cycle:                       true;
     dynamic:                     true;
@@ -61,10 +55,9 @@ listview {
     padding:                     0px;
 }
 
-/* Elements --------------------------------------------------- */
 element {
     cursor:                      pointer;
-    border-radius:               36px;
+    border-radius:               3px;
     background-color:            transparent;
     text-color:                  @foreground;
     orientation:                 vertical;
@@ -80,4 +73,9 @@ element-icon {
     text-color:                  inherit;
     size:                        26%;
     cursor:                      inherit;
+}
+
+element-text {
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
 }
