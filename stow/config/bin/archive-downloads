@@ -1,0 +1,36 @@
+#!/bin/bash
+
+
+cd ~/Downloads
+
+mkdir -p ~/Downloads/Archive
+
+month_names=(
+    "01_January"
+    "02_February"
+    "03_March"
+    "04_April"
+    "05_May"
+    "06_June"
+    "07_July"
+    "08_August"
+    "09_September"
+    "10_October"
+    "11_November"
+    "12_December"
+)
+
+for file in *; do
+    [[ "$file" == *.part ]] && continue
+    [[ "$file" == Archive ]] && continue
+
+    file_date=$(stat -c %y "$file" | awk '{ print $1 }')
+    arr_date=(${file_date//-/ })
+
+    month_index=$((10#${arr_date[1]} - 1))
+    mkdir -p ~/Downloads/Archive/${arr_date[0]}/${month_names[$month_index]}
+    mv "$file" ~/Downloads/Archive/${arr_date[0]}/${month_names[$month_index]}
+done
+
+
+
