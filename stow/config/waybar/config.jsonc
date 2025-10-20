@@ -17,25 +17,49 @@
         "tooltip": false,
         "interval": 10,
         // "format-ethernet": "{bandwidthDownBytes}   {bandwidthUpBytes}    ",
-        "format-ethernet": " ",
+        "format-ethernet": "",
         "interface": "e*",
-        "format-disconnected": "󰖪 "
+        "format-disconnected": "󰖪"
     },
 
     "network#full": {
         "tooltip": false,
         "interval": 10,
-        "format-ethernet": "{bandwidthDownBytes}   {bandwidthUpBytes}    ",
+        "format-ethernet": "{bandwidthDownBytes}   {bandwidthUpBytes}   ",
         "interface": "e*",
         "format-disconnected": "󰖪 "
     },
 
     "tray":{
         "icon-size":18,
-        "spacing": 10
+        "spacing": 8
     },
 
     "clock": {
+        "format": " {:%H:%M}",
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode"          : "year",
+            "mode-mon-col"  : 3,
+            "weeks-pos"     : "right",
+            "on-scroll"     : 1,
+            "format": {
+                "months":     "<span color='#BF616A'><b>{}</b></span>",
+                "days":       "<span color='#FAE3B0'><b>{}</b></span>",
+                "weeks":      "<span color='#89DCEB'><b>W{}</b></span>",
+                "weekdays":   "<span color='#F8BD96'><b>{}</b></span>",
+                "today":      "<span color='#F28FAD'><b><u>{}</u></b></span>"
+            }
+        },
+        "actions":  {
+            "on-click-right": "mode",
+            "on-scroll-up": "tz_up",
+            "on-scroll-down": "tz_down",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
+    },
+    "clock#full": {
         "format": " {:%H:%M  %d-%m-%Y}",
         "tooltip-format": "<tt>{calendar}</tt>",
         "calendar": {
@@ -75,7 +99,7 @@
 
     "custom/media": {
         "format": "{}",
-        "max-length": 45,
+        "max-length": 80,
         "exec": "$HOME/.config/waybar/scripts/media.py --player chromium",
         "return-type": "json",
         "on-click": "playerctl play-pause",
@@ -86,33 +110,28 @@
     },
 
     "hyprland/workspaces": {
-        "format": "{name} {icon}",
-        //"format": " {icon} ",
         "show-special": false,
-        // "on-click": "activate",
-        // "on-scroll-up": "hyprctl dispatch workspace e+1",
-        // "on-scroll-down": "hyprctl dispatch workspace e-1",
         "all-outputs": true,
         "sort-by-number": true,
-        "format-icons": {
-            "1": " ",
-            "2": " ",
-            "3": " ",
-            "4": " ",
-            "5": " ",
-            "6": " ",
-            "7": " ",
-            "8": "󰸳 ",
-            "9": " ",
-            "10": "󰃀 ",
-        "focused": "",
-        "default": "",
+        "format": "{icon} {windows}",
+        "format-window-separator": " ",
+        "window-rewrite-default": "",
+        "window-rewrite": {
+            "title<.*youtube.*firefox.*>": "",
+            "title<.*youtube.*music.*>": "",
+            "class<firefox>": "",
+            "title<.*whatsapp.*>": "",
+            "class<.*term.*>": "",
+            "class<.*steam.*>": "",
+            "class<.*thunar.*>": "",
+            "class<.*gpt.*>": "",
+            "class<chrom.*>": "",
         },
     },
 
     "custom/notification": {
         "tooltip": false,
-        "format": "{icon}",
+        "format": "",
         "format-icons": {
             "notification": "<span foreground='cyan'><sup></sup></span>",
             "none": "",
@@ -123,12 +142,8 @@
             "dnd-inhibited-notification": "<span foreground='cyan'><sup></sup></span>",
             "dnd-inhibited-none": ""
         },
-        "return-type": "json",
-        "exec-if": "which swaync-client",
-        "exec": "swaync-client -swb",
-        "on-click": "swaync-client -t -sw",
-        "on-click-right": "swaync-client -d -sw",
-        "escape": true
+        "on-click": "makoctl restore",
+        "on-click-right": "makoctl dismiss --all"
     },
 
     "custom/nvidia": {
@@ -137,23 +152,17 @@
         "format": "{text}",
         "tooltip": true,
         "interval": 1,
-        "max-length": 5
+        "max-length": 6
     },
 
     "custom/launcher":{
         "format": "",
-        "on-click": "pkill rofi; rofi -show drun -modi drun,calc,filebrowser",
-        "on-click-right": "killall rofi"
+        "on-click": "omarchy-menu"
     },
 
     "custom/fullscreen":{
         "format": "{}",
         "exec": "$HOME/.config/system_scripts/is_fullscreen.sh",
         "interval": 1
-    },
-
-    "custom/power":{
-        "format": "",
-        "on-click": "$HOME/.config/system_scripts/shutdown_menu.sh",
-    },
+    }
 }

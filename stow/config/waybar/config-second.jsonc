@@ -2,8 +2,8 @@
 	"layer": "top",
     "include": "~/.config/waybar/config.jsonc",
     "output": "DP-2",
-    "height": 39,
-	"modules-left": ["cpu","memory","custom/nvidia", "network"],
+    "height": 30,
+	"modules-left": ["cpu", "memory", "custom/nvidia", "network"],
     "modules-center": ["custom/media"],
 	"modules-right": ["custom/fullscreen", "pulseaudio", "clock"],
 }
