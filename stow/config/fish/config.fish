@@ -123,3 +123,8 @@ zoxide init fish --cmd cd | source
 starship init fish | source
 
 select_venv
+
+# test for existence of local.fish file
+if test -f local.fish
+  source local.fish
+end
