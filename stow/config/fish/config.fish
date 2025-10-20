@@ -41,7 +41,7 @@ bind \cR search_history
 
 # Custom functions
 function search_history
-    set cmd (history | fzf)
+    set cmd (history | fzf --no-sort --exact --smart-case)
     if test -n "$cmd"
         commandline -r -- $cmd
         # commandline -f execute
