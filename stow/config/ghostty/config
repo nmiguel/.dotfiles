@@ -1,0 +1,30 @@
+# --- Startup ---
+command = tmux
+
+# --- Appearance ---
+confirm-close-surface = false
+
+# --- Fonts ---
+font-family = CommitMono
+font-feature = liga=1
+font-size = 16
+
+# --- Cursor ---
+background = 131a21
+foreground = e0e0e0
+background-opacity = 0.75
+
+# This has the side effect of making the neovim bar have multiple colors
+# background-opacity-cells = true
+
+# --- Mouse ---
+mouse-scroll-multiplier = 0.5
+mouse-hide-while-typing = true
+
+# --- Window Padding ---
+window-padding-x = 10
+window-padding-y = 1
+
+# --- Other ---
+link-url = true
+link-previews = true
