@@ -1,3 +1,14 @@
+palette = "custom"
+
+[palettes.custom]
+black = "#5C6773"
+red = "#FF3333"
+green = "#BAE67E"
+yellow = "#FFCC66"
+blue = "#5CCFE6"
+white = "#CBCCC6"
+purple = "#D4BFFF"
+
 [cmd_duration]
 min_time = 500
 show_milliseconds = true
@@ -23,6 +34,7 @@ symbol = " "
 
 [directory]
 read_only = " 󰌾"
+style = "bold blue"
 
 [docker_context]
 symbol = " "
