@@ -1,0 +1,25 @@
+# Cache files
+.cache/***
+**cache**
+
+# Game Libraries
+/.local/share/Steam/***
+/.steam/***
+/.config/unity**
+
+# Python virtual environments
+venv/***
+.venv/***
+__pycache__/***
+
+# Node.js dependencies
+node_modules/***
+
+# Rust
+target/***
+/.cargo/***
+
+# Other junk
+.Trash/***
+*.tmp
+*~
