@@ -1,21 +1,16 @@
 # --- Startup ---
 command = tmux
 
-# --- Appearance ---
-confirm-close-surface = false
-
 # --- Fonts ---
 font-family = CommitMono
 font-feature = liga=1
 font-size = 16
 
-# --- Cursor ---
-background = 131a21
-foreground = e0e0e0
-background-opacity = 0.75
+adjust-underline-thickness = 1
+adjust-cursor-thickness = 1
+adjust-box-thickness = 1
 
-# This has the side effect of making the neovim bar have multiple colors
-# background-opacity-cells = true
+
 
 # --- Mouse ---
 mouse-scroll-multiplier = 0.5
@@ -28,3 +23,20 @@ window-padding-y = 1
 # --- Other ---
 link-url = true
 link-previews = true
+confirm-close-surface = false
+shell-integration = fish
+
+# --- Appearance ---
+# theme = Atom One Dark
+# theme = Blue Dolphin
+theme = TokyoNight Moon
+# theme = Catppuccin Frappe
+cursor-color = #abb2bf
+selection-background = #323844
+selection-foreground = #abb2bf
+background = #131a21
+foreground = #e0e0e0
+background-opacity = 0.75
+
+# This has the side effect of making the neovim bar have multiple colors
+# background-opacity-cells = true
