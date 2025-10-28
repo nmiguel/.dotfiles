@@ -6,6 +6,8 @@ abbr docker-compose "docker compose"
 abbr exp "nohup xdg-open . >/dev/null 2>&1 & disown"
 abbr wiztree "sudo ncdu / --exclude /mnt"
 abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
+abbr lg lazygit
+abbr ld lazydocker
 
 function ls
     eza -lh --group-directories-first --icons=auto $argv
@@ -47,6 +49,12 @@ function search_history
         # commandline -f execute
     end
 end
+
+function multicd
+    echo cd (string repeat -n (math (string length -- $argv[1]) - 1) ../)
+end
+
+abbr --add dotdot --regex '^\.\.+$' --function multicd
 
 function notes
     cd ~/projects/personal/notes
