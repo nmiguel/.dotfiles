@@ -1,4 +1,5 @@
 set fish_greeting
+set -g fish_key_bindings fish_vi_key_bindings
 
 # Aliases
 abbr v nvim
@@ -39,7 +40,8 @@ end
 # Key bindings (for autosuggestions, requires a fish autosuggestions plugin)
 bind \cH backward-kill-word
 bind \cY accept-autosuggestion
-bind \cR search_history
+bind \cR  search_history
+bind --mode insert \cR search_history
 
 # Custom functions
 function search_history
