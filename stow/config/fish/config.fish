@@ -126,10 +126,8 @@ add_to_path ~/.cargo/bin
 add_to_path ~/.config/bin
 add_to_path ~/go/bin
 
-# Zoxide initialization for fish
+# Initialize tools
 zoxide init fish --cmd cd | source
-
-# Starship prompt initialization for fish
 starship init fish | source
 
 select_venv
@@ -138,3 +136,16 @@ select_venv
 if test -f local.fish
   source local.fish
 end
+
+# Reloads fish in the root of the project or the closest local.fish file
+function reload
+  set pwd (pwd)
+  for i in (seq 5)
+    if test -f local.fish || test -d .git
+      fish -C "cd $pwd"
+      break
+    end
+    cd ..
+  end
+end
+
