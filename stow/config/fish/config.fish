@@ -38,8 +38,8 @@ function select_venv
 end
 
 # Key bindings (for autosuggestions, requires a fish autosuggestions plugin)
-bind \cH backward-kill-word
-bind \cY accept-autosuggestion
+bind --mode insert \cH backward-kill-word
+bind --mode insert \cY accept-autosuggestion
 bind \cR  search_history
 bind --mode insert \cR search_history
 
