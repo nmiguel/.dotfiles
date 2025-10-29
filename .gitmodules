@@ -2,7 +2,3 @@
     path = stow/config/nvim
 	url = https://github.com/nmiguel/nvim-config
 
-[submodule "wezterm"]
-    path = stow/config/wezterm
-	url = https://github.com/nmiguel/wezterm
-
