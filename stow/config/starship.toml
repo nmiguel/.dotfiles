@@ -86,7 +86,7 @@ symbol = " "
 symbol = " "
 
 [hostname]
-ssh_symbol = " "
+disabled = true
 
 [java]
 symbol = " "
@@ -197,3 +197,6 @@ symbol = " "
 
 [zig]
 symbol = " "
+
+[username]
+disabled = true
