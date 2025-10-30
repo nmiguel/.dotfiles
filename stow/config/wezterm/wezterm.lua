@@ -46,8 +46,8 @@ config.background = {
 	},
 }
 
-config.color_scheme = "BlueDolphin"
-config.colors = require("./theme")
+config.color_scheme = "Tokyo Night Moon"
+-- config.colors = require("./theme")
 
 config.show_new_tab_button_in_tab_bar = false
 
