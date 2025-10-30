@@ -113,18 +113,10 @@ set -gx FZF_DEFAULT_OPTS "
 "
 
 
-
-function add_to_path
-  set -l path $argv[1]
-  if test -d $path
-    set -gx PATH $path $PATH
-  end
-end
-
-add_to_path ~/.local/bin
-add_to_path ~/.cargo/bin
-add_to_path ~/.config/bin
-add_to_path ~/go/bin
+fish_add_path ~/.local/bin
+fish_add_path ~/.cargo/bin
+fish_add_path ~/.config/bin
+fish_add_path ~/go/bin
 
 # Initialize tools
 zoxide init fish --cmd cd | source
