@@ -89,8 +89,8 @@ function bind_dollar
 end
 
 function fish_user_key_bindings
-    bind ! bind_bang
-    bind '$' bind_dollar
+    bind --mode insert ! bind_bang
+    bind --mode insert '$' bind_dollar
 end
 
 
@@ -113,10 +113,10 @@ set -gx FZF_DEFAULT_OPTS "
 "
 
 
-fish_add_path ~/.local/bin
-fish_add_path ~/.cargo/bin
-fish_add_path ~/.config/bin
-fish_add_path ~/go/bin
+fish_add_path --path ~/.local/bin
+fish_add_path --path ~/.cargo/bin
+fish_add_path --path ~/.config/bin
+fish_add_path --path ~/go/bin
 
 # Initialize tools
 zoxide init fish --cmd cd | source

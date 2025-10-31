@@ -4,3 +4,4 @@ stow/config/omarchy/current/background
 stow/config/omarchy/current/theme
 scripts/packages/aur_bak*
 scripts/packages/pacman_bak*
+stow/config/fish/fish_variables
