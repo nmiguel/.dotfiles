@@ -42,3 +42,10 @@ else
     tmux switch-client -t $selected_name
 fi
 
+# Kill tmux sessions whose names are numbers only
+tmux ls 2>/dev/null \
+  | cut -d: -f1 \
+  | grep -E '^[0-9]+$' \
+  | while read -r s; do
+        tmux kill-session -t "$s"
+    done
