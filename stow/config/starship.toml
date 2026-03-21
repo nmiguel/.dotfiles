@@ -87,6 +87,7 @@ symbol = " "
 
 [hostname]
 ssh_only = true
+format = "[$ssh_symbol]($style) "
 
 [java]
 symbol = " "
