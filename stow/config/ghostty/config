@@ -40,3 +40,7 @@ background-opacity = 0.75
 
 # This has the side effect of making the neovim bar have multiple colors
 # background-opacity-cells = true
+
+clipboard-read = allow
+clipboard-write = allow
+copy-on-select = clipboard
