@@ -22,13 +22,7 @@ SOURCE_ETC="/etc/"
 
 # Package list destination
 
-# --- DESTINATION ---
-# !! CHOOSE ONE destination and comment out the other !!
-
-
-# Option 1: Local secondary drive
 DEST_ROOT="/mnt/data/tower_backup"
-
 # Option 2: Network Raspberry Pi (make sure SSH keys are set up!)
 # DEST_ROOT="user@raspberry-pi:/path/to/storage/"
 

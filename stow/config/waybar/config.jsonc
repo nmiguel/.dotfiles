@@ -118,10 +118,11 @@
         "window-rewrite-default": "",
         "window-rewrite": {
             "title<.*youtube.*firefox.*>": "",
-            "title<.*youtube.*music.*>": "",
+            "class<.*youtube.*music.*>": "",
             "class<firefox>": "",
             "title<.*whatsapp.*>": "",
             "class<.*term.*>": "",
+            "class<.*ghostty.*>": "󱙝",
             "class<.*steam.*>": "",
             "class<.*thunar.*>": "",
             "class<.*gpt.*>": "",
