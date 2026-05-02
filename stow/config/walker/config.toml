@@ -1,5 +1,5 @@
 close_when_open = true
-theme = "omarchy-default"
+theme = "noctalia"
 theme_base = []
 theme_location = ["~/.local/share/omarchy/default/walker/themes/"]
 hotreload_theme = true
