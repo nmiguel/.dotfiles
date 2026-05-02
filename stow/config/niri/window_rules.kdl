@@ -1,0 +1,80 @@
+window-rule {
+    geometry-corner-radius 8
+    clip-to-geometry true
+    draw-border-with-background false
+    opacity 0.95
+
+    background-effect {
+        xray true
+        blur true
+        // saturation 3
+    }
+}
+
+window-rule {
+    match is-active=true
+    opacity 0.98
+}
+// Open the Firefox picture-in-picture player as floating by default.
+window-rule {
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-on-output "DP-2"
+    // open-floating true
+    open-focused false
+    // default-floating-position x=32 y=32 relative-to="top-left"
+    // default-column-width { proportion 0.3; }
+    default-window-height { proportion 0.3; }
+}
+
+// Set the overview wallpaper on the backdrop.
+layer-rule {
+  match namespace="^noctalia-overview*"
+  place-within-backdrop true
+}
+
+// Dialogs window rule
+window-rule {
+    match app-id="confirm"
+    // match app-id="pavucontrol"
+    match app-id="blueman"
+    match app-id="nm-connection-editor"
+    match app-id="easyeffects"
+    match app-id="xdg-desktop-portal-gtk"
+    match app-id="ghostty_journalctl"
+    match app-id="satty"
+    match app-id="thunar" title="Rename \".*\""
+    open-floating true
+    default-column-width { proportion 0.45; }
+    default-window-height { proportion 0.45; }
+}
+
+// Startup workspaces
+window-rule {
+    match title=r#"Ghostty$"# at-startup=true
+    open-on-workspace "code"
+    default-column-width { proportion 1.0; }
+}
+window-rule {
+    match app-id=r#"firefox$"# at-startup=true
+    open-on-workspace "web"
+    default-column-width { proportion 1.0; }
+}
+
+window-rule {
+    match title=r#"Steam$"# at-startup=true
+    open-on-workspace "games"
+    default-column-width { proportion 1.0; }
+}
+
+window-rule {
+    match app-id=r#"com.github.th_ch.youtube_music"# at-startup=true
+    match title=r#"web.whatsapp.com"# at-startup=true
+    open-on-workspace "media"
+    default-column-width { proportion 1.0; }
+}
+
+window-rule {
+    match app-id=r#"chrome-chatgpt.com__-Default"# at-startup=true
+    open-on-workspace "ai"
+    default-column-width { proportion 1.0; }
+}

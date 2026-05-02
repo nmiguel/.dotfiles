@@ -1,0 +1,86 @@
+binds {
+    Mod+Space { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
+    Mod+R { spawn-sh "qs -c noctalia-shell ipc call controlCenter toggle"; }
+    Mod+Comma { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
+
+    Mod+slash { show-hotkey-overlay; }
+    Mod+Return { spawn "ghostty"; }
+    Mod+BackSpace { close-window; }
+    Mod+E { spawn "thunar"; }
+    Mod+V { toggle-window-floating; }
+    Mod+Shift+V { spawn-sh "cliphist list | rofi -dmenu | cliphist decode | wl-copy && wtype -M ctrl -k v -m ctrl"; }
+    Mod+B { spawn "firefox"; }
+    Mod+F { switch-preset-column-width; }
+    // Mod+R { spawn "omarchy-menu"; }
+    // Mod+Space { spawn "walker" "-p" "Launch…"; }
+    Mod+P { switch-focus-between-floating-and-tiling; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+T hotkey-overlay-title="Volume mixer" { spawn-sh "pkill rofi || true && rofi -modi \"vol:$HOME/.config/system_scripts/volume_mixer.py\" -show vol -kb-custom-1 \"Alt+Left\" -kb-custom-2 \"Alt+Right\""; }
+
+    Mod+Shift+S { screenshot; }
+
+    Mod+H { focus-column-or-monitor-left; }
+    Mod+L { focus-column-or-monitor-right; }
+    Mod+K { focus-window-or-workspace-up; }
+    Mod+J { focus-window-or-workspace-down; }
+
+    Mod+Shift+J { move-workspace-down; }
+    Mod+Shift+K { move-workspace-up; }
+    Mod+Shift+L { focus-monitor-right; }
+    Mod+Shift+H { focus-monitor-left; }
+
+    Mod+M { move-workspace-to-monitor-next; }
+
+    Mod+bracketleft { consume-or-expel-window-left;}
+    Mod+bracketright { consume-or-expel-window-right;}
+
+    Mod+Ctrl+H { move-column-left-or-to-monitor-left;}
+    Mod+Ctrl+L { move-column-right-or-to-monitor-right; }
+    Mod+Ctrl+K { move-window-up-or-to-workspace-up; }
+    Mod+Ctrl+J { move-window-down-or-to-workspace-down; }
+
+    Mod+Shift+Space { toggle-overview; }
+
+    Mod+Ctrl+bracketleft { move-column-to-workspace-down; }
+    Mod+Ctrl+bracketright { move-column-to-workspace-up; }
+
+    Mod+1 { focus-workspace "code"; }
+    Mod+2 { focus-workspace "web"; }
+    Mod+3 { focus-workspace "media"; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace "games"; }
+    Mod+6 { focus-workspace "ai"; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+0 { focus-workspace 10; }
+
+    Mod+Ctrl+1 { move-window-to-workspace "code"; }
+    Mod+Ctrl+2 { move-window-to-workspace "web"; }
+    Mod+Ctrl+3 { move-window-to-workspace "media"; }
+    Mod+Ctrl+4 { move-window-to-workspace 4; }
+    Mod+Ctrl+5 { move-window-to-workspace "games"; }
+    Mod+Ctrl+6 { move-window-to-workspace "ai"; }
+    Mod+Ctrl+7 { move-window-to-workspace 7; }
+    Mod+Ctrl+8 { move-window-to-workspace 8; }
+    Mod+Ctrl+9 { move-window-to-workspace 9; }
+    Mod+Ctrl+0 { move-window-to-workspace 10; }
+
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { focus-workspace-up; }
+    Mod+WheelScrollUp                { focus-column-right; }
+    Mod+WheelScrollDown                 { focus-column-left; }
+
+
+    Mod+A hotkey-overlay-title="Toggle Audio Output"  { spawn-sh "$HOME/.config/system_scripts/audio_switch.sh"; }
+    XF86AudioRaiseVolume { spawn-sh "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"; }
+    XF86AudioLowerVolume { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"; }
+    XF86AudioMute { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioMicMute { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+    XF86MonBrightnessUp { spawn-sh "brightnessctl s 10%+"; }
+    XF86MonBrightnessDown { spawn-sh "brightnessctl s 10%-"; }
+    XF86AudioNext { spawn-sh "playerctl next"; }
+    XF86AudioPrev { spawn-sh "playerctl previous"; }
+    XF86AudioPlay { spawn-sh "playerctl play-pause"; }
+    XF86AudioPause { spawn-sh "playerctl play-pause"; }
+}
