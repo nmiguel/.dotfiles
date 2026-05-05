@@ -1,3 +1,11 @@
+// DMS configuration at the start to make it overrideable
+include "dms/colors.kdl"
+// include "dms/layout.kdl"
+include "dms/alttab.kdl"
+// include "dms/binds.kdl"
+// include "dms/outputs.kdl"
+include "dms/cursor.kdl"
+
 prefer-no-csd
 
 output "DP-1" {
@@ -153,7 +161,7 @@ layout {
 
     focus-ring {
         on
-        active-gradient from="#80c8ff" to="rgba(0,0,0,0)" angle=135
+        // active-gradient from="#80c8ff" to="rgba(0,0,0,0)" angle=135
         inactive-color "rgba(0,0,0,0)"
     }
 
@@ -214,7 +222,8 @@ spawn-at-startup "thunar" "--daemon"
 spawn-at-startup "elephant"
 spawn-at-startup "openrgb" "-p" "Default"
 spawn-at-startup "xwayland-satellite"
-spawn-at-startup "qs" "-c" "noctalia-shell"
+// spawn-at-startup "qs" "-c" "noctalia-shell"
+spawn-at-startup "dms" "run"
 
 // spawn-at-startup "mako"
 // spawn-at-startup "waybar" "-c" "/home/nomig/.config/waybar/config-main.jsonc"

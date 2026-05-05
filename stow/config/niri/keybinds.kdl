@@ -1,14 +1,27 @@
 binds {
-    Mod+Space { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
+    // Mod+Space { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
+    Mod+Space hotkey-overlay-title="Application Launcher" {
+        spawn "dms" "ipc" "call" "spotlight" "toggle";
+    }
     Mod+R { spawn-sh "qs -c noctalia-shell ipc call controlCenter toggle"; }
-    Mod+Comma { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
+    // Mod+Comma { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
+    Mod+Comma hotkey-overlay-title="Settings" {
+        spawn "dms" "ipc" "call" "settings" "focusOrToggle";
+    }
+
+    Ctrl+Shift+Escape hotkey-overlay-title="Task Manager" {
+        spawn "dms" "ipc" "call" "processlist" "focusOrToggle";
+    }
 
     Mod+slash { show-hotkey-overlay; }
     Mod+Return { spawn "ghostty"; }
     Mod+BackSpace { close-window; }
     Mod+E { spawn "thunar"; }
     Mod+V { toggle-window-floating; }
-    Mod+Shift+V { spawn-sh "cliphist list | rofi -dmenu | cliphist decode | wl-copy && wtype -M ctrl -k v -m ctrl"; }
+    Mod+Shift+V hotkey-overlay-title="Clipboard Manager" {
+        spawn "dms" "ipc" "call" "clipboard" "toggle";
+    }
+    // Mod+Shift+V { spawn-sh "cliphist list | rofi -dmenu | cliphist decode | wl-copy && wtype -M ctrl -k v -m ctrl"; }
     Mod+B { spawn "firefox"; }
     Mod+F { switch-preset-column-width; }
     // Mod+R { spawn "omarchy-menu"; }

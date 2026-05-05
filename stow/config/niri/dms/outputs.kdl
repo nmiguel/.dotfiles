@@ -1,0 +1,7 @@
+
+output "DP-1" {
+    mode "2560x1440@164.999"
+    position x=1080 y=480
+    focus-at-startup
+}
+

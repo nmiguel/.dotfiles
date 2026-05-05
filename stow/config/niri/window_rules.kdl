@@ -43,6 +43,7 @@ window-rule {
     match app-id="ghostty_journalctl"
     match app-id="satty"
     match app-id="thunar" title="Rename \".*\""
+    match app-id="firefox" title="Log in or sign up | .*"
     open-floating true
     default-column-width { proportion 0.45; }
     default-window-height { proportion 0.45; }

@@ -1,0 +1,10 @@
+{
+  "volumeMixer": {
+    "enabled": true,
+    "showDeviceSelector": false
+  },
+  "calculator": {
+    "enabled": true,
+    "trigger": "="
+  }
+}
