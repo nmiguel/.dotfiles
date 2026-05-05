@@ -95,8 +95,11 @@ end
 
 
 # Environment variables
-set -gx EDITOR nvim
+set -gx EDITOR (which nvim)
+set -gx VISUAL $EDITOR
+set -gx SUDO_EDITOR $EDITOR
 set -gx MANPAGER "nvim +Man!"
+
 set -gx FZF_DEFAULT_OPTS "
   --color=fg:-1,fg+:#aac5e6,bg:-1,bg+:-1 \
   --color=hl:#5f87af,hl+:#5fd7ff,info:#afaf87,marker:#87ff00 \
