@@ -41,6 +41,7 @@ binds {
     Mod+Shift+K { move-workspace-up; }
     Mod+Shift+L { focus-monitor-right; }
     Mod+Shift+H { focus-monitor-left; }
+    Mod+semicolon { spawn-sh "niri_helper tile"; }
 
     Mod+M { move-workspace-to-monitor-next; }
 

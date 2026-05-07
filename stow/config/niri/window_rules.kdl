@@ -43,7 +43,7 @@ window-rule {
     match app-id="ghostty_journalctl"
     match app-id="satty"
     match app-id="thunar" title="Rename \".*\""
-    match app-id="firefox" title="Log in or sign up | .*"
+    match app-id="firefox" title="Log in or sign up .*"
     open-floating true
     default-column-width { proportion 0.45; }
     default-window-height { proportion 0.45; }
@@ -63,7 +63,9 @@ window-rule {
 
 window-rule {
     match title=r#"Steam$"# at-startup=true
+    match app-id=r#"steam$"# at-startup=true
     open-on-workspace "games"
+    open-focused false
     default-column-width { proportion 1.0; }
 }
 
@@ -71,11 +73,13 @@ window-rule {
     match app-id=r#"com.github.th_ch.youtube_music"# at-startup=true
     match title=r#"web.whatsapp.com"# at-startup=true
     open-on-workspace "media"
+    open-focused false
     default-column-width { proportion 1.0; }
 }
 
 window-rule {
     match app-id=r#"chrome-chatgpt.com__-Default"# at-startup=true
     open-on-workspace "ai"
+    open-focused false
     default-column-width { proportion 1.0; }
 }

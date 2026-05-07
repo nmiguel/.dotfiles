@@ -212,7 +212,7 @@ workspace "ai" {
     open-on-output "DP-2"
 }
 
-spawn-sh-at-startup "niri_helper -s DP-2"
+spawn-sh-at-startup "niri_helper -s DP-2 -e DP-1"
 
 
 spawn-at-startup "xdg-desktop-portal-gnome"
