@@ -10,6 +10,15 @@ abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
 abbr lg lazygit
 abbr ld lazydocker
 
+if type -q paru && not type -q yay
+    abbr yay paru
+    alias yay paru
+end
+if type -q yay && not type -q paru
+    abbr paru yay
+    alias paru yay
+end
+
 function ls
     eza -lh --group-directories-first --icons=auto $argv
 end
@@ -144,3 +153,8 @@ function reload
   end
 end
 
+# function fish_greeting
+#     if type -q fastfetch
+#         fastfetch
+#     end
+# end
