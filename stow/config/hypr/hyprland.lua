@@ -1,0 +1,8 @@
+require("config/keybinds")
+require("config/env")
+require("config/startup")
+require("config/settings")
+require("config/input")
+require("config/monitors")
+require("config/decorations")
+require("config/window_rules")

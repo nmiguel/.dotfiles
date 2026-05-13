@@ -3,7 +3,6 @@ binds {
     Mod+Space hotkey-overlay-title="Application Launcher" {
         spawn "dms" "ipc" "call" "spotlight" "toggle";
     }
-    Mod+R { spawn-sh "qs -c noctalia-shell ipc call controlCenter toggle"; }
     // Mod+Comma { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
     Mod+Comma hotkey-overlay-title="Settings" {
         spawn "dms" "ipc" "call" "settings" "focusOrToggle";
@@ -28,7 +27,7 @@ binds {
     // Mod+Space { spawn "walker" "-p" "Launch…"; }
     Mod+P { switch-focus-between-floating-and-tiling; }
     Mod+Shift+F { fullscreen-window; }
-    Mod+T hotkey-overlay-title="Volume mixer" { spawn-sh "pkill rofi || true && rofi -modi \"vol:$HOME/.config/system_scripts/volume_mixer.py\" -show vol -kb-custom-1 \"Alt+Left\" -kb-custom-2 \"Alt+Right\""; }
+    Mod+T hotkey-overlay-title="Volume mixer" { spawn-sh "pkill rofi || true && rofi -modi \"vol:$HOME/.config/bin/volume_mixer.py\" -show vol -kb-custom-1 \"Alt+Left\" -kb-custom-2 \"Alt+Right\""; }
 
     Mod+Shift+S { screenshot; }
 
