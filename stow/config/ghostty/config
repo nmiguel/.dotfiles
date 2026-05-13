@@ -16,7 +16,7 @@ mouse-hide-while-typing = true
 
 # --- Window Padding ---
 window-padding-x = 10
-window-padding-y = 1
+window-padding-y = 10
 
 # --- Other ---
 link-url = true
