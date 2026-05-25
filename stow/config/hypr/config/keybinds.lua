@@ -2,8 +2,6 @@ local vars = require("config.vars")
 local mod = vars.mod
 local scriptsDir = vars.scriptsDir
 
--- Vars
--- Example binds
 hl.bind(mod .. " + Return", hl.dsp.exec_cmd(vars.terminal))
 hl.bind(mod .. " + BackSpace", hl.dsp.window.close())
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("thunar"))
@@ -16,20 +14,43 @@ hl.bind(mod .. " + B", hl.dsp.exec_cmd(vars.browser))
 
 hl.bind(mod .. " + Space", hl.dsp.exec_cmd("dms ipc call spotlight toggle"))
 hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("dms ipc call settings focusOrToggle"))
+hl.bind(mod .. " + R", hl.dsp.exec_cmd("dms ipc call powermenu toggle"))
 
 hl.bind(mod .. " + F", function()
 	if hl.get_active_workspace().tiled_layout == "scrolling" then
-		hl.dispatch(hl.dsp.layout("colresize +conf"))
+		hl.dispatch(hl.dsp.layout("colresize -conf"))
 	else
 		hl.dsp.window.fullscreen({ mode = "maximized" })
 	end
+end)
+
+hl.bind(mod .. " + semicolon", function()
+	local curr_ws = hl.get_active_workspace()
+	if curr_ws == nil then
+		return
+	end
+	local windows = hl.get_workspace_windows(curr_ws)
+
+	if windows == nil or curr_ws.tiled_layout ~= "scrolling" then
+		return
+	end
+	local count = 0
+	for _ in pairs(windows) do
+		count = count + 1
+	end
+	local size = 1.0 / count
+
+	hl.dispatch(hl.dsp.layout("colresize all " .. size .. ""))
 end)
 
 hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
 
 hl.bind(mod .. " + M", hl.dsp.workspace.move({ monitor = "+1" }))
 hl.bind(mod .. " + S", hl.dsp.workspace.swap_monitors({ monitor1 = vars.monitor1, monitor2 = vars.monitor2 }))
-hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd("omarchy-cmd-screenshot"))
+hl.bind(
+	mod .. " + SHIFT + S",
+	hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | satty -f - -o "~/Pictures/Screenshots/%Y%m%d_%H%M%S.png"')
+)
 hl.bind(
 	mod .. " + T",
 	hl.dsp.exec_cmd(

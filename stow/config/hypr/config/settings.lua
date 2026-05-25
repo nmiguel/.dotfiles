@@ -1,16 +1,5 @@
 local vars = require("config.vars")
 
-local suppressMaximizeRule = hl.window_rule({
-	-- Ignore maximize requests from all apps. You'll probably like this.
-	name = "suppress-maximize-events",
-	match = { class = ".*" },
-
-	suppress_event = "maximize",
-})
-
--- Fix some dragging issues with XWayland
--- windowrule = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
-
 hl.config({ dwindle = {
 	smart_split = false,
 } })
@@ -25,20 +14,28 @@ hl.config({
 hl.config({
 	misc = {
 		initial_workspace_tracking = 0,
+        disable_splash_rendering = true,
+        disable_hyprland_logo = true,
 	},
 })
 
 hl.config({ scrolling = {
-	explicit_column_widths = "0.5,1.0",
+	explicit_column_widths = "0.5,0.985",
+	follow_min_visible = 1.0,
+    -- focus_fit_method = 0,
 } })
 
-hl.workspace_rule({ workspace = string.format("m[%s]", vars.monitor2), layout = "dwindle" })
-
-hl.on("window.open", function(window)
-    if window.title == "Picture-in-Picture" then
-        hl.dispatch(hl.dsp.window.resize({window = window, y = 580, x = 1050}))
-        end
-end)
+-- hl.on("workspace.move_to_monitor", function(ws, m)
+-- 	hl.notification.create({ text = m.name, duration = 2000 })
+-- 	local layout = "scrolling"
+-- 	if m.name == vars.monitor2 then
+-- 		hl.notification.create({ text = "Here", duration = 2000 })
+-- 		layout = "dwindle"
+-- 	end
+-- 	hl.workspace_rule({ workspace = ws.id, layout = layout })
+-- end)
+--
+hl.workspace_rule({ workspace = string.format("m[%s]", vars.monitor2), layout_opts = { direction = "up" } })
 
 -- cursor {
 --     no_warps = true,

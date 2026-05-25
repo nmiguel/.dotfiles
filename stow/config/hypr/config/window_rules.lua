@@ -1,5 +1,19 @@
 local vars = require("config.vars")
 
+local suppressMaximizeRule = hl.window_rule({
+	-- Ignore maximize requests from all apps. You'll probably like this.
+	name = "suppress-maximize-events",
+	match = { class = ".*" },
+
+	suppress_event = "maximize",
+})
+
+hl.on("window.open", function(window)
+	if window.title == "Picture-in-Picture" then
+		hl.dispatch(hl.dsp.window.resize({ window = window, y = -180, x = 0, relative = true }))
+	end
+end)
+
 local function apply_tag(tag, rules)
 	for _, rule in ipairs(rules) do
 		hl.window_rule({
@@ -202,6 +216,21 @@ tagged_rule("floating-window", {
 	center = true,
 	opacity = "1 override 1 override",
 	size = { "monitor_w*0.8", "monitor_h*0.8" },
+})
+
+apply_tag("pop-up", {
+	{
+		title = "^(Rename) .*$",
+		class = "^thunar$",
+	},
+})
+
+tagged_rule("pop-up", {
+	float = true,
+	opacity = "1 override 1 override",
+	size = { 400, 140 },
+	move = { "(cursor_x-(window_w*0.5))", "(cursor_y-(window_h*0.5))" },
+	-- focus = true,
 })
 
 -- Fullscreen idle inhibit

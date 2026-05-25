@@ -3,10 +3,13 @@ set -g fish_key_bindings fish_vi_key_bindings
 
 # Aliases
 abbr v nvim
+abbr sv "command sudo -e -s nvim"
 abbr docker-compose "docker compose"
 abbr exp "nohup xdg-open . >/dev/null 2>&1 & disown"
 abbr wiztree "sudo ncdu / --exclude /mnt"
 abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
+
+abbr --set-cursor=% hlexec "hyprctl dispatch 'hl.dsp.exec_cmd(\"%\")'"
 abbr lg lazygit
 abbr ld lazydocker
 

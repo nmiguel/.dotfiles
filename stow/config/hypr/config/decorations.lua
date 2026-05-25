@@ -1,3 +1,7 @@
+local vars = require("config.vars")
+local gaps_long = 20
+local gaps_small = 4
+
 hl.animation({
 	leaf = "global",
 	enabled = false,
@@ -5,18 +9,20 @@ hl.animation({
 
 hl.config({
 	general = {
-        layout = "scrolling",
-		border_size = 2,
+		layout = "scrolling",
+		border_size = 3,
 		gaps_in = 2,
-		gaps_out = { top = 4, bottom = 4, left = 20, right = 20},
+		-- gaps_out = { top = 4, bottom = 4, left = 20, right = 20 },
+        gaps_out = gaps_small,
 		resize_on_border = true,
 		allow_tearing = false,
 		col = {
-			active_border = {
-				colors = { "rgba(33ccffee)", "rgba(0,0,0,0)", "rgba(33ccffee)", "rgba(0,0,0,0)", "rgba(33ccffee)" },
-				angle = 35,
-			},
-			inactive_border = "rgba(0,0,0,0)",
+			active_border = "rgba(33ccffee)",
+			-- active_border = {
+			-- colors = { "rgba(33ccffee)", "rgba(0,0,0,0)", "rgba(33ccffee)", "rgba(0,0,0,0)", "rgba(33ccffee)" },
+			-- angle = 35,
+			-- },
+			inactive_border = "rgba(121516de)",
 		},
 	},
 })
@@ -29,8 +35,8 @@ hl.config({
 		inactive_opacity = 0.95,
 		fullscreen_opacity = 1.0,
 
-		dim_inactive = true,
-		dim_strength = 0.1,
+		-- dim_inactive = true,
+		-- dim_strength = 0.05,
 
 		shadow = {
 			-- enabled = false,
@@ -48,3 +54,15 @@ hl.config({
 		},
 	},
 })
+
+-- hl.workspace_rule({
+-- 	workspace = string.format("m[%s]", vars.monitor2),
+-- 	gaps_out = {
+-- 		top = gaps_long,
+-- 		bottom = gaps_long,
+-- 		left = gaps_small,
+-- 		right = gaps_small,
+-- 	},
+-- })
+
+hl.workspace_rule({ workspace = "w[tv1]", gaps_out = gaps_small })

@@ -4,7 +4,8 @@ local function startup_workspace_rule(opts)
 	local rule = hl.window_rule({
 		name = opts.name,
 		match = opts.match,
-		workspace = string.format("%s silent, monitor %s", opts.workspace, opts.monitor),
+		workspace = opts.workspace .. " silent",
+        monitor = opts.monitor .. " silent",
 	})
 
 	hl.exec_cmd(opts.command)
@@ -19,8 +20,10 @@ local function startup_workspace_rule(opts)
 end
 
 hl.on("hyprland.start", function()
-	hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
-	hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+	hl.exec_cmd("dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=Hyprland")
+	hl.exec_cmd("systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP")
+
+	hl.exec_cmd("dms run")
 
 	-- Utilities
 	hl.exec_cmd("nm-applet --indicator")
@@ -32,7 +35,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("thunar --daemon")
 	hl.exec_cmd("elephant")
 	hl.exec_cmd("openrgb -p Default")
-	hl.exec_cmd("dms run")
+	hl.exec_cmd("fcitx5")
 
 	-- Normal apps
 	hl.exec_cmd(vars.terminal, { workspace = "1", monitor = vars.monitor1 })
