@@ -47,7 +47,8 @@ hl.on("hyprland.start", function()
 		match = { class = "^(steam)$" },
 		workspace = "5",
 		monitor = vars.monitor1,
-		command = "steam",
+		command = "setpriv --ambient-caps -all steam",
+		-- command = "steam", -- hyprland leaks caps and steam does not allow caps to be inherited
 	})
 
 	startup_workspace_rule({

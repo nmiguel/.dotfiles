@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "configurations": [
+    {
+      "id": "profile_1781049015203_8gyhkv2",
+      "name": "default",
+      "outputs": {
+        "DP-2": {
+          "mode": "2560x1440@164.999",
+          "position": {
+            "x": 1080,
+            "y": 480
+          },
+          "scale": 1,
+          "transform": "Normal",
+          "vrr": false,
+          "disabled": false,
+          "hyprland": {}
+        },
+        "DP-3": {
+          "mode": "1920x1080@60.000",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "scale": 1,
+          "transform": "270",
+          "vrr": false,
+          "disabled": false,
+          "hyprland": {}
+        }
+      }
+    }
+  ]
+}
