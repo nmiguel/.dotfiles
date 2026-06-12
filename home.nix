@@ -135,6 +135,7 @@ in
       yazi
       uv
       mpv
+      pear-desktop # youtube-music
     ]
 
   );

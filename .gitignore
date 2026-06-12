@@ -7,3 +7,5 @@ scripts/packages/pacman_bak*
 stow/config/fish/fish_variables
 stow/home/.claude/
 /result
+/stow/config/hypr/.dms-backups
+/stow/config/hypr/dms

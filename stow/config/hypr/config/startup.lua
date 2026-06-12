@@ -56,7 +56,8 @@ hl.on("hyprland.start", function()
 		match = { class = "^(youtube-music)$" },
 		workspace = "3",
 		monitor = vars.monitor2,
-		command = "youtube-music",
+		command = "pear-desktop", --NIX name
+		-- command = "youtube-music",
 	})
 
 	startup_workspace_rule({
@@ -69,9 +70,17 @@ hl.on("hyprland.start", function()
 
 	startup_workspace_rule({
 		name = "startup-chatgpt",
-		match = { title = "^(ChatGPT)$" },
+		match = { title = "(Claude)$" },
 		workspace = "6",
 		monitor = vars.monitor2,
-		command = "chromium --app=https://chatgpt.com",
+		command = "chromium --app=https://claude.ai",
 	})
+
+	-- startup_workspace_rule({
+	-- 	name = "startup-chatgpt",
+	-- 	match = { title = "^(ChatGPT)$" },
+	-- 	workspace = "6",
+	-- 	monitor = vars.monitor2,
+	-- 	command = "chromium --app=https://chatgpt.com",
+	-- })
 end)
