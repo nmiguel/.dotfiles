@@ -14,7 +14,6 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     inputs.dms.nixosModules.dank-material-shell
-    inputs.dms.nixosModules.greeter
   ];
 
   # Bootloader.
@@ -214,16 +213,24 @@
     enableAudioWavelength = false; # Audio visualizer (cava)
     enableCalendarEvents = true; # Calendar integration (khal)
     enableClipboardPaste = true; # Pasting from the clipboard history (wtype)
-
   };
-  services.displayManager.dms-greeter = {
-    enable = true;
-    compositor = {
-      name = "hyprland";
-    };
-    configHome = "/home/nomig";
 
-    package = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+
+    autoNumlock = true;
+
+    extraPackages = with pkgs; [
+      sddm-astronaut
+    ];
+
+    theme = "sddm-astronaut-theme";
+    settings = {
+      Theme = {
+        Current = "sddm-astronaut-theme";
+      };
+    };
   };
 
   programs = {
@@ -247,6 +254,9 @@
     git
     hyprland
     hyprland-qtutils
+    (sddm-astronaut.override {
+      embeddedTheme = "pixel_sakura";
+    })
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
