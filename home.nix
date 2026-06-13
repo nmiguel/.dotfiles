@@ -24,10 +24,21 @@ in
   # home.file.".config/alacritty".source =
   #   config.lib.file.mkOutOfStoreSymlink "/home/nomig/projects/personal/.dotfiles/stow/config/alacritty";
 
-  home.file = configEntries // {
-    # TODO: handle this better, it's not detected by readDir as it's a submodule
-    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/stow/config/nvim";
-  };
+  home.file =
+    configEntries
+    // {
+      # TODO: handle this better, it's not detected by readDir as it's a submodule
+      ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/stow/config/nvim";
+    }
+    # Install icons
+    // builtins.listToAttrs (
+      map (name: {
+        name = ".local/share/icons/hicolor/128x128/apps/${name}";
+        value = {
+          source = ./icons + "/${name}";
+        };
+      }) (builtins.attrNames (builtins.readDir ./icons))
+    );
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -63,6 +74,14 @@ in
     enable = true;
     platformTheme.name = "gtk";
     style.name = "papirus-dark";
+  };
+
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Classic";
+    size = 24;
   };
 
   # Packages that should be installed to the user profile.
@@ -137,8 +156,14 @@ in
       mpv
       pear-desktop # youtube-music
     ]
-
   );
+  xdg.desktopEntries.claude = {
+    name = "Claude";
+    genericName = "AI Assistant";
+    exec = "chromium --app=https://claude.ai --class=claude";
+    icon = "claude";
+    comment = "Claude AI";
+  };
   services.easyeffects.enable = true;
 
 }
