@@ -5,7 +5,7 @@ local function startup_workspace_rule(opts)
 		name = opts.name,
 		match = opts.match,
 		workspace = opts.workspace .. " silent",
-        monitor = opts.monitor .. " silent",
+        monitor = opts.monitor,
 	})
 
 	hl.exec_cmd(opts.command)
@@ -70,7 +70,7 @@ hl.on("hyprland.start", function()
 
 	startup_workspace_rule({
 		name = "startup-chatgpt",
-		match = { title = "(Claude)$" },
+		match = { initial_title = "^(claude.ai_/)$" },
 		workspace = "6",
 		monitor = vars.monitor2,
 		command = "chromium --app=https://claude.ai",
