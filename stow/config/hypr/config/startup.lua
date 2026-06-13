@@ -1,86 +1,85 @@
 local vars = require("config.vars")
 
-local function startup_workspace_rule(opts)
-	local rule = hl.window_rule({
-		name = opts.name,
-		match = opts.match,
-		workspace = opts.workspace .. " silent",
-        monitor = opts.monitor,
-	})
+local UTILITIES = {
+    -- "dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=Hyprland",
+    -- "systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP",
+    -- "nm-applet --indicator",
+    -- "mako",
+    -- "ags",
+    -- "blueman-applet",
+    -- "hyprsunset",
+    -- "walker --gapplication-service",
+    "thunar --daemon",
+    -- "elephant",
+    -- "openrgb -p Default",
+    -- "fcitx5",
+}
 
-	hl.exec_cmd(opts.command)
+local MAIN_APPS = {
+    {cmd = vars.terminal, opts = { workspace = "1", monitor = vars.monitor1 }},
+    {cmd = vars.browser,  opts = { workspace = "2", monitor = vars.monitor2 }},
+}
 
-	hl.timer(function(timerOpts)
-		timerOpts.rule:set_enabled(false)
-	end, {
-		timeout = opts.timeout or 30000,
-		type = "oneshot",
-		rule = rule,
-	})
+local ROUTED_APPS = {
+    {
+        name    = "startup-steam",
+        match   = { class = "^(steam)$" },
+        workspace = "5",
+        monitor = vars.monitor1,
+        command = "setpriv --ambient-caps -all steam",
+    },
+    {
+        name    = "startup-youtube-music",
+        match   = { class = "^(youtube-music)$" },
+        workspace = "3",
+        monitor = vars.monitor2,
+        command = "pear-desktop",
+    },
+    {
+        name    = "startup-whatsapp",
+        match   = { title = "^(WhatsApp)$" },
+        workspace = "3",
+        monitor = vars.monitor2,
+        command = "chromium --app=https://web.whatsapp.com",
+    },
+    {
+        name    = "startup-claude",
+        match   = { initial_title = "^(claude.ai_/)$" },
+        workspace = "6",
+        monitor = vars.monitor2,
+        command = "chromium --app=https://claude.ai",
+    },
+}
+
+-- ─── logic ───────────────────────────────────────────────────────────────────
+
+local RULE_TIMEOUT = 30000
+
+local function launch_routed(app)
+    local rule = hl.window_rule({
+        name      = app.name,
+        match     = app.match,
+        workspace = app.workspace .. " silent",
+        monitor   = app.monitor,
+    })
+    hl.exec_cmd(app.command)
+    hl.timer(function()
+        rule:set_enabled(false)
+    end, { timeout = RULE_TIMEOUT, type = "oneshot" })
 end
 
+-- ─── startup ─────────────────────────────────────────────────────────────────
+
 hl.on("hyprland.start", function()
-	hl.exec_cmd("dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=Hyprland")
-	hl.exec_cmd("systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP")
+    for _, cmd in ipairs(UTILITIES) do
+        hl.exec_cmd(cmd)
+    end
 
-	hl.exec_cmd("dms run")
 
-	-- Utilities
-	hl.exec_cmd("nm-applet --indicator")
-	hl.exec_cmd("mako")
-	hl.exec_cmd("ags")
-	hl.exec_cmd("blueman-applet")
-	hl.exec_cmd("hyprsunset")
-	hl.exec_cmd("walker --gapplication-service")
-	hl.exec_cmd("thunar --daemon")
-	hl.exec_cmd("elephant")
-	hl.exec_cmd("openrgb -p Default")
-	hl.exec_cmd("fcitx5")
-
-	-- Normal apps
-	hl.exec_cmd(vars.terminal, { workspace = "1", monitor = vars.monitor1 })
-	hl.exec_cmd(vars.browser, { workspace = "2", monitor = vars.monitor2 })
-
-	-- Startup-routed apps
-	startup_workspace_rule({
-		name = "startup-steam",
-		match = { class = "^(steam)$" },
-		workspace = "5",
-		monitor = vars.monitor1,
-		command = "setpriv --ambient-caps -all steam",
-		-- command = "steam", -- hyprland leaks caps and steam does not allow caps to be inherited
-	})
-
-	startup_workspace_rule({
-		name = "startup-youtube-music",
-		match = { class = "^(youtube-music)$" },
-		workspace = "3",
-		monitor = vars.monitor2,
-		command = "pear-desktop", --NIX name
-		-- command = "youtube-music",
-	})
-
-	startup_workspace_rule({
-		name = "startup-whatsapp",
-		match = { title = "^(WhatsApp)$" },
-		workspace = "3",
-		monitor = vars.monitor2,
-		command = "chromium --app=https://web.whatsapp.com",
-	})
-
-	startup_workspace_rule({
-		name = "startup-chatgpt",
-		match = { initial_title = "^(claude.ai_/)$" },
-		workspace = "6",
-		monitor = vars.monitor2,
-		command = "chromium --app=https://claude.ai",
-	})
-
-	-- startup_workspace_rule({
-	-- 	name = "startup-chatgpt",
-	-- 	match = { title = "^(ChatGPT)$" },
-	-- 	workspace = "6",
-	-- 	monitor = vars.monitor2,
-	-- 	command = "chromium --app=https://chatgpt.com",
-	-- })
+    for _, app in ipairs(MAIN_APPS) do
+        hl.exec_cmd(app.cmd, app.opts)
+    end
+    for _, app in ipairs(ROUTED_APPS) do
+        launch_routed(app)
+    end
 end)
