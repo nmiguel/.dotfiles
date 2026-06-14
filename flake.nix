@@ -9,8 +9,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dms = {
-      url = "github:AvengeMedia/DankMaterialShell";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -27,14 +27,24 @@
       modules = [
         "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
 
-        ({ pkgs, ... }: {
-          environment.systemPackages = with pkgs; [
-            git
-            neovim
-            hyprland
-          ];
-        })
-      ];
+        modules = [
+          hosts/tower/configuration.nix
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+
+            home-manager.users.nomig = import ./home.nix;
+          }
+
+          # "${steam-pr}/nixos/modules/programs/steam.nix"
+          # {
+          #     disabledModules = [ "${nixpkgs}/nixos/modules/programs/steam.nix" ];
+          # }
+        ];
+      };
     };
   };
 }

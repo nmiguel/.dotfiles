@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   config,
   pkgs,
@@ -76,6 +77,8 @@ in
     style.name = "papirus-dark";
   };
 
+  programs.noctalia.enable = true;
+
   home.pointerCursor = {
     gtk.enable = true;
     x11.enable = true;
@@ -83,6 +86,10 @@ in
     name = "Bibata-Modern-Classic";
     size = 24;
   };
+
+  imports = [
+    inputs.noctalia.homeModules.default
+  ];
 
   # Packages that should be installed to the user profile.
   home.packages = (

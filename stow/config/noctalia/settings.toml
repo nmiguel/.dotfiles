@@ -1,0 +1,162 @@
+[bar.default]
+background_opacity = 0.79999998211860657
+center = [ "workspaces" ]
+end = [ "group:g2", "tray", "weather", "clock" ]
+margin_edge = 4
+margin_ends = 4
+start = [ "session", "launcher", "clipboard", "wallpaper", "group:g1" ]
+
+    [bar.default.monitor.DP-3]
+    center = [ "workspaces", "media" ]
+    end = [ "output_volume", "clock" ]
+    margin_edge = 4
+    margin_ends = 4
+    padding = 10
+    start = [ "notifications", "date" ]
+
+    [[bar.default.capsule_group]]
+    fill = "surface_variant"
+    id = "g1"
+    members = [ "sysmon", "ram" ]
+    opacity = 0.0
+    padding = 20.0
+
+    [[bar.default.capsule_group]]
+    fill = "surface_variant"
+    id = "g2"
+    members = [ "network_rx", "network_tx" ]
+    opacity = 0.0
+    padding = 20.0
+
+[control_center]
+shortcuts = []
+
+[location]
+address = "Lisbon, Portugal"
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@DP-3", "lockscreen-login-box@DP-2" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-2"]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 1280.0
+    cy = 1317.0
+    output = "DP-2"
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-2".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        input_opacity = 1.0
+        input_radius = 6.0
+        show_login_button = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-3"]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 540.0
+    cy = 1797.0
+    output = "DP-3"
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-3".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        input_opacity = 1.0
+        input_radius = 6.0
+        show_login_button = true
+
+[notification]
+monitors = [ "DP-3" ]
+
+[osd]
+monitors = [ "DP-3" ]
+position = "top_right"
+
+[shell]
+avatar_path = "/home/nomig/.face"
+settings_show_advanced = true
+show_location = false
+
+    [shell.panel]
+    launcher_categories = false
+    open_near_click_control_center = false
+    session_placement = "centered"
+
+    [[shell.session.actions]]
+    action = "shutdown"
+    enabled = true
+    shortcut = "5"
+    variant = "destructive"
+
+    [[shell.session.actions]]
+    action = "reboot"
+    enabled = true
+    shortcut = "4"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "lock"
+    enabled = true
+    shortcut = "1"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "logout"
+    enabled = true
+    shortcut = "2"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "lock_and_suspend"
+    enabled = true
+    shortcut = "3"
+    variant = "default"
+
+[theme]
+builtin = "Catppuccin"
+mode = "dark"
+wallpaper_scheme = "m3-content"
+
+[wallpaper]
+directory = "/home/nomig/Pictures/Wallpapers"
+per_monitor_directories = false
+transition = [ "fade" ]
+transition_on_startup = true
+
+    [wallpaper.last]
+    path = "/home/nomig/Pictures/Wallpapers/vertical/wallhaven-xelykl.jpg"
+
+    [wallpaper.monitor.DP-2]
+    directory = ""
+
+    [wallpaper.monitor.DP-3]
+    directory_dark = "/home/nomig/Pictures/wallpapers/vertical"
+    directory_light = "/home/nomig/Pictures/wallpapers/vertical"
+
+    [wallpaper.monitors.DP-2]
+    path = "/home/nomig/Pictures/Wallpapers/wallhaven_8ogod1.jpg"
+
+    [wallpaper.monitors.DP-3]
+    path = "/home/nomig/Pictures/Wallpapers/vertical/wallhaven-xelykl.jpg"
+
+[widget.media]
+hide_when_no_media = true
+
+[widget.workspaces]
+font_weight = 700
+hide_when_empty = false
+occupied_color = "surface_variant"
+scale = 0.90000000000000002

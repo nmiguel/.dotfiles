@@ -12,9 +12,12 @@ hl.bind(
 )
 hl.bind(mod .. " + B", hl.dsp.exec_cmd(vars.browser))
 
-hl.bind(mod .. " + Space", hl.dsp.exec_cmd("dms ipc call spotlight toggle"))
-hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("dms ipc call settings focusOrToggle"))
-hl.bind(mod .. " + R", hl.dsp.exec_cmd("dms ipc call powermenu toggle"))
+-- hl.bind(mod .. " + Space", hl.dsp.exec_cmd("dms ipc call spotlight toggle"))
+-- hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("dms ipc call settings focusOrToggle"))
+-- hl.bind(mod .. " + R", hl.dsp.exec_cmd("dms ipc call powermenu toggle"))
+hl.bind(mod .. " + Space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
+hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("noctalia msg settings-toggle"))
+hl.bind(mod .. " + R", hl.dsp.exec_cmd("noctalia msg panel-toggle session"))
 
 hl.bind(mod .. " + F", function()
 	if hl.get_active_workspace().tiled_layout == "scrolling" then

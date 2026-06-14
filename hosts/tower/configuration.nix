@@ -13,7 +13,6 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    inputs.dms.nixosModules.dank-material-shell
   ];
 
   # Bootloader.
@@ -188,7 +187,6 @@
     ];
     uid = 1000;
     packages = with pkgs; [
-      #  thunderbird
     ];
   };
 
@@ -197,23 +195,6 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  programs.dank-material-shell = {
-    enable = true;
-    package = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
-
-    systemd = {
-      enable = true; # Systemd service for auto-start
-      restartIfChanged = true; # Auto-restart dms.service when dms-shell changes
-    };
-
-    # Core features
-    enableSystemMonitoring = true; # System monitoring widgets (dgop)
-    enableVPN = false; # VPN management widget
-    enableDynamicTheming = true; # Wallpaper-based theming (matugen)
-    enableAudioWavelength = false; # Audio visualizer (cava)
-    enableCalendarEvents = true; # Calendar integration (khal)
-    enableClipboardPaste = true; # Pasting from the clipboard history (wtype)
-  };
 
   services.displayManager.sddm = {
     enable = true;
@@ -257,6 +238,7 @@
     (sddm-astronaut.override {
       embeddedTheme = "pixel_sakura";
     })
+    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
