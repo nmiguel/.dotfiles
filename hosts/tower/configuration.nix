@@ -10,10 +10,11 @@
 }:
 
 {
-  imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
-  ];
+  # Desktop shell(s): flip a module's flag to enable it. Both can run at
+  # once; neither is also valid. The modules themselves are wired in via
+  # this host's default.nix.
+  systemSettings.noctalia.enable = true;
+  systemSettings.dms.enable = false;
 
   # Bootloader.
   boot = {
@@ -238,7 +239,6 @@
     (sddm-astronaut.override {
       embeddedTheme = "pixel_sakura";
     })
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

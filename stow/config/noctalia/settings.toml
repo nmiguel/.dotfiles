@@ -137,7 +137,7 @@ transition = [ "fade" ]
 transition_on_startup = true
 
     [wallpaper.last]
-    path = "/home/nomig/Pictures/Wallpapers/vertical/wallhaven-xelykl.jpg"
+    path = "/home/nomig/Pictures/Wallpapers/wallhaven_3zgdd3.jpg"
 
     [wallpaper.monitor.DP-2]
     directory = ""
@@ -147,7 +147,7 @@ transition_on_startup = true
     directory_light = "/home/nomig/Pictures/wallpapers/vertical"
 
     [wallpaper.monitors.DP-2]
-    path = "/home/nomig/Pictures/Wallpapers/wallhaven_8ogod1.jpg"
+    path = "/home/nomig/Pictures/Wallpapers/wallhaven_3zgdd3.jpg"
 
     [wallpaper.monitors.DP-3]
     path = "/home/nomig/Pictures/Wallpapers/vertical/wallhaven-xelykl.jpg"
@@ -156,7 +156,7 @@ transition_on_startup = true
 hide_when_no_media = true
 
 [widget.workspaces]
-font_weight = 700
+font_weight = 400
 hide_when_empty = false
 occupied_color = "surface_variant"
-scale = 0.90000000000000002
+scale = 1.1000000000000001

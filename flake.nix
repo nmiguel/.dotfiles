@@ -14,6 +14,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # steam-pr = {
     #     url = "github:NixOS/nixpkgs/backport-524488-to-release-26.05";
     #     flake = false;
@@ -28,7 +33,7 @@
         "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
 
         modules = [
-          hosts/tower/configuration.nix
+          hosts/tower
 
           home-manager.nixosModules.home-manager
           {
