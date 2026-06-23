@@ -30,7 +30,7 @@ local ROUTED_APPS = {
     },
     {
         name    = "startup-youtube-music",
-        match   = { class = "^(com.github.th_ch.youtube_music)$" },
+        match   = { initial_class = "^(com.github.th_ch.youtube_music)$" },
         workspace = "3",
         monitor = vars.monitor2,
         command = "pear-desktop",

@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 {
   inputs,
   config,
@@ -10,11 +6,7 @@
 }:
 
 {
-  # Desktop shell(s): flip a module's flag to enable it. Both can run at
-  # once; neither is also valid. The modules themselves are wired in via
-  # this host's default.nix.
   systemSettings.noctalia.enable = true;
-  systemSettings.dms.enable = false;
 
   # Bootloader.
   boot = {
@@ -97,6 +89,17 @@
         '';
       };
     };
+  };
+
+  users.users.nomig.shell = "${pkgs.fish}/bin/fish";
+  programs.bash = {
+    interactiveShellInit = ''
+      # "check if parent process is not fish" && "make nested shells work properly"
+      if grep -qv fish /proc/$PPID/comm && [[ $SHLVL == [12] ]]; then
+          # set $SHELL for better integration with programs like nix shell, tmux, etc.
+          SHELL=${pkgs.fish}/bin/fish exec fish
+      fi
+    '';
   };
 
   # Use latest kernel.

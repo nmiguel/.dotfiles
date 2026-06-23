@@ -89,6 +89,8 @@ in
   home.packages = (
     with pkgs;
     [
+      claude-code
+
       bat
       blueman
       bluetui
