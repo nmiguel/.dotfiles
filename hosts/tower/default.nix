@@ -10,7 +10,13 @@
     ./hardware-configuration.nix
     ./configuration.nix
 
-    ../../modules/noctalia.nix
-    ../../modules/dms.nix
+    ../../modules/system/noctalia.nix
+    ../../modules/system/dms.nix
+    ../../modules/system/steam.nix
+    ../../modules/system/hyprland.nix
+    ../../modules/system/sddm.nix
+    ../../modules/system/plymouth.nix
+    ../../modules/system/audio.nix
+    ../../modules/system/fish.nix
   ];
 }

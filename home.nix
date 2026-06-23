@@ -41,14 +41,6 @@ in
       }) (builtins.attrNames (builtins.readDir ./icons))
     );
 
-  wayland.windowManager.hyprland = {
-    enable = true;
-    package = null;
-    portalPackage = null;
-    systemd.enable = false;
-    configType = "lua";
-  };
-
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
@@ -100,7 +92,6 @@ in
       libreoffice
       chromium
       dnsutils # `dig` + `nslookup`
-      easyeffects
       ethtool
       eza
       fastfetch
@@ -167,6 +158,5 @@ in
     icon = "claude";
     comment = "Claude AI";
   };
-  services.easyeffects.enable = true;
 
 }
