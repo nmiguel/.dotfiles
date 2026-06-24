@@ -18,5 +18,6 @@
     ../../modules/system/plymouth.nix
     ../../modules/system/audio.nix
     ../../modules/system/fish.nix
+    ../../modules/system/logitech.nix
   ];
 }

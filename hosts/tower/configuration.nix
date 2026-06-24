@@ -15,6 +15,7 @@
     plymouth.enable = true;
     audio.enable = true;
     fish.enable = true;
+    logitech.enable = true;
   };
 
   # Bootloader.
