@@ -25,31 +25,22 @@
     # };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
-    # Please replace my-nixos with your hostname
+  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations.tower = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
       modules = [
-        "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+        ./hosts/tower
 
-        modules = [
-          hosts/tower
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = { inherit inputs; };
 
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs; };
-
-            home-manager.users.nomig = import ./home.nix;
-          }
-
-          # "${steam-pr}/nixos/modules/programs/steam.nix"
-          # {
-          #     disabledModules = [ "${nixpkgs}/nixos/modules/programs/steam.nix" ];
-          # }
-        ];
-      };
+          home-manager.users.nomig = import ./home.nix;
+        }
+      ];
     };
   };
 }
