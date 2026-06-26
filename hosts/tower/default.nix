@@ -15,7 +15,7 @@
     ../../modules/system/steam.nix
     ../../modules/system/hyprland.nix
     ../../modules/system/sddm.nix
-    ../../modules/system/plymouth.nix
+    ../../modules/system/boot_options.nix
     ../../modules/system/audio.nix
     ../../modules/system/fish.nix
     ../../modules/system/logitech.nix

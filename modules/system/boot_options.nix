@@ -9,24 +9,24 @@
   ...
 }:
 let
-  cfg = config.systemSettings.plymouth;
+  cfg = config.systemSettings.boot_options;
 in
 {
-  options.systemSettings.plymouth.enable =
+  options.systemSettings.boot_options.enable =
     lib.mkEnableOption "the Plymouth boot splash and silent boot";
 
   config = lib.mkIf cfg.enable {
     boot = {
-      plymouth = {
-        enable = true;
-        theme = "lone";
-        themePackages = with pkgs; [
-          # By default we would install all themes
-          (adi1090x-plymouth-themes.override {
-            selected_themes = [ "lone" ];
-          })
-        ];
-      };
+      # plymouth = {
+      #   enable = true;
+      #   theme = "lone";
+      #   themePackages = with pkgs; [
+      #     # By default we would install all themes
+      #     (adi1090x-plymouth-themes.override {
+      #       selected_themes = [ "lone" ];
+      #     })
+      #   ];
+      # };
 
       # Enable "Silent boot"
       consoleLogLevel = 3;

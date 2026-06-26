@@ -1,11 +1,3 @@
--- Monitor layout for the `tower` host.
---
--- Host-specific: installed by the system to /etc/hypr/monitors.lua (see this
--- host's configuration.nix -> systemSettings.hyprland.monitorsFile) and loaded
--- from the shared dotfiles config/monitors.lua loader. The monitor *identities*
--- (vars.monitor1/2) still live in the shared config/vars.lua.
-local vars = require("config.vars")
-
 hl.monitor({
 	output = "DP-2",
 	mode = "2560x1440@165",

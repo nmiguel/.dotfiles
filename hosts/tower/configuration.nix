@@ -12,7 +12,7 @@
     hyprland.enable = true;
     hyprland.monitorsFile = ./monitors.lua;
     sddm.enable = true;
-    # plymouth.enable = true;
+    boot_options.enable = true;
     audio.enable = true;
     fish.enable = true;
     logitech.enable = true;
