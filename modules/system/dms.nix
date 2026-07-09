@@ -23,6 +23,10 @@ in
     lib.mkEnableOption "the DankMaterialShell desktop shell";
 
   config = lib.mkIf cfg.enable {
+    # Publish the active shell for the Hyprland config to branch on, mirroring
+    # the monitors.lua pattern. A Lua module so it can be read with dofile.
+    environment.etc."hypr/shell.lua".text = ''return "dms"'';
+
     programs.dank-material-shell = {
       enable = true;
       package = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;

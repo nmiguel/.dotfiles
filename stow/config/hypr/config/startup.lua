@@ -16,8 +16,8 @@ local UTILITIES = {
 }
 
 local MAIN_APPS = {
-    {cmd = vars.terminal, opts = { workspace = "1", monitor = vars.monitor1 }},
-    {cmd = vars.browser,  opts = { workspace = "2", monitor = vars.monitor2 }},
+    {cmd = vars.terminal, opts = { workspace = "1", monitor = vars.monitor_main }},
+    {cmd = vars.browser,  opts = { workspace = "2", monitor = vars.monitor_aux }},
 }
 
 local ROUTED_APPS = {
@@ -25,28 +25,28 @@ local ROUTED_APPS = {
         name    = "startup-steam",
         match   = { class = "^(steam)$" },
         workspace = "5",
-        monitor = vars.monitor1,
+        monitor = vars.monitor_main,
         command = "setpriv --ambient-caps -all steam",
     },
     {
         name    = "startup-youtube-music",
-        match   = { initial_class = "^(com.github.th_ch.youtube_music)$" },
-        workspace = "3",
-        monitor = vars.monitor2,
+        match   = { class = "^(com.github.th_ch.youtube_music)$" },
+        workspace = "4",
+        monitor = vars.monitor_aux,
         command = "pear-desktop",
     },
     {
         name    = "startup-whatsapp",
         match   = { title = "^(WhatsApp)$" },
         workspace = "3",
-        monitor = vars.monitor2,
+        monitor = vars.monitor_aux,
         command = "chromium --app=https://web.whatsapp.com",
     },
     {
         name    = "startup-claude",
         match   = { initial_title = "^(claude.ai_/)$" },
         workspace = "6",
-        monitor = vars.monitor2,
+        monitor = vars.monitor_aux,
         command = "chromium --app=https://claude.ai",
     },
 }

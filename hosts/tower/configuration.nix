@@ -7,7 +7,7 @@
 
 {
   systemSettings = {
-    noctalia.enable = true;
+    dms.enable = true;
     steam.enable = true;
     hyprland.enable = true;
     hyprland.monitorsFile = ./monitors.lua;

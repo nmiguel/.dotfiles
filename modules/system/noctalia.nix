@@ -20,6 +20,10 @@ in
     lib.mkEnableOption "the Noctalia desktop shell";
 
   config = lib.mkIf cfg.enable {
+    # Publish the active shell for the Hyprland config to branch on, mirroring
+    # the monitors.lua pattern. A Lua module so it can be read with dofile.
+    environment.etc."hypr/shell.lua".text = ''return "noctalia"'';
+
     environment.systemPackages = [
       inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];

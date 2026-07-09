@@ -83,6 +83,7 @@ in
     [
       claude-code
 
+      lua-language-server
       bat
       blueman
       bluetui

@@ -12,12 +12,24 @@ hl.bind(
 )
 hl.bind(mod .. " + B", hl.dsp.exec_cmd(vars.browser))
 
--- hl.bind(mod .. " + Space", hl.dsp.exec_cmd("dms ipc call spotlight toggle"))
--- hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("dms ipc call settings focusOrToggle"))
--- hl.bind(mod .. " + R", hl.dsp.exec_cmd("dms ipc call powermenu toggle"))
-hl.bind(mod .. " + Space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
-hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("noctalia msg settings-toggle"))
-hl.bind(mod .. " + R", hl.dsp.exec_cmd("noctalia msg panel-toggle session"))
+-- Which desktop shell is active is decided in the NixOS config
+-- (systemSettings.dms.enable / noctalia.enable), which writes the name to
+-- /etc/hypr/shell.lua. Mirrors the monitors.lua pattern. The file is absent
+-- when no shell is enabled, so guard the dofile.
+local ok, shell = pcall(dofile, "/etc/hypr/shell.lua")
+if not ok then
+	shell = nil
+end
+
+if shell == "dms" then
+	hl.bind(mod .. " + Space", hl.dsp.exec_cmd("dms ipc call spotlight toggle"))
+	hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("dms ipc call settings focusOrToggle"))
+	hl.bind(mod .. " + R", hl.dsp.exec_cmd("dms ipc call powermenu toggle"))
+elseif shell == "noctalia" then
+	hl.bind(mod .. " + Space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
+	hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("noctalia msg settings-toggle"))
+	hl.bind(mod .. " + R", hl.dsp.exec_cmd("noctalia msg panel-toggle session"))
+end
 
 hl.bind(mod .. " + F", function()
 	if hl.get_active_workspace().tiled_layout == "scrolling" then
@@ -49,7 +61,7 @@ end)
 hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
 
 hl.bind(mod .. " + M", hl.dsp.workspace.move({ monitor = "+1" }))
-hl.bind(mod .. " + S", hl.dsp.workspace.swap_monitors({ monitor1 = vars.monitor1, monitor2 = vars.monitor2 }))
+hl.bind(mod .. " + S", hl.dsp.workspace.swap_monitors({ monitor1 = vars.monitor_main, monitor2 = vars.monitor_aux }))
 hl.bind(
 	mod .. " + SHIFT + S",
 	hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | satty -f - -o "~/Pictures/Screenshots/%Y%m%d_%H%M%S.png"')

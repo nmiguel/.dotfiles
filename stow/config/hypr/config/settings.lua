@@ -35,7 +35,7 @@ hl.config({ scrolling = {
 -- 	hl.workspace_rule({ workspace = ws.id, layout = layout })
 -- end)
 --
-hl.workspace_rule({ workspace = string.format("m[%s]", vars.monitor2), layout_opts = { direction = "up" } })
+hl.workspace_rule({ workspace = string.format("m[%s]", vars.monitor_aux), layout_opts = { direction = "up" } })
 
 -- cursor {
 --     no_warps = true,

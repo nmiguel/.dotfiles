@@ -1,7 +1,14 @@
 local M = {}
 
-M.monitor1 = "DP-1"
-M.monitor2 = "DP-2"
+local monitors = require("config.monitors")
+
+M.monitor_main = monitors.main
+M.monitor_aux = monitors.aux
+-- hl.notification.create({ text = monitor_main, duration = 1000})
+
+-- M.monitor_main = "DP-3"
+-- M.monitor_aux = "DP-2"
+
 M.terminal = "ghostty"
 M.mod = "SUPER"
 M.mainMod = M.mod
