@@ -16,6 +16,7 @@
     audio.enable = true;
     fish.enable = true;
     logitech.enable = true;
+    jellyfin.enable = true;
   };
 
   # Bootloader.

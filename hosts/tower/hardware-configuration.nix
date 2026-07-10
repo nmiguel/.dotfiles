@@ -12,6 +12,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  boot.supportedFilesystems = [ "ntfs" ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/7fecf9f0-134b-48f1-8b7b-3ffef020308d";
@@ -28,6 +29,19 @@
    { device = "/dev/disk/by-uuid/6f86b97a-77db-4dc3-9413-562062a27bcf";
      fsType = "ext4";
    };
+
+  fileSystems."/mnt/data" =
+    { device = "/dev/disk/by-uuid/B64A8C654A8C2469";
+      fsType = "ntfs-3g";
+      # NTFS has no real Unix perms; they're synthesized from these masks.
+      # Without a mask ntfs-3g defaults to umask=077 (files 600 / dirs 700),
+      # so only uid=1000 can read. dmask=000/fmask=111 makes dirs 777 and
+      # files 666 — world read+write. Jellyfin (read) plus Radarr/Sonarr
+      # (write, to import into the library) all run as their own users with
+      # PrivateUsers sandboxing that blocks the shared `media` group, so the
+      # simplest reliable access here is via the world bits.
+      options = [ "rw" "uid=1000" "gid=100" "dmask=000" "fmask=111" "nofail" ];
+    };
 
   swapDevices = [ ];
 

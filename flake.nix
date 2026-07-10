@@ -25,22 +25,33 @@
     # };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
-    nixosConfigurations.tower = nixpkgs.lib.nixosSystem {
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+    let
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./hosts/tower
+    in
+    {
+      # NixOS hosts. Home-manager is wired in as a NixOS module; each host
+      # points nomig's home at its own home.nix.
+      nixosConfigurations.tower = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/tower
 
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.nixosModules.home-manager
+        ];
+      };
 
-          home-manager.users.nomig = import ./home.nix;
-        }
-      ];
+      # Standalone home-manager hosts (non-NixOS, e.g. Ubuntu). Build/apply with
+      #   nix run home-manager -- switch --flake .#morpheus   # first time
+      #   home-manager switch --flake .#morpheus              # thereafter
+      homeConfigurations.morpheus = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        extraSpecialArgs = { inherit inputs; };
+        modules = [ ./hosts/morpheus/home.nix ];
+      };
     };
-  };
 }

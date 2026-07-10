@@ -4,7 +4,10 @@
 # system configuration (which sets the systemSettings flags), and the shared
 # feature modules. The modules are imported here so their options exist
 # everywhere, but each stays inert until configuration.nix flips its flag.
-{ ... }:
+#
+# The host also owns its home-manager configuration, so different hosts can
+# point nomig's home at their own home.nix.
+{ inputs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -13,4 +16,9 @@
     # Auto-imports every feature module under modules/system.
     ../../modules/system
   ];
+
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.extraSpecialArgs = { inherit inputs; };
+  home-manager.users.nomig = import ./home.nix;
 }

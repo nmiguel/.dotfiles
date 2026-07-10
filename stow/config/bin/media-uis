@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# Open every media-stack web UI (Jellyfin, Jellyseerr, Radarr, Sonarr,
+# Transmission) as tabs in one browser window.
+
+# Browser launcher. Swap this out for whatever you use (e.g. "brave", "xdg-open").
+BROWSER="firefox"
+
+# Host running the stack. "localhost" when run on the tower itself; otherwise
+# point it at the tower's hostname/IP.
+HOST="localhost"
+
+# Service -> port map.
+JELLYFIN="http://$HOST:8096"
+SEERR="http://$HOST:5055"
+RADARR="http://$HOST:7878"
+SONARR="http://$HOST:8989"
+TRANSMISSION="http://$HOST:9091"
+PROWLARR="http://$HOST:9696"
+BAZARR="http://$HOST:6767"
+
+"$BROWSER" \
+    "$JELLYFIN" \
+    "$SEERR" \
+    "$RADARR" \
+    "$SONARR" \
+    "$TRANSMISSION" \
+    "$PROWLARR" \
+    "$BAZARR"
