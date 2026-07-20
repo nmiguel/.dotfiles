@@ -13,8 +13,7 @@ let
   cfg = config.userSettings.rust;
 in
 {
-  options.userSettings.rust.enable =
-    lib.mkEnableOption "the Rust development toolchain";
+  options.userSettings.rust.enable = lib.mkEnableOption "the Rust development toolchain";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
@@ -23,6 +22,7 @@ in
       rust-analyzer # LSP
       rustfmt # formatter
       clippy # linter
+      gcc
     ];
   };
 }

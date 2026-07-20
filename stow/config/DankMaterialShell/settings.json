@@ -480,19 +480,19 @@
     "dock": [],
     "notifications": [
       {
-        "name": "DP-2",
+        "name": "DP-3",
         "model": "LG FHD"
       }
     ],
     "osd": [
       {
-        "name": "DP-2",
+        "name": "DP-3",
         "model": "LG FHD"
       }
     ],
     "toast": [
       {
-        "name": "DP-2",
+        "name": "DP-3",
         "model": "LG FHD"
       }
     ]
@@ -616,7 +616,7 @@
       "maximizeDetection": true,
       "scrollEnabled": true,
       "scrollXBehavior": "column",
-      "scrollYBehavior": "workspace",
+      "scrollYBehavior": "none",
       "shadowIntensity": 0,
       "shadowOpacity": 60,
       "shadowColorMode": "text",
@@ -783,6 +783,9 @@
   "builtInPluginSettings": {
     "dms_settings_search": {
       "trigger": "?"
+    },
+    "dms_clipboard_search": {
+      "trigger": "cb"
     }
   },
   "clipboardEnterToPaste": false,

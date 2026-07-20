@@ -25,7 +25,7 @@ in
   config = lib.mkMerge [
     (lib.mkIf cfg.cli.enable {
       home.packages = with pkgs; [
-        codex
+        opencode
 
         bat
         ncdu

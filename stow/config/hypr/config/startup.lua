@@ -43,11 +43,13 @@ local ROUTED_APPS = {
         command = "chromium --app=https://web.whatsapp.com",
     },
     {
-        name    = "startup-claude",
-        match   = { initial_title = "^(claude.ai_/)$" },
+        name    = "startup-ai",
+        -- match   = { initial_title = "^(claude.ai_/)$" },
+		match = { title = "^(ChatGPT)$" },
         workspace = "6",
         monitor = vars.monitor_aux,
-        command = "chromium --app=https://claude.ai",
+        -- command = "chromium --app=https://claude.ai",
+		command = "chromium --app=https://chatgpt.com",
     },
 }
 

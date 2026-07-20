@@ -4,7 +4,7 @@ local monitors = require("config.monitors")
 
 M.monitor_main = monitors.main
 M.monitor_aux = monitors.aux
--- hl.notification.create({ text = monitor_main, duration = 1000})
+-- hl.notification.create({ text = M.monitor_main, duration = 1000})
 
 -- M.monitor_main = "DP-3"
 -- M.monitor_aux = "DP-2"
