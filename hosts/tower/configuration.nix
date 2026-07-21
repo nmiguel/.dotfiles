@@ -6,9 +6,10 @@
 }:
 
 {
+  modules.games.enable = true;
+
   systemSettings = {
     dms.enable = true;
-    steam.enable = true;
     hyprland.enable = true;
     hyprland.monitorsFile = ./monitors.lua;
     sddm.enable = true;

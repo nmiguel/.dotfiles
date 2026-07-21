@@ -1,4 +1,4 @@
-# Home-manager configuration for nomig on `morpheus`.
+# Home-manager configuration for coder on `morpheus`.
 #
 # morpheus is an Ubuntu machine (not NixOS), so home-manager runs in
 # standalone mode — it manages only this user's packages and dotfiles, not the
@@ -18,10 +18,10 @@
     # Shared feature modules.
     dotfiles.enable = true;
     # Point this at wherever the repo is checked out on morpheus if it differs.
-    # dotfiles.repoRoot = "/home/nomig/.dotfiles";
-    theming.enable = true;
+    # dotfiles.repoRoot = "/home/coder/.dotfiles";
+    theming.enable = false;
     packages.cli.enable = true;
-    packages.gui.enable = true;
+    packages.gui.enable = false;
 
     # Per-language development toolchains (see modules/user/<lang>.nix).
     python.enable = true;
@@ -30,13 +30,16 @@
     go.enable = true;
   };
 
-  home.username = "nomig";
-  home.homeDirectory = "/home/nomig";
+  home.username = "coder";
+  home.homeDirectory = "/home/coder";
   home.stateVersion = "25.11";
 
-  # Non-NixOS host: make home-manager set up session variables, XDG paths and
-  # make Nix-installed desktop apps show up in the Ubuntu launcher.
-  targets.genericLinux.enable = true;
+  # Keep shell/session integration for Ubuntu without installing GPU support on
+  # this SSH-only host.
+  targets.genericLinux = {
+    enable = true;
+    gpu.enable = false;
+  };
 
   # Let home-manager manage its own installation on this standalone host.
   programs.home-manager.enable = true;

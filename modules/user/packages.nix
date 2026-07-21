@@ -83,7 +83,6 @@ in
         grim
         localsend
         logiops
-        lutris
         nwg-displays
         nwg-look
         obs-studio
