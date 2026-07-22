@@ -22,6 +22,7 @@
     theming.enable = false;
     packages.cli.enable = true;
     packages.gui.enable = false;
+    desktop.enable = false;
 
     # Per-language development toolchains (see modules/user/<lang>.nix).
     python.enable = true;

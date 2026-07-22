@@ -4,7 +4,7 @@
 #   - `cli` is the portable terminal toolchain that makes sense on any Linux
 #     box (NixOS or not).
 #   - `gui` layers on the graphical desktop apps — browsers, editors, Wayland
-#     utilities, hardware tools — plus the Claude web-app launcher entry.
+#     utilities, and hardware tools.
 # Splitting them lets a headless or foreign-distro host take just the CLI set
 # while a full desktop (tower) enables both.
 {
@@ -97,14 +97,6 @@ in
         mpv
         pear-desktop # youtube-music
       ];
-
-      xdg.desktopEntries.claude = {
-        name = "Claude";
-        genericName = "AI Assistant";
-        exec = "chromium --app=https://claude.ai --class=claude";
-        icon = "claude";
-        comment = "Claude AI";
-      };
     })
   ];
 }
