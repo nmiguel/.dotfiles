@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Read monitor name, active workspace, and focus flag into arrays
 monitors=() workspaces=() focused=()

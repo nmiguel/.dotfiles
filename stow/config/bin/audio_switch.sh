@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 speakers=`pactl list short sinks | grep virtual_headphones_sink | awk 'BEGIN {FS="\t"}; {print $2}'`
 headphones=`pactl list short sinks | grep virtual_speakers_sink | awk 'BEGIN {FS="\t"}; {print $2}'`

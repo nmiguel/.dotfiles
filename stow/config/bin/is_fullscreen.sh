@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Get the ID of the currently focused workspace
 focused_ws=$(hyprctl -j monitors | jq -r '.[] | select(.focused == true).activeWorkspace.id')

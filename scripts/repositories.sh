@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Install build tools
 sudo pacman -S --needed --noconfirm base-devel

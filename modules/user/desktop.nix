@@ -20,6 +20,14 @@ in
       comment = "Claude AI";
     };
 
+    xdg.desktopEntries.chatgpt = {
+      name = "ChatGPT";
+      genericName = "AI Assistant";
+      exec = "chromium --app=https://chatgpt.com";
+      icon = "chatgpt";
+      comment = "ChatGPT";
+    };
+
     xdg.desktopEntries.whatsapp = {
       name = "WhatsApp";
       genericName = "WhatsApp";

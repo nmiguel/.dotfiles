@@ -27,6 +27,13 @@ in
     # the monitors.lua pattern. A Lua module so it can be read with dofile.
     environment.etc."hypr/shell.lua".text = ''return "dms"'';
 
+    environment.systemPackages = [ pkgs.papirus-icon-theme ];
+
+    systemd.user.services.dms.environment = {
+      QT_QPA_PLATFORMTHEME = "gtk3";
+      QS_ICON_THEME = "Papirus-Dark";
+    };
+
     programs.dank-material-shell = {
       enable = true;
       package = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;

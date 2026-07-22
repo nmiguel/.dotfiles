@@ -178,7 +178,7 @@
   "showWorkspaceName": false,
   "showWorkspacePadding": false,
   "workspaceScrolling": false,
-  "showWorkspaceApps": false,
+  "showWorkspaceApps": true,
   "workspaceDragReorder": true,
   "maxWorkspaceIcons": 10,
   "workspaceAppIconSizeOffset": 1,
@@ -246,7 +246,23 @@
   "runningAppsCurrentWorkspace": true,
   "runningAppsGroupByApp": false,
   "runningAppsCurrentMonitor": false,
-  "appIdSubstitutions": [],
+  "appIdSubstitutions": [
+    {
+      "pattern": "com.github.th_ch.youtube_music",
+      "replacement": "com.github.th-ch.youtube-music",
+      "type": "exact"
+    },
+    {
+      "pattern": "chrome-web.whatsapp.com__-Default",
+      "replacement": "whatsapp",
+      "type": "exact"
+    },
+    {
+      "pattern": "chrome-chatgpt.com__-Default",
+      "replacement": "chatgpt",
+      "type": "exact"
+    }
+  ],
   "centeringMode": "index",
   "clockDateFormat": "",
   "lockDateFormat": "",

@@ -37,8 +37,7 @@ in
 
     qt = {
       enable = true;
-      platformTheme.name = "gtk";
-      style.name = "papirus-dark";
+      platformTheme.name = "gtk3";
     };
 
     home.pointerCursor = {

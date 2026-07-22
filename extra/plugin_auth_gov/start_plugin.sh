@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 sudo systemctl start pcscd.service
 sudo systemctl status pcscd.service

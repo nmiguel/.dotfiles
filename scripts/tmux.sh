@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Install TPM
 tpm_dir="$HOME/.tmux/plugins/tpm"
