@@ -30,14 +30,14 @@ local ROUTED_APPS = {
 	},
 	{
 		name = "startup-youtube-music",
-		match = { class = "^(com.github.th_ch.youtube_music)$" },
-		workspace = "4",
+		match = { class = "^(com.github.th-ch.youtube-music)$" },
+		workspace = "3",
 		monitor = vars.monitor_aux,
 		command = "pear-desktop",
 	},
 	{
 		name = "startup-whatsapp",
-		match = { title = "^(WhatsApp)$" },
+		match = { initial_title = "^(web\\.whatsapp\\.com.*)$" },
 		workspace = "3",
 		monitor = vars.monitor_aux,
 		command = "chromium --app=https://web.whatsapp.com",
@@ -50,6 +50,7 @@ local ROUTED_APPS = {
 		monitor = vars.monitor_aux,
 		-- command = "chromium --app=https://claude.ai",
 		command = "chromium --app=https://chatgpt.com",
+		delay = 1500,
 	},
 }
 
@@ -64,7 +65,10 @@ local function launch_routed(app)
 		workspace = app.workspace .. " silent",
 		monitor = app.monitor,
 	})
-	hl.exec_cmd(app.command, { workspace = app.workspace .. " silent" })
+	hl.exec_cmd(app.command, {
+		workspace = app.workspace .. " silent",
+		monitor = app.monitor,
+	})
 	hl.timer(function()
 		rule:set_enabled(false)
 	end, { timeout = RULE_TIMEOUT, type = "oneshot" })
@@ -81,6 +85,12 @@ hl.on("hyprland.start", function()
 		hl.exec_cmd(app.cmd, app.opts)
 	end
 	for _, app in ipairs(ROUTED_APPS) do
-		launch_routed(app)
+		if app.delay then
+			hl.timer(function()
+				launch_routed(app)
+			end, { timeout = app.delay, type = "oneshot" })
+		else
+			launch_routed(app)
+		end
 	end
 end)

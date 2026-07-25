@@ -49,12 +49,18 @@ apply_tag("notif", {
 -- Music
 apply_tag("music", {
 	{ class = "^(Spotify)$" },
-	{ class = "^(com.github.th_ch.youtube_music)$" },
+	{ class = "^(com.github.th-ch.youtube-music)$" },
 })
 
 tagged_rule("music", {
 	workspace = "3 silent",
 	opacity = "0.95 0.85",
+})
+
+hl.window_rule({
+	name = "youtube-music-workspace",
+	match = { class = "^(com.github.th-ch.youtube-music)$" },
+	workspace = "3 silent",
 })
 
 -- Terminals
@@ -86,7 +92,7 @@ apply_tag("screenshare", {
 apply_tag("im", {
 	{ class = "^([Dd]iscord|[Ww]ebCord|[Vv]esktop)$" },
 	{ class = "^([Ff]erdium)$" },
-	{ title = "^(web\\.whatsapp\\.com.*)$" },
+	{ initial_title = "^(web\\.whatsapp\\.com.*)$" },
 	{ class = "^([Ww]hatsapp-for-linux)$" },
 	{ class = "^(ZapZap|com.rtosta.zapzap)$" },
 	{ class = "^(org.telegram.desktop|io.github.tdesktop_x64.TDesktop)$" },
