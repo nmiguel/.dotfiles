@@ -31,6 +31,7 @@ in
         ncdu
         borgmatic
         btop
+        curl
         dnsutils # `dig` + `nslookup`
         ethtool
         eza
@@ -39,12 +40,15 @@ in
         file
         fish
         fzf # A command-line fuzzy finder
+        gcc
+        git
         gnutar
         iftop # network monitoring
         jq
         lazydocker
         lazygit
         lsof
+        neovim
         pciutils
         ripgrep
         nixd
@@ -53,6 +57,7 @@ in
         tmux
         tokei
         tree
+        tree-sitter
         unzip
         usbutils # lsusb
         wget

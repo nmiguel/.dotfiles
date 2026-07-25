@@ -17,8 +17,7 @@
   userSettings = {
     # Shared feature modules.
     dotfiles.enable = true;
-    # Point this at wherever the repo is checked out on morpheus if it differs.
-    # dotfiles.repoRoot = "/home/coder/.dotfiles";
+    dotfiles.repoRoot = "/home/coder/.dotfiles";
     theming.enable = false;
     packages.cli.enable = true;
     packages.gui.enable = false;
@@ -29,6 +28,7 @@
     rust.enable = true;
     lua.enable = true;
     go.enable = true;
+    js.enable = true;
   };
 
   home.username = "coder";

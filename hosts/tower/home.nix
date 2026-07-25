@@ -22,6 +22,7 @@
     rust.enable = true;
     lua.enable = true;
     go.enable = true;
+    js.enable = true;
   };
 
   home.username = "nomig";
