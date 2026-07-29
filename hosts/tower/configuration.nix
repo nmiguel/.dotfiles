@@ -10,6 +10,7 @@
 
   systemSettings = {
     dms.enable = true;
+    fonts.enable = true;
     hyprland.enable = true;
     hyprland.monitorsFile = ./monitors.lua;
     sddm.enable = true;
@@ -17,6 +18,9 @@
     audio.enable = true;
     fish.enable = true;
     logitech.enable = true;
+    openrgb = {
+      enable = true;
+    };
     jellyfin.enable = true;
   };
 
