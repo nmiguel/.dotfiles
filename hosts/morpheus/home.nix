@@ -17,7 +17,7 @@
   userSettings = {
     # Shared feature modules.
     dotfiles.enable = true;
-    dotfiles.repoRoot = "/home/coder/.dotfiles";
+    dotfiles.repoRoot = "/home/coder/projects/personal/.dotfiles";
     theming.enable = false;
     packages.cli.enable = true;
     packages.gui.enable = false;
