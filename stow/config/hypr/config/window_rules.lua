@@ -8,9 +8,18 @@ local suppressMaximizeRule = hl.window_rule({
 	suppress_event = "maximize",
 })
 
+---@param window HL.Window
 hl.on("window.open", function(window)
 	if window.title == "Picture-in-Picture" then
 		hl.dispatch(hl.dsp.window.resize({ window = window, y = -180, x = 0, relative = true }))
+		local windows = window.workspace:get_windows()
+		for _, w in ipairs(windows) do
+			---@cast w HL.Window
+			if w.title ~= window.title then
+				hl.dispatch(hl.dsp.focus({ window = w }))
+				hl.dispatch(hl.dsp.layout("fit expand"))
+			end
+		end
 	end
 end)
 

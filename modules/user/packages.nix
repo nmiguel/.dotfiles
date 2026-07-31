@@ -76,7 +76,9 @@ in
         bluetui
         libreoffice
         chromium
+        evince
         firefox
+        file-roller
         ghostty
         gimp
         gnome-calendar
@@ -86,8 +88,11 @@ in
         gnome-themes-extra
         google-chrome
         grim
+        imv
         localsend
         logiops
+        mousepad
+        mpv
         nwg-displays
         nwg-look
         obs-studio
@@ -98,8 +103,6 @@ in
         slurp
         wev
         wl-clipboard
-        thunar
-        mpv
         pear-desktop # youtube-music
       ];
     })
