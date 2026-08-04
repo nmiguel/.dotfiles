@@ -11,6 +11,7 @@
 }:
 let
   cfg = config.userSettings.theming;
+  gtk3Schemas = "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}";
 in
 {
   options.userSettings.theming.enable =
@@ -18,6 +19,10 @@ in
 
   config = lib.mkIf cfg.enable {
     dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+
+    # Qt's GTK3 platform theme loads GTK's file chooser settings at runtime.
+    home.sessionSearchVariables.XDG_DATA_DIRS = [ gtk3Schemas ];
+    systemd.user.sessionVariables.XDG_DATA_DIRS = "${gtk3Schemas}:\${XDG_DATA_DIRS}";
 
     gtk = {
       enable = true;

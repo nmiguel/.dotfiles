@@ -16,6 +16,7 @@
     theming.enable = true;
     packages.cli.enable = true;
     packages.gui.enable = true;
+    seafile.enable = true;
     desktop.enable = true;
 
     # Per-language development toolchains (see modules/user/<lang>.nix).
