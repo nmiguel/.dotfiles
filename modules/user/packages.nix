@@ -98,6 +98,7 @@ in
         obs-studio
         openrgb
         papirus-icon-theme
+        playerctl
         qalculate-gtk
         satty
         slurp
