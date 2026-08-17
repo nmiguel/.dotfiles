@@ -42,6 +42,16 @@
         ];
       };
 
+      nixosConfigurations.chariot = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/chariot
+
+          home-manager.nixosModules.home-manager
+        ];
+      };
+
       # Standalone home-manager hosts (non-NixOS, e.g. Ubuntu). Build/apply with
       #   nix run home-manager -- switch --flake .#morpheus   # first time
       #   home-manager switch --flake .#morpheus              # thereafter
