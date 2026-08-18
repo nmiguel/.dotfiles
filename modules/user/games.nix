@@ -9,10 +9,13 @@ let
   cfg = config.modules.games;
 in
 {
-  options.modules.games.enable =
-    lib.mkEnableOption "user-level gaming applications";
+  options.modules.games.enable = lib.mkEnableOption "user-level gaming applications";
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.lutris ];
+    home.packages = with pkgs; [
+      lutris
+      heroic
+      # wine
+    ];
   };
 }
