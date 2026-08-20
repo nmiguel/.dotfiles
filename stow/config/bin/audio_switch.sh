@@ -1,19 +1,23 @@
 #!/bin/sh
 
-speakers=`pactl list short sinks | grep virtual_headphones_sink | awk 'BEGIN {FS="\t"}; {print $2}'`
-headphones=`pactl list short sinks | grep virtual_speakers_sink | awk 'BEGIN {FS="\t"}; {print $2}'`
+current_sink=$(wpctl inspect @DEFAULT_AUDIO_SINK@ | awk -F'"' '/node.name =/ { print $2; exit }')
 
-current_sink=`pactl get-default-sink`
+case "$current_sink" in
+    virtual_headphones_sink) next_sink=virtual_speakers_sink ;;
+    *) next_sink=virtual_headphones_sink ;;
+esac
 
-echo "Audio switcher :: current audio sink: $current_sink"
+next_id=$(wpctl status -n | awk -v name="$next_sink" '
+    index($0, name) && match($0, /[0-9]+\./) {
+        print substr($0, RSTART, RLENGTH - 1)
+        exit
+    }
+')
 
-next_sink=$speakers
-if [[ "$current_sink" == "$speakers" ]]; then
-    next_sink=$headphones
+if [ -z "$next_id" ]; then
+    printf 'Audio sink %s is unavailable\n' "$next_sink" >&2
+    exit 1
 fi
 
-echo "Audio switcher :: switching to: $next_sink"
-
-exec pactl set-default-sink $next_sink
-
-echo "Audio switcher :: done"
+printf 'Switching from %s to %s\n' "$current_sink" "$next_sink"
+exec wpctl set-default "$next_id"

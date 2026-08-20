@@ -8,7 +8,10 @@ abbr docker-compose "docker compose"
 abbr exp "nohup xdg-open . >/dev/null 2>&1 & disown"
 abbr wiztree "sudo ncdu / --exclude /mnt"
 abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
-abbr ns --set-cursor=% "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p % --run fish"
+abbr ~pw --position anywhere "~/projects/work"
+abbr ~pp --position anywhere "~/projects/personal"
+abbr nx-shell --set-cursor=% "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p % --run fish"
+abbr nx-switch "sudo nixos-rebuild switch --flake .#(hostname)"
 
 
 abbr --set-cursor=% hlexec "hyprctl dispatch 'hl.dsp.exec_cmd(\"%\")'"

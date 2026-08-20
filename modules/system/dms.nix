@@ -4,12 +4,11 @@
 # inert until a host flips it on. The upstream NixOS module is always imported
 # (so its options exist) but nothing it provides activates unless the flag is
 # set. dms is configured entirely on the NixOS side.
-{
-  inputs,
-  pkgs,
-  config,
-  lib,
-  ...
+{ inputs
+, pkgs
+, config
+, lib
+, ...
 }:
 let
   cfg = config.systemSettings.dms;
@@ -50,6 +49,11 @@ in
       enableAudioWavelength = false; # Audio visualizer (cava)
       enableCalendarEvents = true; # Calendar integration (khal)
       enableClipboardPaste = true; # Pasting from the clipboard history (wtype)
+
+      plugins = {
+        volumeMixer.src = inputs.dms-volume-mixer;
+        calculator.src = inputs.dank-calculator;
+      };
     };
   };
 }

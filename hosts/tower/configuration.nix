@@ -15,9 +15,27 @@
     hyprland.monitorsFile = ./monitors.lua;
     sddm.enable = true;
     boot_options.enable = true;
-    audio.enable = true;
+    audio = {
+      enable = true;
+      virtualOutputs = {
+        headphones = {
+          target = "alsa_output.usb-1532_Razer_BlackShark_V2_Pro_2.4_O001000007-00.analog-stereo";
+          volume = 50;
+          targetVolume = 6;
+        };
+        speakers = {
+          target = "alsa_output.usb-Yamaha_Corporation_Digital_Keyboard-00.analog-stereo";
+          volume = 25;
+        };
+      };
+    };
     fish.enable = true;
     logitech.enable = true;
+    onepassword = {
+      enable = true;
+      polkitPolicyOwners = [ "nomig" ];
+      browserExtensions.enable = true;
+    };
     openrgb = {
       enable = true;
     };

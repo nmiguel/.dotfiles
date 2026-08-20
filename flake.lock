@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "dank-calculator": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1782146268,
+        "narHash": "sha256-j8C62+sevr6b+akzVSAqUVysIhb6Vbr8jnWcTXeOtE8=",
+        "owner": "rochacbruno",
+        "repo": "DankCalculator",
+        "rev": "1db5865419a40a33171a475855a59e0b8bf7187f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rochacbruno",
+        "repo": "DankCalculator",
+        "type": "github"
+      }
+    },
     "dank-qml-common": {
       "flake": false,
       "locked": {
@@ -35,6 +51,22 @@
       "original": {
         "owner": "AvengeMedia",
         "repo": "DankMaterialShell",
+        "type": "github"
+      }
+    },
+    "dms-volume-mixer": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785646099,
+        "narHash": "sha256-RiMm8ZHphrZ6VuUUja0GrHe4EqUB/dI6EKfKaL8mtsU=",
+        "owner": "cwelsys",
+        "repo": "dms-volume-mixer",
+        "rev": "353e00b659a16df07105b16c8790e6b526743471",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cwelsys",
+        "repo": "dms-volume-mixer",
         "type": "github"
       }
     },
@@ -112,7 +144,9 @@
     },
     "root": {
       "inputs": {
+        "dank-calculator": "dank-calculator",
         "dms": "dms",
+        "dms-volume-mixer": "dms-volume-mixer",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "noctalia": "noctalia"

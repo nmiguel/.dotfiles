@@ -19,6 +19,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    dms-volume-mixer = {
+      url = "github:cwelsys/dms-volume-mixer";
+      flake = false;
+    };
+
+    dank-calculator = {
+      url = "github:rochacbruno/DankCalculator";
+      flake = false;
+    };
+
     # steam-pr = {
     #     url = "github:NixOS/nixpkgs/backport-524488-to-release-26.05";
     #     flake = false;
