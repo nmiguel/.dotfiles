@@ -20,7 +20,7 @@
       virtualOutputs = {
         headphones = {
           target = "alsa_output.usb-1532_Razer_BlackShark_V2_Pro_2.4_O001000007-00.analog-stereo";
-          volume = 50;
+          volume = 30;
           targetVolume = 6;
         };
         speakers = {

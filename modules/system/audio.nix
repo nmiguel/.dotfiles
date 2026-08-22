@@ -95,7 +95,7 @@ in
 
         volume = lib.mkOption {
           type = percentageType;
-          default = 50;
+          default = 30;
           description = "Initial volume percentage shown for Virtual Headphones";
         };
 
@@ -114,7 +114,7 @@ in
 
         volume = lib.mkOption {
           type = percentageType;
-          default = 50;
+          default = 30;
           description = "Initial volume percentage shown for Virtual Speakers";
         };
       };

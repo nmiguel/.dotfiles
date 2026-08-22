@@ -49,6 +49,11 @@
       "pattern": "chrome-chatgpt.com__-Default",
       "replacement": "chatgpt",
       "type": "exact"
+    },
+    {
+      "pattern": "chrome-discord.com__app-Default",
+      "replacement": "discord",
+      "type": "exact"
     }
   ],
   "spotlightSectionViewModes": {
@@ -75,6 +80,9 @@
   "launcherLogoMode": "os",
   "osdAlwaysShowValue": true,
   "osdPosition": 0,
+  "osdVolumeEnabled": false,
+  "osdMediaVolumeEnabled": false,
+  "osdBrightnessEnabled": false,
   "osdPowerProfileEnabled": true,
   "powerMenuActions": [
     "reboot",

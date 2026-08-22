@@ -1,11 +1,11 @@
 # Dotfile deployment.
 #
 # Home-manager module: declares `userSettings.dotfiles.enable` and, when on,
-# symlinks the tracked config trees under stow/config into ~/.config, the nvim
-# submodule, and the app icons under icons/. The config/nvim links are kept
-# "out of store" (they point straight at the repo checkout) so editing a file
-# in the repo takes effect immediately, without a home-manager rebuild — which
-# is why the module needs to know where that checkout lives (`repoRoot`).
+# symlinks the tracked config trees under stow/config into ~/.config and the
+# nvim submodule. The config/nvim links are kept "out of store" (they point
+# straight at the repo checkout) so editing a file in the repo takes effect
+# immediately, without a home-manager rebuild — which is why the module needs
+# to know where that checkout lives (`repoRoot`).
 {
   config,
   lib,
@@ -22,14 +22,6 @@ let
       name = ".config/${name}";
       value.source = config.lib.file.mkOutOfStoreSymlink "${cfg.repoRoot}/stow/config/${name}";
     }) (builtins.attrNames (builtins.readDir configDir))
-  );
-
-  # icons/ ships bespoke app icons into the user's hicolor icon theme.
-  iconEntries = builtins.listToAttrs (
-    map (name: {
-      name = ".local/share/icons/hicolor/128x128/apps/${name}";
-      value.source = ../../icons + "/${name}";
-    }) (builtins.attrNames (builtins.readDir ../../icons))
   );
 in
 {
@@ -50,7 +42,6 @@ in
   config = lib.mkIf cfg.enable {
     home.file =
       configEntries
-      // iconEntries
       // {
         # nvim is a git submodule, so the readDir above doesn't pick it up.
         ".config/nvim".source =
