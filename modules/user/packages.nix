@@ -57,6 +57,7 @@ in
         tmux
         tokei
         tree
+        silicon
         tree-sitter
         unzip
         usbutils # lsusb
