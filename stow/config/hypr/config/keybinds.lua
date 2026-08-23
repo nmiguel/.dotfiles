@@ -78,16 +78,21 @@ hl.bind(
 hl.bind(mod .. " + A", hl.dsp.exec_cmd(scriptsDir .. "/audio_switch.sh"))
 
 -- Move focus
-hl.bind(mod .. " + H", hl.dsp.focus({ direction = "left" }))
-hl.bind(mod .. " + L", hl.dsp.focus({ direction = "right" }))
-hl.bind(mod .. " + K", hl.dsp.focus({ direction = "up" }))
-hl.bind(mod .. " + J", hl.dsp.focus({ direction = "down" }))
+local directions = { left = "H", right = "L", up = "K", down = "J" }
+for direction, key in pairs(directions) do
+    hl.bind(mod .. " + " .. key, hl.dsp.focus({ direction = direction }))
+end
 
 -- Move windows
-hl.bind(mod .. " + CTRL + H", hl.dsp.window.move({ direction = "left" }))
-hl.bind(mod .. " + CTRL + L", hl.dsp.window.move({ direction = "right" }))
-hl.bind(mod .. " + CTRL + K", hl.dsp.window.move({ direction = "up" }))
-hl.bind(mod .. " + CTRL + J", hl.dsp.window.move({ direction = "down" }))
+for direction, key in pairs(directions) do
+    hl.bind(mod .. " + CTRL + " .. key, hl.dsp.window.move({ direction = direction }))
+end
+
+local expel_directions = { Left = "prev", Right = "next" }
+for key, direction in pairs(expel_directions) do
+    hl.bind(mod .. " + CTRL + Bracket" .. key, hl.dsp.layout("consume_or_expel " .. direction))
+    hl.bind(mod .. " + Bracket" .. key, hl.dsp.layout("consume_or_expel " .. direction))
+end
 
 hl.bind(mod .. " + BracketLeft", function()
 	if hl.get_active_workspace().tiled_layout == "scrolling" then
@@ -99,7 +104,6 @@ hl.bind(mod .. " + BracketRight", function()
 		hl.dispatch(hl.dsp.layout("consume_or_expel next"))
 	end
 end)
-
 -- Switch workspaces with mod + [0-9]
 -- Move active window to a workspace with mod + SHIFT + [0-9]
 for i = 1, 10 do
