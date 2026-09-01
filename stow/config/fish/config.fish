@@ -137,6 +137,7 @@ fish_add_path --path ~/.local/bin
 fish_add_path --path ~/.cargo/bin
 fish_add_path --path ~/.config/bin
 fish_add_path --path ~/go/bin
+fish_add_path --path ~/.nix-profile/bin
 
 # Initialize tools
 zoxide init fish --cmd cd | source

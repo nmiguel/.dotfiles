@@ -17,4 +17,5 @@ _add_path "$HOME/.local/bin"
 _add_path "$HOME/.cargo/bin"
 _add_path "$HOME/.config/bin"
 _add_path "$HOME/go/bin"
+_add_path "$HOME/.nix-profile/bin"
 

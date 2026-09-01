@@ -41,6 +41,7 @@ in
         fish
         fzf # A command-line fuzzy finder
         gcc
+        gh
         git
         gnutar
         iftop # network monitoring
