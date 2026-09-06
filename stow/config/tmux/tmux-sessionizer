@@ -30,16 +30,20 @@ tmux_running=$(pgrep tmux)
 #     exit 0
 # fi
 
-if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -ds $selected_name -c $selected
-    tmux new-window -d -t $selected_name -c $selected
-    tmux new-window -d -t $selected_name -c $selected
+if ! tmux has-session -t "=$selected_name" 2> /dev/null; then
+    tmux new-session -ds "$selected_name" -c "$selected"
 fi
 
+window_count=$(tmux list-windows -t "=$selected_name" -F '#{window_id}' | wc -l)
+while (( window_count < 3 )); do
+    tmux new-window -d -t "=$selected_name:" -c "$selected"
+    window_count=$((window_count + 1))
+done
+
 if [[ -z $TMUX ]]; then
-    tmux attach -t $selected_name
+    tmux attach -t "=$selected_name"
 else
-    tmux switch-client -t $selected_name
+    tmux switch-client -t "=$selected_name"
 fi
 
 # Kill tmux sessions whose names are numbers only

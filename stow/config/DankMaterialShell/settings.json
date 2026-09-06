@@ -254,6 +254,10 @@
           "id": "memUsage",
           "enabled": true,
           "minimumWidth": true
+        },
+        {
+          "id": "gpuMonitor",
+          "enabled": true
         }
       ],
       "centerWidgets": [
@@ -352,5 +356,5 @@
       "trigger": "cb"
     }
   },
-  "configVersion": 15
+  "configVersion": 18
 }

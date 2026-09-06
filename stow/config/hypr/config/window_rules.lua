@@ -126,14 +126,17 @@ tagged_rule("ai", {
 apply_tag("games", {
 	{ class = "^(gamescope)$" },
 	{ class = "^(steam_app_\\d+)$" },
+	{ class = "^(Terraria.bin.x86_64)$" },
+	{ initial_title = "^(Godot)$" },
 })
 
 tagged_rule("games", {
-	workspace = "5",
+	workspace = "8",
 	no_blur = true,
 	fullscreen = true,
 	fullscreen_state = "3 3",
 	opacity = "1.0 override 1.0 override",
+    monitor = vars.monitor_main,
 })
 
 -- Game Stores

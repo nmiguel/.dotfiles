@@ -28,6 +28,10 @@
           volume = 25;
         };
       };
+      virtualInputs.microphone = {
+        target = "alsa_input.usb-1532_Razer_BlackShark_V2_Pro_2.4_O001000007-00.mono-fallback";
+        boost = 1.35;
+      };
     };
     fish.enable = true;
     logitech.enable = true;
