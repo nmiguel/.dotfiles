@@ -4,7 +4,16 @@
   pkgs,
   ...
 }:
-
+let
+  graphicalRuntimeLibraries = with pkgs; [
+    libX11
+    libXcursor
+    libXi
+    libXrandr
+    libxkbcommon
+    vulkan-loader
+  ];
+in
 {
   modules.games.enable = true;
 
@@ -43,7 +52,7 @@
     openrgb = {
       enable = true;
     };
-    jellyfin.enable = true;
+    jellyfin.enable = false;
   };
 
   # Bootloader.
@@ -162,6 +171,19 @@
   };
 
   programs.firefox.enable = true;
+
+  programs.nix-ld = {
+    enable = true;
+    libraries = graphicalRuntimeLibraries;
+  };
+
+  # Nix-linked development binaries bypass nix-ld, so expose only the
+  # graphical additions to their native loader.
+  programs.fish.shellInit = ''
+    set -gx NIX_LD /run/current-system/sw/share/nix-ld/lib/ld.so
+    set -gx NIX_LD_LIBRARY_PATH /run/current-system/sw/share/nix-ld/lib
+    set -gx LD_LIBRARY_PATH ${pkgs.lib.makeLibraryPath graphicalRuntimeLibraries}
+  '';
 
   nixpkgs.config.allowUnfree = true;
 

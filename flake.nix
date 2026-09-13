@@ -9,6 +9,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    opencode = {
+      url = "github:anomalyco/opencode?ref=pull/5657/merge";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     noctalia = {
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -43,6 +53,20 @@
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
+      overlays = [
+        inputs.neovim-nightly-overlay.overlays.default
+        (_final: _prev:
+          let
+            opencode = inputs.opencode.packages.${system}.default;
+            node_modules = opencode.node_modules.override {
+              # The synthetic merge ref changes workspace files without updating this hash.
+              hash = "sha256-tHl+UGkUbalkh+C5RDkRpZ3Q87tgvqnoF4xdih6QeOw=";
+            };
+          in
+          {
+            opencode = opencode.override { inherit node_modules; };
+          })
+      ];
     in
     {
       # NixOS hosts. Home-manager is wired in as a NixOS module; each host
@@ -53,6 +77,8 @@
         modules = [
           ./hosts/tower
 
+          { nixpkgs.overlays = overlays; }
+
           home-manager.nixosModules.home-manager
         ];
       };
@@ -62,6 +88,8 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/chariot
+
+          { nixpkgs.overlays = overlays; }
 
           home-manager.nixosModules.home-manager
         ];
@@ -74,6 +102,7 @@
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          inherit overlays;
         };
         extraSpecialArgs = { inherit inputs; };
         modules = [ ./hosts/morpheus/home.nix ];

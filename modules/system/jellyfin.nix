@@ -24,10 +24,20 @@
 }:
 let
   cfg = config.systemSettings.jellyfin;
+  persistentState = cfg.stateRoot != null;
+  serviceState = name: "${cfg.stateRoot}/${name}";
 in
 {
-  options.systemSettings.jellyfin.enable =
-    lib.mkEnableOption "the Jellyfin media server and *arr request/download stack";
+  options.systemSettings.jellyfin = {
+    enable = lib.mkEnableOption "the Jellyfin media server and *arr request/download stack";
+
+    stateRoot = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      example = "/mnt/data/services/media";
+      description = "Persistent root for media-service state; null uses each service's default location.";
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     # Shared group so Transmission's completed downloads are readable by
@@ -38,16 +48,34 @@ in
       jellyfin.extraGroups = [ "media" ];
       radarr.extraGroups = [ "media" ];
       sonarr.extraGroups = [ "media" ];
+      bazarr.extraGroups = [ "media" ];
       transmission.extraGroups = [ "media" ];
+    }
+    // lib.optionalAttrs persistentState {
+      seerr = {
+        isSystemUser = true;
+        group = "seerr";
+        home = serviceState "seerr";
+      };
     };
+    users.groups.seerr = lib.mkIf persistentState { };
 
     # Library layout. The setgid bit (leading 2) makes new files inherit the
     # `media` group so Jellyfin can always read what Radarr/Sonarr drop in.
-    systemd.tmpfiles.rules = [
-      "d /var/lib/media 0775 root media - -"
-      "d /var/lib/media/movies 2775 radarr media - -"
-      "d /var/lib/media/tv 2775 sonarr media - -"
-    ];
+    systemd.tmpfiles.rules =
+      if persistentState then
+        [
+          "d ${cfg.stateRoot} 0755 root root - -"
+          "d ${serviceState "seerr"} 0700 seerr seerr - -"
+          "d ${serviceState "sonarr"} 0700 sonarr sonarr - -"
+          "d ${serviceState "transmission"} 0750 transmission media - -"
+        ]
+      else
+        [
+          "d /var/lib/media 0775 root media - -"
+          "d /var/lib/media/movies 2775 radarr media - -"
+          "d /var/lib/media/tv 2775 sonarr media - -"
+        ];
 
     # Jellyfin media server. Runs under its own `jellyfin` user, auto-starts on
     # boot, and opens the firewall for LAN clients (HTTP 8096 / HTTPS 8920 plus
@@ -55,6 +83,10 @@ in
     services.jellyfin = {
       enable = true;
       openFirewall = true;
+    }
+    // lib.optionalAttrs persistentState {
+      dataDir = serviceState "jellyfin";
+      cacheDir = serviceState "jellyfin-cache";
     };
 
     # Jellyseerr — request/discovery front-end that talks to Jellyfin.
@@ -63,6 +95,9 @@ in
     services.seerr = {
       enable = true;
       openFirewall = true;
+    }
+    // lib.optionalAttrs persistentState {
+      configDir = serviceState "seerr";
     };
 
     # Radarr (movies, web UI :7878) and Sonarr (TV, :8989). These fulfil the
@@ -71,10 +106,16 @@ in
     services.radarr = {
       enable = true;
       openFirewall = true;
+    }
+    // lib.optionalAttrs persistentState {
+      dataDir = serviceState "radarr";
     };
     services.sonarr = {
       enable = true;
       openFirewall = true;
+    }
+    // lib.optionalAttrs persistentState {
+      dataDir = serviceState "sonarr";
     };
 
     # Bazarr (web UI :6767) — subtitle companion. Watches Radarr's and Sonarr's
@@ -82,6 +123,9 @@ in
     services.bazarr = {
       enable = true;
       openFirewall = true;
+    }
+    // lib.optionalAttrs persistentState {
+      dataDir = serviceState "bazarr";
     };
 
     # Prowlarr (web UI :9696) — central tracker/indexer manager. Add each
@@ -89,6 +133,9 @@ in
     services.prowlarr = {
       enable = true;
       openFirewall = true;
+    }
+    // lib.optionalAttrs persistentState {
+      dataDir = serviceState "prowlarr";
     };
 
     # FlareSolverr (:8191) — headless-browser proxy that solves the Cloudflare
@@ -107,9 +154,18 @@ in
       openFirewall = true;
       openRPCPort = true;
       group = "media";
+      home = if persistentState then serviceState "transmission" else "/var/lib/transmission";
       settings = {
-        download-dir = "/var/lib/transmission/Downloads";
-        incomplete-dir = "/var/lib/transmission/.incomplete";
+        download-dir =
+          if persistentState then
+            "${serviceState "transmission"}/Downloads"
+          else
+            "/var/lib/transmission/Downloads";
+        incomplete-dir =
+          if persistentState then
+            "${serviceState "transmission"}/.incomplete"
+          else
+            "/var/lib/transmission/.incomplete";
         incomplete-dir-enabled = true;
         umask = 2;
         # Stop seeding once a torrent hits ratio 2.0 OR sits idle (no peers)
@@ -126,6 +182,16 @@ in
         rpc-bind-address = "0.0.0.0";
         rpc-whitelist-enabled = false;
         rpc-host-whitelist-enabled = false;
+      };
+    };
+
+    systemd.services.seerr = lib.mkIf persistentState {
+      serviceConfig = {
+        DynamicUser = lib.mkForce false;
+        StateDirectory = lib.mkForce [ ];
+        User = "seerr";
+        Group = "seerr";
+        ReadWritePaths = [ (serviceState "seerr") ];
       };
     };
   };

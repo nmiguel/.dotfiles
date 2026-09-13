@@ -5,7 +5,23 @@
   imports = [ ../../modules/user ];
 
   userSettings = {
-    dotfiles.enable = true;
+    dotfiles = {
+      enable = true;
+      entries = [
+        "bin"
+        "btop"
+        "fastfetch"
+        "fish"
+        "lazygit"
+        "nix"
+        "nvim"
+        "opencode"
+        "rsync"
+        "starship.toml"
+        "television"
+        "tmux"
+      ];
+    };
     theming.enable = false;
     packages.cli.enable = true;
     packages.gui.enable = false;

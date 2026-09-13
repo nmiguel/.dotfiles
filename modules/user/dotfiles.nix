@@ -15,13 +15,17 @@ let
   cfg = config.userSettings.dotfiles;
 
   configDir = ../../stow/config;
+  availableEntries = lib.unique (
+    builtins.attrNames (builtins.readDir configDir) ++ [ "nvim" ]
+  );
+  selectedEntries = if cfg.entries == null then availableEntries else cfg.entries;
 
-  # Every entry under stow/config becomes a matching ~/.config/<name> symlink.
+  # Selected entries under stow/config become matching ~/.config/<name> links.
   configEntries = builtins.listToAttrs (
     map (name: {
       name = ".config/${name}";
       value.source = config.lib.file.mkOutOfStoreSymlink "${cfg.repoRoot}/stow/config/${name}";
-    }) (builtins.attrNames (builtins.readDir configDir))
+    }) selectedEntries
   );
 in
 {
@@ -37,15 +41,15 @@ in
         repo take effect without a home-manager rebuild.
       '';
     };
+
+    entries = lib.mkOption {
+      type = lib.types.nullOr (lib.types.listOf (lib.types.enum availableEntries));
+      default = null;
+      description = "Dotfile entries to link, or all tracked entries when null.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
-    home.file =
-      configEntries
-      // {
-        # nvim is a git submodule, so the readDir above doesn't pick it up.
-        ".config/nvim".source =
-          config.lib.file.mkOutOfStoreSymlink "${cfg.repoRoot}/stow/config/nvim";
-      };
+    home.file = configEntries;
   };
 }

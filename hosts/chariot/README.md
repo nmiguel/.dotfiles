@@ -11,6 +11,10 @@ existing 4 TB ext4 filesystem.
 - `/mnt/data/services/gitea-postgresql-14`: Gitea PostgreSQL cluster
 - `/mnt/data/services/seafile`: existing Seafile data and MariaDB directories
 - `/mnt/data/services/caddy`: Caddy account and certificate state
+- `/mnt/data/services/media`: Jellyfin, Seerr, Radarr, Prowlarr, Bazarr,
+  Transmission, and Sonarr state
+- `/mnt/data/Media`: movies and shows, copied from Tower without deleting the
+  source library
 - `/mnt/data/backups`: local service dumps; this is not an independent backup
 - `/mnt/data/secrets/chariot`: runtime secrets that must never be added to Git
 - `/mnt/data/secrets/chariot/openssh`: persistent host SSH keys
@@ -24,221 +28,218 @@ the root filesystem.
 Create these as root-owned files with mode `0600` before activating this host:
 
 - `ddclient-cloudflare-token`: only the Cloudflare API token
-- `seafile-mysql.env`: only the existing MariaDB root password
+- `seafile-mysql.env`: only the MariaDB root password
 - `seafile.env`: the Seafile application secrets below
 
 ```dotenv
 # seafile-mysql.env
-MYSQL_ROOT_PASSWORD=<existing MariaDB root password>
+MYSQL_ROOT_PASSWORD=<MariaDB root password>
 
 # seafile.env
-DB_ROOT_PASSWD=<same existing MariaDB root password>
-DB_PASSWORD=<existing Seafile database password>
-JWT_PRIVATE_KEY=<existing Seafile JWT key>
-INIT_SEAFILE_ADMIN_EMAIL=<existing administrator email>
-INIT_SEAFILE_ADMIN_PASSWORD=<existing administrator password>
+DB_ROOT_PASSWD=<same MariaDB root password>
+DB_PASSWORD=<Seafile database password>
+JWT_PRIVATE_KEY=<Seafile JWT key>
 ```
 
-The `nomig` Linux password is intentionally mutable and is not stored on the
-persistent disk. Set any desired password from the root installer environment
-after each root filesystem replacement. SSH public-key login does not depend on
-this password, but password-based `sudo` does.
+The `INIT_SEAFILE_ADMIN_*` variables are needed only when initializing a new
+instance. Do not retain an administrator password in the environment after the
+administrator exists in the database.
 
-Gitea's existing `SECRET_KEY`, `INTERNAL_TOKEN`, OAuth2 JWT secret, and LFS JWT
-secret must be extracted respectively into `secret_key`, `internal_token`,
+The first local console automatically logs in as `nomig`; system services start
+at boot independently of that session. The `nomig` Linux password remains
+mutable and is not stored on the persistent disk. SSH public-key login and
+console autologin do not depend on this password, but password-based `sudo`
+does.
+
+Gitea's generated `SECRET_KEY`, `INTERNAL_TOKEN`, OAuth2 JWT secret, and LFS JWT
+secret live respectively in `secret_key`, `internal_token`,
 `oauth2_jwt_secret`, and `lfs_jwt_secret` under
-`/mnt/data/services/gitea-native/gitea/conf` before its first start. This
-preserves sessions, tokens, and LFS behavior without exposing their values to
-the Nix store or this repository.
-
-The migrated Gitea tree and SSH host keys must be recursively owned by numeric
-UID/GID `989:989`. The explicit IDs keep ownership stable across future root
-disk replacements and preserve the existing SSH host identity.
+`/mnt/data/services/gitea-native/gitea/conf`. They remain outside the Nix store
+and this repository. The Gitea tree is owned by numeric UID/GID `989:989`; the
+explicit IDs keep ownership stable across future root-disk replacements.
 
 Gitea remains stopped until `/mnt/data/services/gitea-native/.nixos-ready`
-exists. The Seafile containers remain stopped until their required environment
-files and `/mnt/data/services/seafile/.nixos-ready` exist. Create these markers
-only after the corresponding migration and verification gates have passed.
+exists and all four application secrets are non-empty.
+All three Seafile containers share one gate: both secret environment files,
+both data directories, and `/mnt/data/services/seafile/.nixos-ready` must exist.
+The media stack remains stopped until
+`/mnt/data/services/media/.nixos-ready` exists. Keep this marker absent while an
+initial or final media/configuration synchronization is in progress.
+Create a marker only after the corresponding recovery checks have passed.
 
-## Filesystems
+## Filesystems and boot
 
-The persistent disk is selected by its existing UUID. The disposable OS
-filesystems must have the labels `chariot-root` and `chariot-boot`. The
-persistent disk must not be formatted or relabeled.
+The installed machine boots in UEFI mode with systemd-boot. The current
+filesystem identifiers, recorded in `hardware-configuration.nix`, are:
 
-## Migration status
+| Purpose | Hardware | Filesystem UUID |
+| --- | --- | --- |
+| EFI system partition | Samsung 80 GB, partition 1 | `4859-1C4D` |
+| Disposable root | Samsung 80 GB, partition 2 | `c9600267-64af-4d65-b7dc-d275198f8f33` |
+| Swap partition | Samsung 80 GB, partition 3 | `03ace1d9-fdd1-4c0c-bf97-c54ecb3aeec9` |
+| Persistent data | Seagate 4 TB, partition 1 | `22c39105-5af0-4ffc-916a-40e3855a9214` |
 
-Completed preparation:
+The data-disk UUID must always be verified before disk maintenance. It must not
+be formatted or relabeled. Its stable identifier is
+`/dev/disk/by-id/ata-ST4000VN006-3CW104_WW690B4Y`; the disposable disk is
+`/dev/disk/by-id/ata-SAMSUNG_HD080HJ_P_S0DEJ1IL567387`. A future root-disk
+replacement will produce new root, EFI, and swap UUIDs, which must be updated
+before building that install.
 
-- The `Chariot` configuration is wired into the flake and builds successfully.
-- Hardware, BIOS boot, mounts, firewall, users, development tools, and services
-  are declared.
-- Host OpenSSH keys are copied to
-  `/mnt/data/secrets/chariot/openssh` and referenced by NixOS.
-- Seafile images are pinned to the exact digests currently running.
-- Gitea and Seafile have readiness markers that prevent premature startup.
-- No NixOS activation, service cutover, or disk replacement has been performed.
+## Runtime model
 
-Outstanding blockers:
+Caddy, ddclient, Gitea, PostgreSQL, printing, SSH, monitoring, Jellyfin, Seerr,
+Radarr, Prowlarr, Bazarr, Transmission, Sonarr, and FlareSolverr run as native
+NixOS services. Seafile Server and Seahub were removed from nixpkgs as
+unmaintained, so Seafile 12 remains the one OCI workload. NixOS still declares
+its exact images, systemd units, dependencies, network, secrets, loopback-only
+port, and persistent mounts. Replacing that image with a private native package
+would add an unsupported application build and a database migration to this
+recovery; test such a change separately against restored copies.
 
-- There is no verified independent backup of Gitea or Seafile.
-- Active Gitea files and PostgreSQL data still live on the root disk.
-- Remaining runtime secrets have not been staged on the persistent disk.
-- Gitea's upgrade from `1.25.4` to the nixpkgs version must be accepted and
-  restore-tested.
-- A rollback copy or retained replacement of the current root disk is required.
+## Current recovery status
 
-## Migration gates
+The pre-install plan was overtaken by the NixOS installation on 2026-09-12.
+Observed after boot:
 
-Do not replace the root filesystem until every gate below is satisfied:
+- UEFI/systemd-boot, root, EFI, swap, and `/mnt/data` are active on the UUIDs
+  above; the persistent filesystem passed its boot-time check.
+- Caddy, Docker, PostgreSQL, and SSH start successfully.
+- Public DNS, router forwarding, the host firewall, TLS, and Caddy are working.
+- Seafile, MariaDB, and memcached were authorized and started on 2026-09-12.
+  MariaDB reported that no upgrade was required, all three containers remained
+  active without restarts, and the database contained 11 repositories with 11
+  owners after startup. The public login, API ping, and fileserver protocol
+  endpoints returned successful responses.
+- Before startup, `/mnt/data/services/seafile` was copied read-only to
+  `tower:/home/nomig/chariot-recovery-2026-09-12/seafile-prestart.tar.zst`.
+  The 70,419,283,599-byte archive passed zstd and tar validation; its SHA-256 is
+  `6b46cda719a4147234d7a2f097cb898330bbc541afc119d71b02f9169a2e07c9`.
+- The MariaDB root password, Seafile database password, and Seafile JWT key were
+  rotated on 2026-09-13. Both old database credentials are rejected, the admin
+  bootstrap variables are absent from the runtime environment, all three public
+  endpoints return HTTP 200, and the database still contains 11 repositories.
+  The pre-rotation logical dump was copied to
+  `tower:/home/nomig/chariot-recovery-2026-09-12/seafile-credential-rotation-backup/pre-credential-rotation-2026-09-13.tar`.
+  Its embedded SQL matches the server copy at SHA-256
+  `33454f4cc409b6a6900abc6643826a7ab82dd7142b58b03b172481d982f5928d`;
+  the archive SHA-256 is
+  `2f9a0a6a2578fc3f84316d276a324a1a3ca9b553db4d65c64cdb38e80d870e8e`.
+- The old Gitea tree and PostgreSQL database were lost when NixOS replaced the
+  previous root filesystem. A fresh native Gitea `1.27.3` instance now serves
+  HTTPS only. The `nmiguel` administrator and two private repositories were
+  rebuilt from the surviving local clones. Fresh HTTPS clones passed `git fsck`
+  and matched `homeserver/main` at `62a98b5` and `Bank-Parser/master` at
+  `fdae9c8`; old issues, tokens, hooks, attachments, settings, and other database
+  metadata could not be recovered.
+- The native Gitea and PostgreSQL backup jobs completed successfully. Their
+  outputs were copied to
+  `tower:/home/nomig/chariot-recovery-2026-09-12/gitea-native-backups` and
+  restore-tested: both archived repositories passed `git fsck`, while the SQL
+  restored into isolated PostgreSQL 14 with two repository rows and one user.
+  The Gitea archive SHA-256 is
+  `db7730842cdf4df3f11e5fbe061ba3d572be18ac7c542b52a411ddc1d7482648`;
+  the PostgreSQL archive SHA-256 is
+  `ea22679a2cb219b5ccc1c0f6cb73e52fdbe0b35d3ee46563b8fc1f833a4fdb10`.
+- The ddclient token and Seafile environment files are staged outside Git.
+  ddclient updates the apex, wildcard, `www`, and `drive` records. `git` resolves
+  through the Cloudflare-proxied wildcard because Gitea exposes HTTPS only.
+- The active Cloudflare token also appears in Fish history and in an OpenCode
+  session from 2026-08-04 that used the OpenAI provider. This is third-party
+  disclosure even though the private Gitea repository is not anonymously
+  accessible. Replace the token and revoke the current value.
+- The currently served SSH Ed25519 host key matches the key accepted before
+  this recovery. Automatic replacement-key generation is disabled in NixOS.
 
-- An off-host backup contains Gitea, Seafile, database dumps, and server-side
-  repository changes.
-- Both database dumps have been restored successfully in an isolated test.
-- File manifests and representative content hashes match their sources.
-- Gitea's target tree contains the active data, not the stale
-  `/mnt/data/services/gitea` copy.
-- All required secrets exist with the expected ownership and permissions.
-- The final maintenance-window data sync has completed with writes stopped.
-- The current root disk is retained intact or has a verified restorable image.
-- The 4 TB persistent disk is positively identified and excluded from every
-  operating-system disk operation.
+## Unresolved gates
 
-## Next steps
+- Gitea and PostgreSQL need recurring off-host backups with restore tests. The
+  surviving local clones and recovery archives preserve Git history but not the
+  lost application metadata.
+- Seafile still needs authenticated, application-level validation of library
+  contents, representative hashes, upload, download, sharing, history, and
+  client synchronization before the recovery is considered fully accepted.
+- Confirm that the temporary Gitea bootstrap password was changed. Its local
+  recovery copy is no longer present.
+- The administrator value committed for Seafile no longer matches any current
+  administrator hash; its current plaintext value is intentionally unavailable.
+- Replace and revoke the active Cloudflare token because it was retained in
+  shell and OpenCode history and sent through an OpenAI-backed session. The
+  committed Seafile database credentials and JWT key are already rotated.
 
-### 1. Preserve current server work
+## Recovery order
 
-- Preserve the server-side `homeserver` checkout. It currently has modified
-  firewall and Seafile files plus untracked CUPS configuration.
-- Record current service versions, container image digests, database counts,
-  repository counts, mount UUIDs, ownership, and public SSH fingerprints.
-- Store that inventory with the migration backups.
+### 1. Preserve data
 
-### 2. Stage remaining secrets
+- Take an off-host copy of `/mnt/data/services/seafile` before starting its
+  MariaDB container. The container has automatic MariaDB upgrade enabled.
+- Preserve the surviving Gitea clones and incomplete persistent tree; the old
+  root filesystem and its PostgreSQL database are no longer recoverable.
+- Record file manifests, representative content hashes, ownership, image
+  digests, database counts, user counts, library counts, and repository counts.
 
-Copy values without printing them to the terminal or placing them in Git:
+Local dumps under `/mnt/data/backups` are useful for recovery history but are
+not independent backups because they share the production disk.
 
-| Target | Source |
+### 2. Stage runtime secrets
+
+Copy values from a secure source directly to their persistent targets without
+printing them or placing an intermediate file in this checkout:
+
+| Target | Required content |
 | --- | --- |
-| `ddclient-cloudflare-token` | Cloudflare password/token field in the active ddclient configuration |
-| `seafile-mysql.env` | Existing Seafile MariaDB root password |
-| `seafile.env` | Existing Seafile DB password, JWT key, and administrator values |
-| Gitea `secret_key` | `SECRET_KEY` in the active Gitea `app.ini` |
-| Gitea `internal_token` | `INTERNAL_TOKEN` in the active Gitea `app.ini` |
-| Gitea `oauth2_jwt_secret` | OAuth2 `JWT_SECRET` in the active Gitea `app.ini` |
-| Gitea `lfs_jwt_secret` | `LFS_JWT_SECRET` in the active Gitea `app.ini` |
-| Gitea SSH host keys | `/data/ssh` in the active Gitea container |
+| `ddclient-cloudflare-token` | Only a least-privilege Cloudflare API token |
+| `seafile-mysql.env` | `MYSQL_ROOT_PASSWORD` |
+| `seafile.env` | The three Seafile variables documented above |
+| Gitea `gitea/conf/*_secret` files | The four persistent application secrets |
 
-- Keep files under `/mnt/data/secrets/chariot` root-owned with mode `0600`
-  unless Gitea must read them directly.
-- Keep secret directories mode `0700` unless an explicitly configured service
-  group requires traversal.
-- Treat credentials already committed to the homeserver Git history as exposed
-  and rotate them after the restored services are verified.
+Secret directories must be root-owned mode `0700`; standalone secret files
+must be root-owned mode `0600`. Gitea-owned files must remain readable by UID
+and GID `989` without becoming public. NixOS checks that every required file is
+non-empty but deliberately does not create any secret.
 
-### 3. Create independent backups
+### 3. Recover Seafile
 
-- Choose storage that is not the server's 4 TB disk.
-- Produce a logical PostgreSQL dump of the active Gitea database.
-- Copy active Gitea repositories, LFS objects, attachments, application data,
-  application secrets, and Gitea SSH host keys.
-- Produce a transactionally consistent MariaDB dump containing all three
-  Seafile databases.
-- Copy the complete `/mnt/data/services/seafile` tree, including the 68 GB
-  Seafile object store and MariaDB directory.
-- Copy the dirty server-side repository and any other wanted files from the
-  current root filesystem.
-- Generate manifests and hashes for the backups without modifying the sources.
+- Verify the MariaDB and Seafile directories against the preserved inventory.
+- Verify both environment files are non-empty and contain only the expected
+  assignments.
+- Create `/mnt/data/services/seafile/.nixos-ready` only after accepting the
+  first-start upgrade risk.
+- Start `docker-seafile-mysql.service` and wait for Docker health to report
+  `healthy` before starting the application. The NixOS application unit also
+  enforces this wait with a five-minute timeout.
+- Start `docker-seafile-memcached.service` and `docker-seafile.service`.
+- Validate login, library listing, upload, download, sharing, history, client
+  synchronization, and representative hashes before accepting new writes.
 
-### 4. Prove the backups
+Creating a marker does not start a previously skipped unit. Removing a marker
+does not stop a running unit; stop the units explicitly before removing it.
 
-- Restore the Gitea PostgreSQL dump into an isolated PostgreSQL 14 instance.
-- Start an isolated Gitea test against copied files and the restored database.
-- Confirm the observed baseline of one user and two repositories, then test an
-  HTTP clone, SSH clone, LFS object, login, and repository browsing.
-- Restore the Seafile MariaDB dump and copied object store into an isolated
-  Seafile stack.
-- Confirm the observed baseline of 11 library records and test login, listing,
-  upload, download, and representative file hashes.
-- Record the restore procedure and results. A backup is not accepted until this
-  gate passes.
+### 4. Recover Gitea
 
-### 5. Stage the persistent Gitea target
+The old root filesystem was overwritten before its active Gitea state was
+preserved. The accepted fallback was a fresh native instance populated from the
+two surviving clones. Keep the incomplete `/mnt/data/services/gitea` tree only
+as a recovery artifact; do not merge it into the active tree. Validate login,
+HTTPS clone and push, repository visibility, hooks, and backups after future
+changes. Gitea's built-in SSH server is intentionally disabled.
 
-- Use `/mnt/data/services/gitea-native`; do not reuse or overwrite the stale
-  `/mnt/data/services/gitea` tree.
-- Copy the active `/home/nomig/data/gitea` content into the new target while the
-  current service remains available, then plan a final cold delta sync.
-- Preserve Gitea's four application secrets and three SSH host keypairs.
-- Set the migrated Gitea tree to numeric ownership `989:989`.
-- Prepare the PostgreSQL logical dump for restoration into
-  `/mnt/data/services/gitea-postgresql-14` after NixOS initializes PostgreSQL.
-- Leave `/mnt/data/services/gitea-native/.nixos-ready` absent.
+### 5. Enable dynamic DNS last
 
-### 6. Complete pre-install checks
+- Reconcile the configured apex, wildcard, `www`, and `drive` records with
+  Cloudflare first. Gitea's `git` hostname uses the proxied wildcard.
+- Stage the token, start ddclient, and confirm that it changes only the intended
+  records. There is no IPv6 update configured.
 
-- Rebuild and evaluate `nixosConfigurations.Chariot` from the exact revision
-  selected for installation.
-- Confirm the machine is still using legacy BIOS and that GRUB targets only the
-  disposable operating-system disk.
-- Confirm the persistent disk UUID matches `hardware-configuration.nix`.
-- Confirm the future root and boot filesystems will use the labels expected by
-  the configuration.
-- Confirm the copied OpenSSH fingerprints match the current host.
-- Confirm console or installer-root access is available to set any desired
-  `nomig` Linux password.
+## Long-term work
 
-### 7. Perform the maintenance cutover
-
-- Announce a maintenance window and prevent new writes to Gitea and Seafile.
-- Take final logical database dumps after writes have stopped.
-- Perform the final Gitea filesystem delta sync and final Seafile backup sync.
-- Recheck database counts, manifests, hashes, and backup readability.
-- Keep both readiness markers absent.
-- Proceed to operating-system replacement only after the migration gates pass
-  and a separate destructive runbook has been explicitly reviewed and approved.
-
-### 8. Complete first-boot restoration
-
-- Verify `/mnt/data` is mounted from the expected persistent disk before
-  inspecting or starting stateful services.
-- Set the chosen `nomig` Linux password from the root installer environment.
-- Verify the copied host OpenSSH keys are active before relying on remote access.
-- Let NixOS initialize the empty PostgreSQL 14 target, then restore the verified
-  Gitea logical dump.
-- Verify Gitea files, secrets, SSH keys, paths, and ownership before creating
-  the Gitea readiness marker.
-- Verify Seafile environment files, database directory, object store, and image
-  digests before creating the Seafile readiness marker.
-- Start each application separately and stop the cutover if its validation
-  checks fail.
-
-### 9. Validate the migrated host
-
-- Confirm Gitea users, repositories, HTTPS clone, SSH clone, LFS, hooks, login,
-  tokens, and attachments.
-- Confirm Seafile users, libraries, uploads, downloads, shares, history, and
-  representative file hashes.
-- Confirm Caddy certificates and both reverse proxies.
-- Confirm ddclient updates only the intended DNS records.
-- Confirm host SSH fingerprints, firewall policy, CUPS printing, SMART status,
-  filesystem mounts, swap, timers, and local dumps.
-- Monitor logs and disk growth through an agreed observation period.
-
-### 10. Establish rollback and long-term backups
-
-- Retain the old root disk or its verified image until the observation period
-  completes.
-- Keep pre-migration dumps and file backups immutable during that period.
-- Configure recurring off-host backups for Gitea, PostgreSQL, Seafile MariaDB,
-  and the Seafile object store.
-- Define retention, restore testing, monitoring, and alerting.
-- Remove stale data and old rollback material only in a later, separately
-  approved cleanup step.
-
-## Destructive phase
-
-This document intentionally contains no formatting, installation, NixOS
-activation, service-stop, or deletion commands. Those commands should be added
-only to a separate cutover runbook after the migration gates and outstanding
-decisions have been resolved.
+- Add recurring off-host backups for Gitea, PostgreSQL, Seafile MariaDB, and
+  the Seafile object store, with retention and periodic restore tests.
+- Keep credentials out of future commits and remove them from shell commands and
+  AI tool arguments. Rotate the retained Cloudflare token.
+- Treat Caddy journals and access logs as sensitive. NixOS redacts the custom
+  `Seafile-Repo-Token` request header in both runtime errors and Drive access
+  logs, but old journal entries can still contain it.
+- Keep the exact Seafile image digests fixed until backup and restore tests pass.
+- Prototype a native Seafile package only against isolated restored data; it is
+  a maintained packaging project, not a safe in-place configuration switch.

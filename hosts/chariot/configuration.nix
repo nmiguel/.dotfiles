@@ -6,20 +6,75 @@
 let
   dataRoot = "/mnt/data";
   secretRoot = "${dataRoot}/secrets/chariot";
+  ddclientSecret = "${secretRoot}/ddclient-cloudflare-token";
+  sshHostKeyFiles = [
+    "${secretRoot}/openssh/ssh_host_ed25519_key"
+    "${secretRoot}/openssh/ssh_host_ecdsa_key"
+    "${secretRoot}/openssh/ssh_host_rsa_key"
+  ];
   giteaStateDir = "${dataRoot}/services/gitea-native";
   giteaReady = "${giteaStateDir}/.nixos-ready";
+  giteaRequiredFiles = [
+    "${giteaStateDir}/gitea/conf/secret_key"
+    "${giteaStateDir}/gitea/conf/internal_token"
+    "${giteaStateDir}/gitea/conf/oauth2_jwt_secret"
+    "${giteaStateDir}/gitea/conf/lfs_jwt_secret"
+  ];
   seafileRoot = "${dataRoot}/services/seafile";
+  seafileDataDir = "${seafileRoot}/seafile-data";
+  seafileMysqlDataDir = "${seafileRoot}/seafile-mysql/db";
   seafileSecretEnv = "${secretRoot}/seafile.env";
   seafileMysqlSecretEnv = "${secretRoot}/seafile-mysql.env";
+  seafileRequiredFiles = [
+    seafileMysqlSecretEnv
+    seafileSecretEnv
+  ];
   seafileReady = "${seafileRoot}/.nixos-ready";
+  mediaStateRoot = "${dataRoot}/services/media";
+  mediaReady = "${mediaStateRoot}/.nixos-ready";
+  persistentDirectoriesService = "chariot-persistent-directories.service";
+  seafileUnitConfig = {
+    RequiresMountsFor = dataRoot;
+    ConditionPathExists = seafileReady;
+    ConditionPathIsDirectory = [
+      seafileDataDir
+      seafileMysqlDataDir
+    ];
+    ConditionFileNotEmpty = seafileRequiredFiles;
+  };
+  waitForSeafileMysql = pkgs.writeShellScript "wait-for-seafile-mysql" ''
+    for _attempt in $(${pkgs.coreutils}/bin/seq 1 150); do
+      status="$(${lib.getExe pkgs.docker} inspect --format='{{.State.Health.Status}}' seafile-mysql 2>/dev/null || true)"
+      if [ "$status" = healthy ]; then
+        exit 0
+      fi
+      if [ "$status" = unhealthy ]; then
+        exit 1
+      fi
+      ${pkgs.coreutils}/bin/sleep 2
+    done
+
+    exit 1
+  '';
+  mediaUnitConfig = {
+    RequiresMountsFor = dataRoot;
+    ConditionPathExists = mediaReady;
+  };
 in
 {
-  systemSettings.fish.enable = true;
-
-  boot.loader.grub = {
-    enable = true;
-    device = "/dev/sda";
+  systemSettings = {
+    fish.enable = true;
+    jellyfin = {
+      enable = true;
+      stateRoot = mediaStateRoot;
+    };
   };
+
+  boot.loader.systemd-boot = {
+    enable = true;
+    configurationLimit = 10;
+  };
+  boot.loader.efi.canTouchEfiVariables = true;
 
   networking = {
     hostName = "chariot";
@@ -32,7 +87,6 @@ in
       allowedTCPPorts = [
         80
         443
-        222
       ];
 
       # Keep host SSH and CUPS private without publishing the actual LAN range.
@@ -44,6 +98,9 @@ in
 
   time.timeZone = "UTC";
   i18n.defaultLocale = "en_US.UTF-8";
+
+  # Keep local recovery possible without waiting for an interactive login.
+  services.getty.autologinUser = "nomig";
 
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
@@ -71,6 +128,7 @@ in
 
   services.openssh = {
     enable = true;
+    generateHostKeys = false;
     openFirewall = false;
     hostKeys = [
       {
@@ -98,20 +156,33 @@ in
     enable = true;
     dataDir = "${dataRoot}/services/caddy";
     openFirewall = false;
+    logFormat = ''
+      level ERROR
+      format filter {
+        request>headers>Seafile-Repo-Token replace REDACTED
+      }
+    '';
 
     virtualHosts = {
       "git.getthybearings.xyz".extraConfig = ''
         reverse_proxy 127.0.0.1:3000
       '';
 
-      "drive.getthybearings.xyz".extraConfig = ''
-        reverse_proxy 127.0.0.1:3100 {
-          header_up Host {host}
-          header_up X-Real-IP {remote_host}
-          header_up X-Forwarded-For {remote_host}
-          flush_interval -1
-        }
-      '';
+      "drive.getthybearings.xyz" = {
+        logFormat = ''
+          output file /var/log/caddy/access-drive.getthybearings.xyz.log
+          format filter {
+            request>headers>Seafile-Repo-Token replace REDACTED
+          }
+        '';
+        extraConfig = ''
+          reverse_proxy 127.0.0.1:3100 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            flush_interval -1
+          }
+        '';
+      };
     };
   };
 
@@ -120,7 +191,7 @@ in
     interval = "5min";
     protocol = "cloudflare";
     username = "token";
-    passwordFile = "${secretRoot}/ddclient-cloudflare-token";
+    passwordFile = ddclientSecret;
     zone = "getthybearings.xyz";
     domains = [
       "getthybearings.xyz"
@@ -162,19 +233,11 @@ in
       server = {
         APP_DATA_PATH = "${giteaStateDir}/gitea";
         DOMAIN = "git.getthybearings.xyz";
-        SSH_DOMAIN = "git.getthybearings.xyz";
         HTTP_ADDR = "127.0.0.1";
         HTTP_PORT = 3000;
         ROOT_URL = "https://git.getthybearings.xyz/";
-        DISABLE_SSH = false;
-        START_SSH_SERVER = true;
-        SSH_LISTEN_PORT = 222;
-        SSH_PORT = 22;
-        SSH_SERVER_HOST_KEYS = builtins.concatStringsSep "," [
-          "${giteaStateDir}/ssh/ssh_host_rsa_key"
-          "${giteaStateDir}/ssh/ssh_host_ecdsa_key"
-          "${giteaStateDir}/ssh/ssh_host_ed25519_key"
-        ];
+        DISABLE_SSH = true;
+        START_SSH_SERVER = false;
         OFFLINE_MODE = true;
       };
 
@@ -236,7 +299,7 @@ in
   };
 
   # Seafile was removed from nixpkgs as unmaintained. Keep the upstream stack
-  # declarative and pin every image to the digest currently running on chariot.
+  # declarative and pin every image to its last known pre-migration digest.
   virtualisation.oci-containers = {
     backend = "docker";
     containers = {
@@ -247,7 +310,7 @@ in
           MYSQL_LOG_CONSOLE = "true";
           MARIADB_AUTO_UPGRADE = "1";
         };
-        volumes = [ "${seafileRoot}/seafile-mysql/db:/var/lib/mysql" ];
+        volumes = [ "${seafileMysqlDataDir}:/var/lib/mysql" ];
         networks = [ "seafile-net" ];
         extraOptions = [
           "--network-alias=seafile-db"
@@ -294,7 +357,7 @@ in
           SEADOC_SERVER_URL = "https://drive.getthybearings.xyz/sdoc-server";
         };
         ports = [ "127.0.0.1:3100:80" ];
-        volumes = [ "${seafileRoot}/seafile-data:/shared" ];
+        volumes = [ "${seafileDataDir}:/shared" ];
         networks = [ "seafile-net" ];
       };
     };
@@ -322,50 +385,147 @@ in
   };
 
   systemd.services = {
-    caddy.unitConfig.RequiresMountsFor = dataRoot;
-    ddclient.unitConfig.RequiresMountsFor = dataRoot;
-    gitea.unitConfig = {
+    chariot-persistent-directories = {
+      description = "Create Chariot directories on the persistent data disk";
+      wantedBy = [ "multi-user.target" ];
+      before = [
+        "caddy.service"
+        "ddclient.service"
+        "gitea.service"
+        "postgresql.service"
+        "sshd.service"
+        "jellyfin.service"
+        "seerr.service"
+        "radarr.service"
+        "prowlarr.service"
+        "bazarr.service"
+        "transmission.service"
+        "sonarr.service"
+        "flaresolverr.service"
+      ];
+      unitConfig.RequiresMountsFor = dataRoot;
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      script = ''
+        ${pkgs.coreutils}/bin/install -d -m 0755 -o root -g root ${dataRoot}/services
+        ${pkgs.coreutils}/bin/install -d -m 0750 -o caddy -g caddy ${dataRoot}/services/caddy
+        ${pkgs.coreutils}/bin/install -d -m 0700 -o postgres -g postgres ${dataRoot}/services/gitea-postgresql-14
+        ${pkgs.coreutils}/bin/install -d -m 0750 -o gitea -g gitea ${giteaStateDir} ${giteaStateDir}/git
+        ${pkgs.coreutils}/bin/install -d -m 0755 -o root -g root ${mediaStateRoot}
+        ${pkgs.coreutils}/bin/install -d -m 0700 -o root -g root ${mediaStateRoot}/prowlarr
+        ${pkgs.coreutils}/bin/install -d -m 0700 -o root -g root ${secretRoot}
+        ${pkgs.coreutils}/bin/install -d -m 0711 -o root -g root ${dataRoot}/backups
+        ${pkgs.coreutils}/bin/install -d -m 0750 -o gitea -g gitea ${dataRoot}/backups/gitea
+        ${pkgs.coreutils}/bin/install -d -m 0700 -o postgres -g postgres ${dataRoot}/backups/postgresql
+      '';
+    };
+
+    caddy = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig.RequiresMountsFor = dataRoot;
+    };
+    sshd = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = {
+        RequiresMountsFor = dataRoot;
+        ConditionFileNotEmpty = sshHostKeyFiles;
+      };
+    };
+    ddclient = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = {
+        RequiresMountsFor = dataRoot;
+        ConditionFileNotEmpty = ddclientSecret;
+      };
+    };
+    gitea = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = {
+        RequiresMountsFor = dataRoot;
+        ConditionPathExists = giteaReady;
+        ConditionFileNotEmpty = giteaRequiredFiles;
+      };
+    };
+    postgresql = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+    };
+    gitea-dump.unitConfig = {
       RequiresMountsFor = dataRoot;
       ConditionPathExists = giteaReady;
     };
-    gitea-dump.unitConfig.ConditionPathExists = giteaReady;
     postgresqlBackup-gitea.unitConfig = {
       RequiresMountsFor = dataRoot;
       ConditionPathExists = giteaReady;
     };
 
+    jellyfin = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = mediaUnitConfig;
+    };
+    seerr = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = mediaUnitConfig;
+    };
+    radarr = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = mediaUnitConfig;
+    };
+    prowlarr = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = mediaUnitConfig;
+    };
+    bazarr = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = mediaUnitConfig;
+    };
+    transmission = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = mediaUnitConfig;
+    };
+    sonarr = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = mediaUnitConfig;
+    };
+    flaresolverr = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig = mediaUnitConfig;
+    };
+
     docker-seafile-mysql = {
       after = [ "seafile-network.service" ];
       requires = [ "seafile-network.service" ];
-      unitConfig = {
-        RequiresMountsFor = dataRoot;
-        ConditionPathExists = [
-          seafileReady
-          seafileMysqlSecretEnv
-        ];
-      };
+      unitConfig = seafileUnitConfig;
       serviceConfig.Restart = lib.mkForce "always";
     };
     docker-seafile-memcached = {
       after = [ "seafile-network.service" ];
       requires = [ "seafile-network.service" ];
-      unitConfig = {
-        RequiresMountsFor = dataRoot;
-        ConditionPathExists = seafileReady;
-      };
+      unitConfig = seafileUnitConfig;
       serviceConfig.Restart = lib.mkForce "always";
     };
     docker-seafile = {
       after = [ "seafile-network.service" ];
       requires = [ "seafile-network.service" ];
-      unitConfig = {
-        RequiresMountsFor = dataRoot;
-        ConditionPathExists = [
-          seafileReady
-          seafileSecretEnv
-        ];
+      unitConfig = seafileUnitConfig;
+      serviceConfig = {
+        ExecStartPre = lib.mkAfter [ waitForSeafileMysql ];
+        Restart = lib.mkForce "always";
       };
-      serviceConfig.Restart = lib.mkForce "always";
     };
   };
 
@@ -403,12 +563,6 @@ in
     enable = true;
     autodetect = true;
   };
-
-  systemd.tmpfiles.rules = [
-    "d '${dataRoot}/services/caddy' 0750 caddy caddy - -"
-    "d '${secretRoot}' 0700 root root - -"
-    "d '${dataRoot}/backups' 0750 root root - -"
-  ];
 
   environment.systemPackages = with pkgs; [
     borgbackup

@@ -16,6 +16,7 @@ in
     lib.mkEnableOption "the Fish shell as the login shell";
 
   config = lib.mkIf cfg.enable {
+    programs.fish.enable = true;
     users.users.nomig.shell = "${pkgs.fish}/bin/fish";
     programs.bash = {
       interactiveShellInit = ''
