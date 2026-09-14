@@ -1,55 +1,11 @@
 #!/bin/sh
 
-set -e
-sudo -v
+set -eu
 
-# --- CONFIGURATION ---
-
-# Your personal exclude file
-EXCLUDE_FILE="$HOME/.config/rsync/exclude_list.txt"
-LOG_FILE="$HOME/backup.log"
-
-ARGS="-aAXHv --delete --delete-excluded --info=progress2"
-
-if [ ! -f "$EXCLUDE_FILE" ]; then
-    echo "Exclude file not found. Exiting."
+if [ "$(hostname)" != "tower" ]; then
+    echo "The system backup is configured only on tower." >&2
     exit 1
 fi
 
-# Source directories
-SOURCE_HOME="$HOME"
-SOURCE_ETC="/etc/"
-
-# Package list destination
-
-DEST_ROOT="/mnt/data/tower_backup"
-# Option 2: Network Raspberry Pi (make sure SSH keys are set up!)
-# DEST_ROOT="user@raspberry-pi:/path/to/storage/"
-
-
-# --- SCRIPT ---
-
-# Create destination directories if they don't exist
-# The `-p` flag creates parent directories as needed
-mkdir -p "$DEST_ROOT/home"
-mkdir -p "$DEST_ROOT/etc"
-
-echo "Backing up package lists..."
-pacman -Qen > "$DEST_ROOT/pkglist-repo.txt"
-pacman -Qem > "$DEST_ROOT/pkglist-aur.txt"
-
-echo "Backing up /etc..."
-sudo rsync $ARGS \
-      "$SOURCE_ETC" \
-      "$DEST_ROOT/etc/" | tee "$LOG_FILE"
-
-
-echo "Finished backup of /etc. Starting backup of /home..." | tee -a "$LOG_FILE"
-
-sudo rsync $ARGS \
-      --exclude-from=$EXCLUDE_FILE \
-      "$SOURCE_HOME/" \
-      "$DEST_ROOT/home/" | tee -a "$LOG_FILE"
-
-echo "Backup complete!"
-date
+sudo systemctl start borgmatic.service
+sudo systemctl --no-pager --full status borgmatic.service
