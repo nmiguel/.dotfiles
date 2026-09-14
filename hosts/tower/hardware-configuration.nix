@@ -43,6 +43,12 @@
       options = [ "rw" "uid=1000" "gid=100" "dmask=000" "fmask=111" "nofail" ];
     };
 
+  fileSystems."/mnt/win" = {
+    device = "/dev/disk/by-uuid/D2621F2F621F17B5";
+    fsType = "ntfs-3g";
+    options = [ "rw" "uid=1000" "gid=100" "umask=0077" "nofail" ];
+  };
+
   swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
