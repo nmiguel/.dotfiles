@@ -32,8 +32,6 @@ let
   seafileReady = "${seafileRoot}/.nixos-ready";
   mediaStateRoot = "${dataRoot}/services/media";
   mediaReady = "${mediaStateRoot}/.nixos-ready";
-  towerBorgRepository = "${dataRoot}/tower_backup";
-  towerBackupPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINfSc6o1n3wa2I1lmEuEleV+jfZBJU2uuFXTLes/PFXP home-server";
   persistentDirectoriesService = "chariot-persistent-directories.service";
   seafileUnitConfig = {
     RequiresMountsFor = dataRoot;
@@ -204,60 +202,6 @@ in
     usev4 = "webv4, webv4=ifconfig.me/ip";
     usev6 = "";
     extraConfig = "ttl=1";
-  };
-
-  # Tower uploads through an append-only SSH command. Chariot performs
-  # destructive retention locally with the full repository permissions.
-  services.borgbackup.repos.tower = {
-    path = towerBorgRepository;
-    authorizedKeysAppendOnly = [ towerBackupPublicKey ];
-    quota = "1500G";
-  };
-
-  services.borgmatic = {
-    enable = true;
-    settings = {
-      source_directories = [ ];
-      repositories = [
-        {
-          path = towerBorgRepository;
-          label = "tower";
-        }
-      ];
-      archive_name_format = "tower-{now:%Y-%m-%dT%H:%M:%S.%f}";
-      match_archives = "sh:tower-*";
-      encryption_passphrase = "{credential systemd borgmatic.pw}";
-      lock_wait = 300;
-      retries = 3;
-      retry_wait = 60;
-      statistics = true;
-
-      keep_within = "14d";
-      keep_weekly = 8;
-      keep_monthly = 12;
-      keep_yearly = 3;
-
-      checks = [
-        {
-          name = "repository";
-          frequency = "1 month";
-          max_duration = 3600;
-        }
-        {
-          name = "archives";
-          frequency = "1 month";
-        }
-        {
-          name = "extract";
-          frequency = "3 months";
-        }
-      ];
-      check_last = 3;
-
-      borg_base_directory = "/var/lib/borgmatic";
-      user_state_directory = "/var/lib/borgmatic";
-      skip_actions = [ "create" ];
-    };
   };
 
   services.gitea = {
@@ -478,39 +422,6 @@ in
       '';
     };
 
-    borgbackup-repo-tower = {
-      after = [ persistentDirectoriesService ];
-      requires = [ persistentDirectoriesService ];
-      before = [ "sshd.service" ];
-      unitConfig.RequiresMountsFor = [ dataRoot ];
-      serviceConfig.UMask = "0077";
-      script = lib.mkForce ''
-        ${pkgs.coreutils}/bin/install -d -m 0700 -o borg -g borg ${lib.escapeShellArg towerBorgRepository}
-        ${pkgs.coreutils}/bin/chown -R borg:borg ${lib.escapeShellArg towerBorgRepository}
-        ${pkgs.coreutils}/bin/chmod 0700 ${lib.escapeShellArg towerBorgRepository}
-      '';
-    };
-
-    borgmatic = {
-      after = [ "borgbackup-repo-tower.service" ];
-      requires = [ "borgbackup-repo-tower.service" ];
-      unitConfig.RequiresMountsFor = [ towerBorgRepository ];
-      serviceConfig = {
-        User = "borg";
-        Group = "borg";
-        ProtectSystem = "strict";
-        ProtectHome = true;
-        ReadWritePaths = [ towerBorgRepository ];
-        UMask = "0077";
-
-        Nice = 19;
-        CPUSchedulingPolicy = "idle";
-        IOSchedulingClass = "idle";
-        CPUWeight = 10;
-        IOWeight = 10;
-      };
-    };
-
     caddy = {
       after = [ persistentDirectoriesService ];
       requires = [ persistentDirectoriesService ];
@@ -616,17 +527,6 @@ in
         Restart = lib.mkForce "always";
       };
     };
-  };
-
-  systemd.timers.borgmatic.timerConfig = {
-    # Maintenance is separated from tower's Sunday upload window.
-    OnCalendar = [
-      ""
-      "Wed *-*-01..07 03:00:00"
-    ];
-    Persistent = true;
-    RandomizedDelaySec = "30m";
-    AccuracySec = "30m";
   };
 
   services.printing = {
