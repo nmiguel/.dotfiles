@@ -6,7 +6,14 @@
 let
   dataRoot = "/mnt/data";
   secretRoot = "${dataRoot}/secrets/chariot";
-  ddclientSecret = "${secretRoot}/ddclient-cloudflare-token";
+  cloudflareDnsToken = "${secretRoot}/ddclient-cloudflare-token";
+  lanSubnet = "192.168.1.0/24";
+  gitHost = "git.getthybearings.xyz";
+  driveHost = "drive.getthybearings.xyz";
+  jellyfinHost = "jellyfin.getthybearings.xyz";
+  jellyseerrHost = "jellyseerr.getthybearings.xyz";
+  tailscaleAuthKey = "${secretRoot}/tailscale-auth-key";
+  tailscaleStateDir = "${dataRoot}/services/tailscale";
   sshHostKeyFiles = [
     "${secretRoot}/openssh/ssh_host_ed25519_key"
     "${secretRoot}/openssh/ssh_host_ecdsa_key"
@@ -56,6 +63,22 @@ let
 
     exit 1
   '';
+  waitForSeafile = pkgs.writeShellScript "wait-for-seafile" ''
+    for _attempt in $(${pkgs.coreutils}/bin/seq 1 180); do
+      if ${lib.getExe pkgs.curl} \
+        --fail \
+        --silent \
+        --output /dev/null \
+        --max-time 2 \
+        --header ${lib.escapeShellArg "Host: ${driveHost}"} \
+        http://127.0.0.1:3110/; then
+        exit 0
+      fi
+      ${pkgs.coreutils}/bin/sleep 1
+    done
+
+    exit 1
+  '';
   mediaUnitConfig = {
     RequiresMountsFor = dataRoot;
     ConditionPathExists = mediaReady;
@@ -66,6 +89,7 @@ in
     fish.enable = true;
     jellyfin = {
       enable = true;
+      openFirewall = false;
       stateRoot = mediaStateRoot;
     };
   };
@@ -84,14 +108,11 @@ in
     firewall = {
       enable = true;
       backend = "nftables";
-      allowedTCPPorts = [
-        80
-        443
-      ];
 
-      # Keep host SSH and CUPS private without publishing the actual LAN range.
+      # Tailscale remains the remote-access path, but trusted LAN clients can
+      # reach SSH and the user-facing service ports directly.
       extraInputRules = ''
-        ip saddr { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 } tcp dport { 22, 631 } accept
+        ip saddr ${lanSubnet} tcp dport { 22, 631, 3000, 3100, 5055, 6767, 7878, 8096, 8920, 8989, 9091, 9696 } accept
       '';
     };
   };
@@ -152,29 +173,78 @@ in
     };
   };
 
+  # Tailscale Services give every application a stable MagicDNS name and
+  # tailnet-only HTTPS endpoint while keeping the real listeners local.
+  services.tailscale = {
+    enable = true;
+    openFirewall = true;
+    authKeyFile = tailscaleAuthKey;
+    extraUpFlags = [ "--advertise-tags=tag:server" ];
+    extraDaemonFlags = [ "--state=${tailscaleStateDir}/tailscaled.state" ];
+
+    serve = {
+      enable = true;
+      services = {
+        git = {
+          advertised = true;
+          endpoints."tcp:443" = "tcp://127.0.0.1:443";
+        };
+        drive = {
+          advertised = true;
+          endpoints."tcp:443" = "tcp://127.0.0.1:443";
+        };
+        jellyfin = {
+          advertised = true;
+          endpoints."tcp:443" = "tcp://127.0.0.1:443";
+        };
+        jellyseerr = {
+          advertised = true;
+          endpoints."tcp:443" = "tcp://127.0.0.1:443";
+        };
+        radarr.endpoints."tcp:443" = "http://127.0.0.1:7878";
+        sonarr.endpoints."tcp:443" = "http://127.0.0.1:8989";
+        bazarr.endpoints."tcp:443" = "http://127.0.0.1:6767";
+        prowlarr.endpoints."tcp:443" = "http://127.0.0.1:9696";
+        transmission.endpoints."tcp:443" = "http://127.0.0.1:9091";
+        printer.endpoints."tcp:631" = "tcp://127.0.0.1:631";
+        ssh.endpoints."tcp:22" = "tcp://127.0.0.1:22";
+      };
+    };
+  };
+
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "nmiguel123@gmail.com";
+    certs =
+      lib.genAttrs
+        [
+          driveHost
+          gitHost
+          jellyfinHost
+          jellyseerrHost
+        ]
+        (_host: {
+          dnsProvider = "cloudflare";
+          credentialFiles.CF_DNS_API_TOKEN_FILE = cloudflareDnsToken;
+        });
+  };
+
   services.caddy = {
     enable = true;
     dataDir = "${dataRoot}/services/caddy";
     openFirewall = false;
-    logFormat = ''
-      level ERROR
-      format filter {
-        request>headers>Seafile-Repo-Token replace REDACTED
-      }
-    '';
 
     virtualHosts = {
-      "git.getthybearings.xyz".extraConfig = ''
-        reverse_proxy 127.0.0.1:3000
-      '';
-
-      "drive.getthybearings.xyz" = {
-        logFormat = ''
-          output file /var/log/caddy/access-drive.getthybearings.xyz.log
-          format filter {
-            request>headers>Seafile-Repo-Token replace REDACTED
-          }
+      ${gitHost} = {
+        listenAddresses = [ "127.0.0.1" ];
+        useACMEHost = gitHost;
+        extraConfig = ''
+          reverse_proxy 127.0.0.1:3000
         '';
+      };
+      ${driveHost} = {
+        listenAddresses = [ "127.0.0.1" ];
+        useACMEHost = driveHost;
         extraConfig = ''
           reverse_proxy 127.0.0.1:3100 {
             header_up Host {host}
@@ -183,25 +253,21 @@ in
           }
         '';
       };
+      ${jellyfinHost} = {
+        listenAddresses = [ "127.0.0.1" ];
+        useACMEHost = jellyfinHost;
+        extraConfig = ''
+          reverse_proxy 127.0.0.1:8096
+        '';
+      };
+      ${jellyseerrHost} = {
+        listenAddresses = [ "127.0.0.1" ];
+        useACMEHost = jellyseerrHost;
+        extraConfig = ''
+          reverse_proxy 127.0.0.1:5055
+        '';
+      };
     };
-  };
-
-  services.ddclient = {
-    enable = true;
-    interval = "5min";
-    protocol = "cloudflare";
-    username = "token";
-    passwordFile = ddclientSecret;
-    zone = "getthybearings.xyz";
-    domains = [
-      "getthybearings.xyz"
-      "*.getthybearings.xyz"
-      "www.getthybearings.xyz"
-      "drive.getthybearings.xyz"
-    ];
-    usev4 = "webv4, webv4=ifconfig.me/ip";
-    usev6 = "";
-    extraConfig = "ttl=1";
   };
 
   services.gitea = {
@@ -232,10 +298,10 @@ in
     settings = {
       server = {
         APP_DATA_PATH = "${giteaStateDir}/gitea";
-        DOMAIN = "git.getthybearings.xyz";
-        HTTP_ADDR = "127.0.0.1";
+        DOMAIN = gitHost;
+        HTTP_ADDR = "0.0.0.0";
         HTTP_PORT = 3000;
-        ROOT_URL = "https://git.getthybearings.xyz/";
+        ROOT_URL = "https://${gitHost}/";
         DISABLE_SSH = true;
         START_SSH_SERVER = false;
         OFFLINE_MODE = true;
@@ -245,7 +311,9 @@ in
       "repository.upload".TEMP_PATH = "${giteaStateDir}/gitea/uploads";
       indexer.ISSUE_INDEXER_PATH = "${giteaStateDir}/gitea/indexers/issues.bleve";
       session = {
-        COOKIE_SECURE = true;
+        # Direct LAN access uses HTTP; the source-restricted firewall rule is
+        # the security boundary for that path.
+        COOKIE_SECURE = false;
         PROVIDER = "file";
         PROVIDER_CONFIG = "${giteaStateDir}/gitea/sessions";
       };
@@ -348,15 +416,15 @@ in
           SEAFILE_MYSQL_DB_SEAFILE_DB_NAME = "seafile_db";
           SEAFILE_MYSQL_DB_SEAHUB_DB_NAME = "seahub_db";
           TIME_ZONE = "Etc/UTC";
-          SEAFILE_SERVER_HOSTNAME = "drive.getthybearings.xyz";
+          SEAFILE_SERVER_HOSTNAME = driveHost;
           SEAFILE_SERVER_PROTOCOL = "https";
           SITE_ROOT = "/";
           NON_ROOT = "false";
           SEAFILE_LOG_TO_STDOUT = "false";
           ENABLE_SEADOC = "false";
-          SEADOC_SERVER_URL = "https://drive.getthybearings.xyz/sdoc-server";
+          SEADOC_SERVER_URL = "https://${driveHost}/sdoc-server";
         };
-        ports = [ "127.0.0.1:3100:80" ];
+        ports = [ "127.0.0.1:3110:80" ];
         volumes = [ "${seafileDataDir}:/shared" ];
         networks = [ "seafile-net" ];
       };
@@ -384,13 +452,20 @@ in
     };
   };
 
+  # Keep Docker's published port private. The socket proxy makes Seafile's LAN
+  # traffic pass through the host input firewall before reaching the container.
+  systemd.sockets.seafile-lan-proxy = {
+    description = "Seafile LAN proxy socket";
+    wantedBy = [ "sockets.target" ];
+    listenStreams = [ "0.0.0.0:3100" ];
+  };
+
   systemd.services = {
     chariot-persistent-directories = {
       description = "Create Chariot directories on the persistent data disk";
       wantedBy = [ "multi-user.target" ];
       before = [
         "caddy.service"
-        "ddclient.service"
         "gitea.service"
         "postgresql.service"
         "sshd.service"
@@ -402,6 +477,9 @@ in
         "transmission.service"
         "sonarr.service"
         "flaresolverr.service"
+        "tailscaled.service"
+        "tailscaled-autoconnect.service"
+        "tailscale-serve.service"
       ];
       unitConfig.RequiresMountsFor = dataRoot;
       serviceConfig = {
@@ -411,6 +489,7 @@ in
       script = ''
         ${pkgs.coreutils}/bin/install -d -m 0755 -o root -g root ${dataRoot}/services
         ${pkgs.coreutils}/bin/install -d -m 0750 -o caddy -g caddy ${dataRoot}/services/caddy
+        ${pkgs.coreutils}/bin/install -d -m 0700 -o root -g root ${tailscaleStateDir}
         ${pkgs.coreutils}/bin/install -d -m 0700 -o postgres -g postgres ${dataRoot}/services/gitea-postgresql-14
         ${pkgs.coreutils}/bin/install -d -m 0750 -o gitea -g gitea ${giteaStateDir} ${giteaStateDir}/git
         ${pkgs.coreutils}/bin/install -d -m 0755 -o root -g root ${mediaStateRoot}
@@ -422,11 +501,6 @@ in
       '';
     };
 
-    caddy = {
-      after = [ persistentDirectoriesService ];
-      requires = [ persistentDirectoriesService ];
-      unitConfig.RequiresMountsFor = dataRoot;
-    };
     sshd = {
       after = [ persistentDirectoriesService ];
       requires = [ persistentDirectoriesService ];
@@ -435,13 +509,28 @@ in
         ConditionFileNotEmpty = sshHostKeyFiles;
       };
     };
-    ddclient = {
+    caddy = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig.RequiresMountsFor = dataRoot;
+    };
+    tailscaled = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig.RequiresMountsFor = dataRoot;
+    };
+    tailscaled-autoconnect = {
       after = [ persistentDirectoriesService ];
       requires = [ persistentDirectoriesService ];
       unitConfig = {
         RequiresMountsFor = dataRoot;
-        ConditionFileNotEmpty = ddclientSecret;
+        ConditionFileNotEmpty = tailscaleAuthKey;
       };
+    };
+    tailscale-serve = {
+      after = [ persistentDirectoriesService ];
+      requires = [ persistentDirectoriesService ];
+      unitConfig.RequiresMountsFor = dataRoot;
     };
     gitea = {
       after = [ persistentDirectoriesService ];
@@ -524,7 +613,21 @@ in
       unitConfig = seafileUnitConfig;
       serviceConfig = {
         ExecStartPre = lib.mkAfter [ waitForSeafileMysql ];
+        ExecStartPost = [ waitForSeafile ];
         Restart = lib.mkForce "always";
+      };
+    };
+    seafile-lan-proxy = {
+      description = "Proxy LAN connections to Seafile's loopback listener";
+      after = [ "docker-seafile.service" ];
+      requires = [ "docker-seafile.service" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:3110";
+        NoNewPrivileges = true;
+        PrivateDevices = true;
+        PrivateTmp = true;
+        ProtectHome = true;
+        ProtectSystem = "strict";
       };
     };
   };
@@ -533,8 +636,11 @@ in
     enable = true;
     drivers = [ pkgs.hplipWithPlugin ];
     listenAddresses = [ "*:631" ];
-    allowFrom = [ "all" ];
-    browsing = true;
+    allowFrom = [
+      "localhost"
+      lanSubnet
+    ];
+    browsing = false;
     defaultShared = true;
     openFirewall = false;
   };
@@ -547,16 +653,6 @@ in
       model = "drv:///hp/hpcups.drv/hp-laserjet_mfp_m28-m31.ppd";
     }
   ];
-
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    openFirewall = true;
-    publish = {
-      enable = true;
-      userServices = true;
-    };
-  };
 
   services.fstrim.enable = true;
   services.smartd = {

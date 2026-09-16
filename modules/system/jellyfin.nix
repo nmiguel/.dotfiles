@@ -2,7 +2,7 @@
 #
 # Two-layer module: declares `systemSettings.jellyfin.enable` and stays inert
 # until a host flips it on. Every service auto-starts on boot (systemd) and its
-# firewall port is opened so clients on the LAN can reach the web UIs.
+# firewall exposure is controlled by `systemSettings.jellyfin.openFirewall`.
 #
 # The request/download pipeline:
 #
@@ -36,6 +36,12 @@ in
       default = null;
       example = "/mnt/data/services/media";
       description = "Persistent root for media-service state; null uses each service's default location.";
+    };
+
+    openFirewall = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether to expose the media services through the host firewall.";
     };
   };
 
@@ -77,12 +83,12 @@ in
           "d /var/lib/media/tv 2775 sonarr media - -"
         ];
 
-    # Jellyfin media server. Runs under its own `jellyfin` user, auto-starts on
-    # boot, and opens the firewall for LAN clients (HTTP 8096 / HTTPS 8920 plus
-    # the DLNA/discovery UDP ports).
+    # Jellyfin media server. Runs under its own `jellyfin` user and auto-starts
+    # on boot. Firewall exposure includes HTTP 8096 / HTTPS 8920 plus the
+    # DLNA/discovery UDP ports.
     services.jellyfin = {
       enable = true;
-      openFirewall = true;
+      openFirewall = cfg.openFirewall;
     }
     // lib.optionalAttrs persistentState {
       dataDir = serviceState "jellyfin";
@@ -94,7 +100,7 @@ in
     # option to `services.seerr`.)
     services.seerr = {
       enable = true;
-      openFirewall = true;
+      openFirewall = cfg.openFirewall;
     }
     // lib.optionalAttrs persistentState {
       configDir = serviceState "seerr";
@@ -105,14 +111,14 @@ in
     # finished file into /var/lib/media.
     services.radarr = {
       enable = true;
-      openFirewall = true;
+      openFirewall = cfg.openFirewall;
     }
     // lib.optionalAttrs persistentState {
       dataDir = serviceState "radarr";
     };
     services.sonarr = {
       enable = true;
-      openFirewall = true;
+      openFirewall = cfg.openFirewall;
     }
     // lib.optionalAttrs persistentState {
       dataDir = serviceState "sonarr";
@@ -122,7 +128,7 @@ in
     # libraries and downloads matching subtitles alongside each video file.
     services.bazarr = {
       enable = true;
-      openFirewall = true;
+      openFirewall = cfg.openFirewall;
     }
     // lib.optionalAttrs persistentState {
       dataDir = serviceState "bazarr";
@@ -132,7 +138,7 @@ in
     # tracker once here and it syncs them into Radarr and Sonarr.
     services.prowlarr = {
       enable = true;
-      openFirewall = true;
+      openFirewall = cfg.openFirewall;
     }
     // lib.optionalAttrs persistentState {
       dataDir = serviceState "prowlarr";
@@ -151,8 +157,8 @@ in
     # umask 002 makes downloads group-writable so Radarr/Sonarr can move them.
     services.transmission = {
       enable = true;
-      openFirewall = true;
-      openRPCPort = true;
+      openFirewall = cfg.openFirewall;
+      openRPCPort = cfg.openFirewall;
       group = "media";
       home = if persistentState then serviceState "transmission" else "/var/lib/transmission";
       settings = {
@@ -177,8 +183,8 @@ in
         ratio-limit = 2.0;
         idle-seeding-limit-enabled = true;
         idle-seeding-limit = 60;
-        # Expose the web UI to the LAN. Fine on a trusted home network; tighten
-        # rpc-whitelist if this host is reachable from elsewhere.
+        # The host firewall controls remote ingress; Tailscale's reverse proxy
+        # continues to reach this listener over loopback.
         rpc-bind-address = "0.0.0.0";
         rpc-whitelist-enabled = false;
         rpc-host-whitelist-enabled = false;

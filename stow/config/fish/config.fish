@@ -3,6 +3,7 @@ set -g fish_key_bindings fish_vi_key_bindings
 
 # Aliases
 abbr v nvim
+abbr oc opencode
 abbr sv "command sudo -e -s nvim"
 abbr docker-compose "docker compose"
 abbr exp "nohup xdg-open . >/dev/null 2>&1 & disown"
