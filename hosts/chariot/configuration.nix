@@ -7,6 +7,7 @@ let
   dataRoot = "/mnt/data";
   secretRoot = "${dataRoot}/secrets/chariot";
   cloudflareDnsToken = "${secretRoot}/ddclient-cloudflare-token";
+  lanInterface = "enp0s31f6";
   lanSubnet = "192.168.1.0/24";
   gitHost = "git.getthybearings.xyz";
   driveHost = "drive.getthybearings.xyz";
@@ -117,6 +118,7 @@ in
       # reach SSH and the user-facing service ports directly.
       extraInputRules = ''
         ip saddr ${lanSubnet} tcp dport { 22, 631, 3000, 3100, 5055, 6767, 7878, 8096, 8920, 8989, 9091, 9696 } accept
+        ip saddr ${lanSubnet} udp dport 5353 accept
       '';
     };
   };
@@ -210,7 +212,10 @@ in
         bazarr.endpoints."tcp:443" = "http://127.0.0.1:6767";
         prowlarr.endpoints."tcp:443" = "http://127.0.0.1:9696";
         transmission.endpoints."tcp:443" = "http://127.0.0.1:9091";
-        printer.endpoints."tcp:631" = "tcp://127.0.0.1:631";
+        printer = {
+          advertised = true;
+          endpoints."tcp:631" = "tcp://127.0.0.1:631";
+        };
         ssh.endpoints."tcp:22" = "tcp://127.0.0.1:22";
       };
     };
@@ -636,17 +641,30 @@ in
     };
   };
 
+  services.avahi = {
+    enable = true;
+    allowInterfaces = [ lanInterface ];
+    ipv6 = false;
+    openFirewall = false;
+    publish = {
+      enable = true;
+      userServices = true;
+    };
+  };
+
   services.printing = {
     enable = true;
     drivers = [ pkgs.hplipWithPlugin ];
     listenAddresses = [ "*:631" ];
-    allowFrom = [
-      "localhost"
-      lanSubnet
-    ];
-    browsing = false;
+    # Network access is restricted by nftables and the Tailscale Service ACL.
+    allowFrom = [ "all" ];
+    browsing = true;
+    browsed.enable = false;
     defaultShared = true;
     openFirewall = false;
+    extraConf = ''
+      ServerAlias printer.heron-kingsnake.ts.net
+    '';
   };
 
   hardware.printers.ensurePrinters = [
