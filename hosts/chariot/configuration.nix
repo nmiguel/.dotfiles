@@ -92,6 +92,10 @@ in
       openFirewall = false;
       stateRoot = mediaStateRoot;
     };
+    openrgb = {
+      enable = true;
+      startupProfile = "all-off";
+    };
   };
 
   boot.loader.systemd-boot = {

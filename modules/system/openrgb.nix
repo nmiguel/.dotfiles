@@ -12,13 +12,20 @@ in
   options.systemSettings.openrgb = {
     enable = lib.mkEnableOption "OpenRGB lighting control";
 
+    startupProfile = lib.mkOption {
+      type = lib.types.enum [
+        "all-off"
+        "all-light-blue"
+      ];
+      default = "all-light-blue";
+      description = "OpenRGB profile to apply when the service starts.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     services.hardware.openrgb = {
       enable = true;
-      # startupProfile = "all-off";
-      startupProfile = "all-light-blue";
+      startupProfile = cfg.startupProfile;
     };
 
     # OpenRGB profiles contain detected controller metadata, so generate them
