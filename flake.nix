@@ -34,11 +34,6 @@
       flake = false;
     };
 
-    dms-gpu-monitor = {
-      url = "github:rollecode/dms-gpu-monitor";
-      flake = false;
-    };
-
     dank-calculator = {
       url = "github:rochacbruno/DankCalculator";
       flake = false;

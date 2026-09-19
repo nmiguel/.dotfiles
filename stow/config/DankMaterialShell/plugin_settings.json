@@ -3,14 +3,11 @@
     "enabled": true,
     "showDeviceSelector": false
   },
+  "gpuUsage": {
+    "enabled": true
+  },
   "calculator": {
     "enabled": true,
     "trigger": "="
-  },
-  "gpuMonitor": {
-    "enabled": true,
-    "labelText": "",
-    "showLabel": false,
-    "topCount": 10
   }
 }

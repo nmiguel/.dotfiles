@@ -256,8 +256,9 @@
           "minimumWidth": true
         },
         {
-          "id": "gpuMonitor",
-          "enabled": true
+          "id": "gpuUsage",
+          "enabled": true,
+          "minimumWidth": true
         }
       ],
       "centerWidgets": [

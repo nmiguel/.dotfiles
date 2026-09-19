@@ -52,7 +52,6 @@ in
 
       plugins = {
         volumeMixer.src = inputs.dms-volume-mixer;
-        gpuMonitor.src = inputs.dms-gpu-monitor;
         calculator.src = inputs.dank-calculator;
       };
     };

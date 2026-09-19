@@ -54,22 +54,6 @@
         "type": "github"
       }
     },
-    "dms-gpu-monitor": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1785070845,
-        "narHash": "sha256-zSRCPbxIp9I67QBMtM7pho4T3AQmw0WQOME9MsPBeRM=",
-        "owner": "rollecode",
-        "repo": "dms-gpu-monitor",
-        "rev": "6a725d2c292c4cd8c7da38ed0e40ad77eb77ec25",
-        "type": "github"
-      },
-      "original": {
-        "owner": "rollecode",
-        "repo": "dms-gpu-monitor",
-        "type": "github"
-      }
-    },
     "dms-volume-mixer": {
       "flake": false,
       "locked": {
@@ -242,7 +226,6 @@
       "inputs": {
         "dank-calculator": "dank-calculator",
         "dms": "dms",
-        "dms-gpu-monitor": "dms-gpu-monitor",
         "dms-volume-mixer": "dms-volume-mixer",
         "home-manager": "home-manager",
         "neovim-nightly-overlay": "neovim-nightly-overlay",

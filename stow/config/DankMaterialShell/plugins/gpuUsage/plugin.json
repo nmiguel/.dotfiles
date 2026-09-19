@@ -1,0 +1,19 @@
+{
+  "id": "gpuUsage",
+  "name": "GPU Usage",
+  "description": "Displays NVIDIA volatile GPU utilization in DankBar",
+  "version": "1.0.0",
+  "author": "nomig",
+  "icon": "speed",
+  "type": "widget",
+  "capabilities": [
+    "dankbar-widget"
+  ],
+  "component": "./GpuUsageWidget.qml",
+  "dependencies": [
+    "nvidia-smi"
+  ],
+  "permissions": [
+    "process"
+  ]
+}
