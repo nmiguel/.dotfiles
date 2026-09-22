@@ -1,10 +1,10 @@
-# Home-manager configuration for coder on `morpheus`.
+# Home-manager configuration for coder on `hermit`.
 #
-# morpheus is an Ubuntu machine (not NixOS), so home-manager runs in
-# standalone mode — it manages only this user's packages and dotfiles, not the
-# system. The flake exposes it as `homeConfigurations.morpheus`; apply it with:
+# hermit is an Ubuntu machine (not NixOS), so home-manager runs in standalone
+# mode: it manages only this user's packages and dotfiles, not the system. The
+# flake exposes it as `homeConfigurations.hermit`; apply it with:
 #
-#     home-manager switch --flake .#morpheus
+#     home-manager switch --flake .#hermit
 #
 # It reuses the same modules/user feature set as tower; trim the userSettings
 # below if some desktop packages don't make sense on this box.

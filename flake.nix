@@ -97,16 +97,16 @@
       };
 
       # Standalone home-manager hosts (non-NixOS, e.g. Ubuntu). Build/apply with
-      #   nix run home-manager -- switch --flake .#morpheus -b backup   # first time
-      #   home-manager switch --flake .#morpheus              # thereafter
-      homeConfigurations.morpheus = home-manager.lib.homeManagerConfiguration {
+      #   nix run home-manager -- switch --flake .#hermit -b backup   # first time
+      #   home-manager switch --flake .#hermit              # thereafter
+      homeConfigurations.hermit = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = linuxSystem;
           config.allowUnfree = true;
           overlays = overlaysFor linuxSystem;
         };
         extraSpecialArgs = { inherit inputs; };
-        modules = [ ./hosts/morpheus/home.nix ];
+        modules = [ ./hosts/hermit/home.nix ];
       };
 
       # Standalone Home Manager configuration for an Apple Silicon Mac. Apply with:

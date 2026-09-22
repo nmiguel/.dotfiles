@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bootstrap/refresh the morpheus home-manager configuration on a non-NixOS
+# Bootstrap/refresh the hermit home-manager configuration on a non-NixOS
 # host using nix-portable (rootless nix, shipped in this repo).
 #
 # What this does:
@@ -9,7 +9,7 @@
 #      /nix/store paths home-manager creates resolve on the host and binaries
 #      run natively (no proot overhead at runtime).
 #   3. Creates the nix profile directories home-manager expects.
-#   4. Runs `home-manager switch` for the morpheus configuration via
+#   4. Runs `home-manager switch` for the hermit configuration via
 #      nix-portable, with the nix binary on PATH so the activation script
 #      can find it.
 #
@@ -67,5 +67,5 @@ fi
 export PATH="$nix_bindir:$PATH"
 
 echo "Using nix: $nix_bindir/nix"
-echo "Running home-manager switch for morpheus..."
-exec "$np" nix run home-manager -- switch --flake "$source_dir#morpheus" -b backup
+echo "Running home-manager switch for hermit..."
+exec "$np" nix run home-manager -- switch --flake "$source_dir#hermit" -b backup
