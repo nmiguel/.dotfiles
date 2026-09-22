@@ -6,13 +6,20 @@ abbr v nvim
 abbr oc opencode
 abbr sv "command sudo -e -s nvim"
 abbr docker-compose "docker compose"
-abbr exp "nohup xdg-open . >/dev/null 2>&1 & disown"
-abbr wiztree "sudo ncdu / --exclude /mnt"
 abbr svenv ". (fd -t d -u -d 2 'venv')/bin/activate.fish"
 abbr ~pw --position anywhere "~/projects/work"
 abbr ~pp --position anywhere "~/projects/personal"
 abbr nx-shell --set-cursor=% "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p % --run fish"
-abbr nx-switch "sudo nixos-rebuild switch --flake .#(hostname)"
+
+if test (uname) = Darwin
+    abbr exp "open ."
+    abbr wiztree "sudo ncdu / --exclude /Volumes"
+    abbr nx-switch "home-manager switch --flake .#(hostname -s)"
+else
+    abbr exp "nohup xdg-open . >/dev/null 2>&1 & disown"
+    abbr wiztree "sudo ncdu / --exclude /mnt"
+    abbr nx-switch "sudo nixos-rebuild switch --flake .#(hostname)"
+end
 
 
 abbr --set-cursor=% hlexec "hyprctl dispatch 'hl.dsp.exec_cmd(\"%\")'"

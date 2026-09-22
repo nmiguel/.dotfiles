@@ -1,14 +1,20 @@
-Just a place for my dotfiles
+Just a place for my dotfiles.
 
+# Nix bootstrap
 
-# Installation
+For a normal Nix installation on macOS or Linux:
 
-This repository uses GNU Stow to install. Use the following command
+```sh
+./scripts/bootstrap-nix.sh
+```
 
-`stow . -t $HOME`
+The script only installs official multi-user Nix and enables flakes. The official installer selects the appropriate build for the operating system and architecture. Open a new login shell after bootstrapping.
 
-Some configurations may not go to correct folder.
-This is the case, for example, with Wezterm, which is needed in the host OS.
-For such cases, a symlink may be used, unless the dotfiles OS differs from the target OS, where it is actually needed to clone the submodule.
+Nix Portable is available as a separate Linux-only bootstrap:
 
-Use `ln [TARGET] [SOURCE] -s` to create a symlink.
+```sh
+./scripts/bootstrap-nix-portable.sh
+```
+
+The script selects the download matching the Linux architecture and creates a `/nix` symlink, using `sudo` once, so Nix store paths remain available outside the portable sandbox.
+

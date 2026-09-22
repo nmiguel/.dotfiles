@@ -22,7 +22,7 @@ in
       rust-analyzer # LSP
       rustfmt # formatter
       clippy # linter
-      gcc
+      stdenv.cc
     ];
   };
 }

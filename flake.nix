@@ -1,5 +1,5 @@
 {
-  description = "A simple NixOS flake";
+  description = "NixOS and Home Manager configurations";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -47,19 +47,25 @@
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
-      system = "x86_64-linux";
-      overlays = [
+      linuxSystem = "x86_64-linux";
+      darwinSystem = "aarch64-darwin";
+      overlaysFor = system: [
         inputs.neovim-nightly-overlay.overlays.default
         (_final: _prev:
           let
             opencode = inputs.opencode.packages.${system}.default;
-            node_modules = opencode.node_modules.override {
-              # The synthetic merge ref changes workspace files without updating this hash.
-              hash = "sha256-tHl+UGkUbalkh+C5RDkRpZ3Q87tgvqnoF4xdih6QeOw=";
-            };
           in
           {
-            opencode = opencode.override { inherit node_modules; };
+            opencode = if system == linuxSystem then
+              let
+                node_modules = opencode.node_modules.override {
+                  # The synthetic merge ref changes workspace files without updating this hash.
+                  hash = "sha256-tHl+UGkUbalkh+C5RDkRpZ3Q87tgvqnoF4xdih6QeOw=";
+                };
+              in
+              opencode.override { inherit node_modules; }
+            else
+              opencode;
           })
       ];
     in
@@ -67,40 +73,53 @@
       # NixOS hosts. Home-manager is wired in as a NixOS module; each host
       # points nomig's home at its own home.nix.
       nixosConfigurations.tower = nixpkgs.lib.nixosSystem {
-        inherit system;
+        system = linuxSystem;
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/tower
 
-          { nixpkgs.overlays = overlays; }
+          { nixpkgs.overlays = overlaysFor linuxSystem; }
 
           home-manager.nixosModules.home-manager
         ];
       };
 
       nixosConfigurations.chariot = nixpkgs.lib.nixosSystem {
-        inherit system;
+        system = linuxSystem;
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/chariot
 
-          { nixpkgs.overlays = overlays; }
+          { nixpkgs.overlays = overlaysFor linuxSystem; }
 
           home-manager.nixosModules.home-manager
         ];
       };
 
       # Standalone home-manager hosts (non-NixOS, e.g. Ubuntu). Build/apply with
-      #   nix run home-manager -- switch --flake .#morpheus   # first time
+      #   nix run home-manager -- switch --flake .#morpheus -b backup   # first time
       #   home-manager switch --flake .#morpheus              # thereafter
       homeConfigurations.morpheus = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
-          inherit system;
+          system = linuxSystem;
           config.allowUnfree = true;
-          inherit overlays;
+          overlays = overlaysFor linuxSystem;
         };
         extraSpecialArgs = { inherit inputs; };
         modules = [ ./hosts/morpheus/home.nix ];
+      };
+
+      # Standalone Home Manager configuration for an Apple Silicon Mac. Apply with:
+      #   nix run home-manager -- switch --flake .#magician -b backup   # first time
+      #   home-manager switch --flake .#magician              # thereafter
+      homeConfigurations.magician = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = darwinSystem;
+          config.allowUnfree = true;
+          overlays = overlaysFor darwinSystem;
+        };
+        extraSpecialArgs = { inherit inputs; };
+        modules = [ ./hosts/magician/home.nix ];
       };
     };
 }

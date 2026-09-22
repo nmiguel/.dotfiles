@@ -23,7 +23,7 @@ in
       typescript-language-server # JavaScript / TypeScript LSP
       prettier # formatter
       eslint # linter
-      gcc # native Node.js addon compilation
+      stdenv.cc # native Node.js addon compilation
     ];
   };
 }

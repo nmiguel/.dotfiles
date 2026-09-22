@@ -24,7 +24,7 @@ log() {
     fi
 }
 
-scripts=$(find "$source_dir/scripts" -mindepth 1 -maxdepth 1 -type f -executable)
+scripts=$(find "$source_dir/scripts" -mindepth 1 -maxdepth 1 -type f -executable ! -name 'bootstrap-*')
 
 for s in $scripts; do
     script_name=$(basename "$s")
@@ -52,4 +52,3 @@ for s in $scripts; do
         "$s"
     fi
 done
-
