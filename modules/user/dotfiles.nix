@@ -1,8 +1,8 @@
 # Dotfile deployment.
 #
 # Home-manager module: declares `userSettings.dotfiles.enable` and, when on,
-# symlinks the tracked config trees under stow/config into ~/.config and the
-# nvim submodule. The config/nvim links are kept "out of store" (they point
+# symlinks the tracked trees under stow/config into ~/.config and stow/home
+# into ~/. The links are kept "out of store" (they point
 # straight at the repo checkout) so editing a file in the repo takes effect
 # immediately, without a home-manager rebuild — which is why the module needs
 # to know where that checkout lives (`repoRoot`).
@@ -15,6 +15,7 @@ let
   cfg = config.userSettings.dotfiles;
 
   configDir = ../../stow/config;
+  homeDir = ../../stow/home;
   availableEntries = lib.unique (
     builtins.attrNames (builtins.readDir configDir) ++ [ "nvim" ]
   );
@@ -26,6 +27,14 @@ let
       name = ".config/${name}";
       value.source = config.lib.file.mkOutOfStoreSymlink "${cfg.repoRoot}/stow/config/${name}";
     }) selectedEntries
+  );
+
+  # Entries under stow/home become matching files or directories in ~/.
+  homeEntries = builtins.listToAttrs (
+    map (name: {
+      inherit name;
+      value.source = config.lib.file.mkOutOfStoreSymlink "${cfg.repoRoot}/stow/home/${name}";
+    }) (builtins.attrNames (builtins.readDir homeDir))
   );
 in
 {
@@ -50,6 +59,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.file = configEntries;
+    home.file = configEntries // homeEntries;
   };
 }

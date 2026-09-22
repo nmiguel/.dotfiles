@@ -76,6 +76,8 @@ in
       home.packages = with pkgs; [
         blueman
         bluetui
+        brightnessctl
+        cliphist
         libreoffice
         chromium
         evince
@@ -102,10 +104,12 @@ in
         papirus-icon-theme
         playerctl
         qalculate-gtk
+        rofi
         satty
         slurp
         wev
         wl-clipboard
+        wtype
         pear-desktop # youtube-music
       ];
     })
