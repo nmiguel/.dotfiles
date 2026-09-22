@@ -9,5 +9,6 @@ host="$(hostname -s)"
 cd "$flake_dir"
 
 nix flake update
+nixos-rebuild build --flake ".#$host"
 sudo nix-collect-garbage --delete-older-than 7d
 sudo nixos-rebuild switch --flake ".#$host"
