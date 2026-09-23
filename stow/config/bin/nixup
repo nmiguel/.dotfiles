@@ -8,7 +8,23 @@ host="$(hostname -s)"
 
 cd "$flake_dir"
 
-nix flake update
-nixos-rebuild build --flake ".#$host"
-sudo nix-collect-garbage --delete-older-than 7d
+lock_backup="$(mktemp)"
+cp flake.lock "$lock_backup"
+
+rollback_update() {
+    cp "$lock_backup" flake.lock
+    rm -f "$lock_backup"
+    printf 'Update failed; restored the previous flake.lock.\n' >&2
+    exit 1
+}
+
+trap rollback_update HUP INT TERM
+
+nix flake update || rollback_update
+nix build --no-link ".#nixosConfigurations.${host}.config.system.build.toplevel" || rollback_update
+
+trap - HUP INT TERM
+rm -f "$lock_backup"
+
 sudo nixos-rebuild switch --flake ".#$host"
+sudo nix-collect-garbage --delete-older-than 7d

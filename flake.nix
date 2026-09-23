@@ -15,7 +15,9 @@
     };
 
     opencode = {
-      url = "github:anomalyco/opencode?ref=pull/5657/merge";
+      # Pin the synthetic PR merge: pull/*/merge moves whenever the base branch
+      # changes, which also changes the fixed-output node_modules derivation.
+      url = "github:anomalyco/opencode/164eb20ffefb7fe099fcd0653b9d37626bfdbb8b";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -59,8 +61,8 @@
             opencode = if system == linuxSystem then
               let
                 node_modules = opencode.node_modules.override {
-                  # The synthetic merge ref changes workspace files without updating this hash.
-                  hash = "sha256-tHl+UGkUbalkh+C5RDkRpZ3Q87tgvqnoF4xdih6QeOw=";
+                  # The synthetic merge changes workspace files without updating this hash.
+                  hash = "sha256-eeEW91TWHQOFL0vI/FtpmekRQDnUeJAhxe4/ZVVroT4=";
                 };
               in
               opencode.override { inherit node_modules; }

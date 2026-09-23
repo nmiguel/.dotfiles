@@ -1,6 +1,5 @@
 {
   "currentThemeName": "custom",
-  "currentThemeCategory": "registry",
   "customThemeFile": "/home/nomig/.config/DankMaterialShell/themes/catppuccin/theme.json",
   "registryThemeVariants": {
     "catppuccin": {
@@ -21,19 +20,88 @@
     },
     "rosePine": "rosePine"
   },
-  "widgetBackgroundColor": "sth",
-  "cornerRadius": 12,
+  "radiusStrength": 38,
   "clockFormat": "24h",
+  "powerMenuActions": [
+    "reboot",
+    "poweroff",
+    "lock",
+    "suspend",
+    "logout"
+  ],
+  "dockConfigs": [
+    {
+      "id": "dock",
+      "name": "Dock",
+      "enabled": false,
+      "screenPreferences": [
+        "all"
+      ],
+      "showOnLastDisplay": false,
+      "position": 1,
+      "mode": "compact",
+      "taskbarAlign": "center",
+      "widgetExpansion": "popout",
+      "iconSize": 40,
+      "spacing": 4,
+      "itemSpacing": 4,
+      "margin": 0,
+      "bottomGap": 0,
+      "transparency": 1,
+      "followInterfaceStyle": true,
+      "autoHide": false,
+      "smartAutoHide": false,
+      "useOverlayLayer": false,
+      "editOnRightClick": false,
+      "showOnFullscreen": false,
+      "openOnOverview": false,
+      "groupByApp": false,
+      "separatePinnedAndRunningApps": false,
+      "restoreSpecialWorkspaceOnClick": false,
+      "isolateDisplays": false,
+      "indicatorStyle": "circle",
+      "borderEnabled": false,
+      "borderColor": "surfaceText",
+      "borderOpacity": 1,
+      "borderThickness": 1,
+      "launcherEnabled": false,
+      "launcherLogoMode": "apps",
+      "launcherLogoCustomPath": "",
+      "launcherLogoColorOverride": "",
+      "launcherLogoSizeOffset": 0,
+      "launcherLogoBrightness": 0.5,
+      "launcherLogoContrast": 1,
+      "maxVisibleApps": 0,
+      "maxVisibleRunningApps": 0,
+      "showOverflowBadge": true,
+      "showTrash": false,
+      "trashFileManager": "default",
+      "trashCustomCommand": "",
+      "order": [],
+      "widgets": [
+        {
+          "id": "dock_launcher",
+          "widgetId": "dockLauncher",
+          "enabled": true
+        },
+        {
+          "id": "dock_apps",
+          "widgetId": "appsDock",
+          "enabled": true
+        },
+        {
+          "id": "dock_trash",
+          "widgetId": "dockTrash",
+          "enabled": true
+        }
+      ]
+    }
+  ],
+  "currentThemeCategory": "registry",
+  "widgetBackgroundColor": "sth",
   "barElevationEnabled": false,
   "systemTrayIconTintMode": "monochrome",
   "systemTrayIconTintSaturation": 20,
-  "controlCenterShowMicPercent": true,
-  "showWorkspaceIndex": true,
-  "showWorkspaceApps": true,
-  "maxWorkspaceIcons": 10,
-  "workspaceAppIconSizeOffset": 1,
-  "groupWorkspaceApps": false,
-  "showOccupiedWorkspacesOnly": true,
   "appIdSubstitutions": [
     {
       "pattern": "com.github.th_ch.youtube_music",
@@ -77,23 +145,14 @@
       "cursorHideTimeout": 0
     }
   },
-  "launcherLogoMode": "os",
   "osdAlwaysShowValue": true,
   "osdPosition": 0,
   "osdVolumeEnabled": false,
   "osdMediaVolumeEnabled": false,
   "osdBrightnessEnabled": false,
   "osdPowerProfileEnabled": true,
-  "powerMenuActions": [
-    "reboot",
-    "poweroff",
-    "lock",
-    "suspend",
-    "logout"
-  ],
   "updaterIntervalSeconds": 86400,
   "screenPreferences": {
-    "dock": [],
     "notifications": [
       {
         "name": "DP-3",
@@ -117,7 +176,6 @@
     ]
   },
   "showOnLastDisplay": {
-    "dock": false,
     "notifications": true,
     "osd": true,
     "toast": true
@@ -146,7 +204,8 @@
         },
         {
           "id": "launcherButton",
-          "enabled": true
+          "enabled": true,
+          "launcherLogoMode": "os"
         },
         {
           "id": "cpuUsage",
@@ -166,7 +225,13 @@
       "centerWidgets": [
         {
           "id": "workspaceSwitcher",
-          "enabled": true
+          "enabled": true,
+          "showWorkspaceIndex": true,
+          "showWorkspaceApps": true,
+          "maxWorkspaceIcons": 10,
+          "workspaceAppIconSizeOffset": 1,
+          "groupWorkspaceApps": false,
+          "showOccupiedWorkspacesOnly": true
         }
       ],
       "rightWidgets": [
@@ -184,7 +249,8 @@
         },
         {
           "id": "controlCenterButton",
-          "enabled": true
+          "enabled": true,
+          "showMicPercent": true
         },
         {
           "id": "clock",
@@ -200,7 +266,6 @@
       "noBackground": false,
       "maximizeWidgetIcons": false,
       "maximizeWidgetText": false,
-      "removeWidgetPadding": false,
       "widgetPadding": 8,
       "gothCornersEnabled": false,
       "gothCornerRadiusOverride": false,
@@ -230,7 +295,8 @@
       "shadowOpacity": 60,
       "shadowColorMode": "text",
       "shadowCustomColor": "#000000",
-      "clickThrough": false
+      "clickThrough": false,
+      "followInterfaceStyle": false
     },
     {
       "id": "bar1777910822397",
@@ -265,7 +331,13 @@
         "music",
         {
           "id": "workspaceSwitcher",
-          "enabled": true
+          "enabled": true,
+          "showWorkspaceIndex": true,
+          "showWorkspaceApps": true,
+          "maxWorkspaceIcons": 10,
+          "workspaceAppIconSizeOffset": 1,
+          "groupWorkspaceApps": false,
+          "showOccupiedWorkspacesOnly": true
         }
       ],
       "rightWidgets": [
@@ -303,7 +375,6 @@
       "widgetPadding": 8,
       "maximizeWidgetIcons": false,
       "maximizeWidgetText": false,
-      "removeWidgetPadding": false,
       "fontScale": 1,
       "iconScale": 1,
       "autoHide": false,
@@ -320,35 +391,10 @@
       "shadowIntensity": 0,
       "shadowOpacity": 60,
       "shadowColorMode": "text",
-      "shadowCustomColor": "#000000"
+      "shadowCustomColor": "#000000",
+      "followInterfaceStyle": false
     }
   ],
-  "desktopClockCustomColor": {
-    "r": 1,
-    "g": 1,
-    "b": 1,
-    "a": 1,
-    "hsvHue": -1,
-    "hsvSaturation": 0,
-    "hsvValue": 1,
-    "hslHue": -1,
-    "hslSaturation": 0,
-    "hslLightness": 1,
-    "valid": true
-  },
-  "systemMonitorCustomColor": {
-    "r": 1,
-    "g": 1,
-    "b": 1,
-    "a": 1,
-    "hsvHue": -1,
-    "hsvSaturation": 0,
-    "hsvValue": 1,
-    "hslHue": -1,
-    "hslSaturation": 0,
-    "hslLightness": 1,
-    "valid": true
-  },
   "builtInPluginSettings": {
     "dms_settings_search": {
       "trigger": "?"
@@ -357,5 +403,5 @@
       "trigger": "cb"
     }
   },
-  "configVersion": 18
+  "configVersion": 29
 }

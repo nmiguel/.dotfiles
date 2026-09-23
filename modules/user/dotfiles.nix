@@ -21,6 +21,19 @@ let
   );
   selectedEntries = if cfg.entries == null then availableEntries else cfg.entries;
 
+  filesIn = dir:
+    lib.concatMap
+      (name:
+        let
+          path = dir + "/${name}";
+          type = (builtins.readDir dir).${name};
+        in
+        if type == "directory" then
+          map (child: "${name}/${child}") (filesIn path)
+        else
+          [ name ])
+      (builtins.attrNames (builtins.readDir dir));
+
   # Selected entries under stow/config become matching ~/.config/<name> links.
   configEntries = builtins.listToAttrs (
     map (name: {
@@ -29,12 +42,16 @@ let
     }) selectedEntries
   );
 
-  # Entries under stow/home become matching files or directories in ~/.
+  # Link individual files so stateful directories such as ~/.claude remain
+  # writable without placing runtime data in the repository.
   homeEntries = builtins.listToAttrs (
     map (name: {
       inherit name;
-      value.source = config.lib.file.mkOutOfStoreSymlink "${cfg.repoRoot}/stow/home/${name}";
-    }) (builtins.attrNames (builtins.readDir homeDir))
+      value = {
+        source = config.lib.file.mkOutOfStoreSymlink "${cfg.repoRoot}/stow/home/${name}";
+        force = name == ".claude/settings.json";
+      };
+    }) (filesIn homeDir)
   );
 in
 {
