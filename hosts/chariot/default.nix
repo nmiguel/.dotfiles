@@ -4,6 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ./configuration.nix
+    ./llm.nix
 
     ../../modules/system
   ];
