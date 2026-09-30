@@ -98,8 +98,10 @@
     }
   ],
   "currentThemeCategory": "registry",
+  "popupTransparency": 0.93,
   "widgetBackgroundColor": "sth",
   "barElevationEnabled": false,
+  "foregroundLayerTransparency": 0.9,
   "systemTrayIconTintMode": "monochrome",
   "systemTrayIconTintSaturation": 20,
   "appIdSubstitutions": [
@@ -260,7 +262,7 @@
       "spacing": 0,
       "innerPadding": 4,
       "bottomGap": 0,
-      "transparency": 0.75,
+      "transparency": 0.5,
       "widgetTransparency": 1,
       "squareCorners": true,
       "noBackground": false,
@@ -296,7 +298,10 @@
       "shadowColorMode": "text",
       "shadowCustomColor": "#000000",
       "clickThrough": false,
-      "followInterfaceStyle": false
+      "followInterfaceStyle": false,
+      "surfaceColor": "default",
+      "widgetStyle": "pills",
+      "attachToScreenEdge": false
     },
     {
       "id": "bar1777910822397",
@@ -357,7 +362,7 @@
       "spacing": 0,
       "innerPadding": 4,
       "bottomGap": 0,
-      "transparency": 0.9,
+      "transparency": 0.5,
       "widgetTransparency": 1,
       "squareCorners": true,
       "noBackground": false,
@@ -401,6 +406,12 @@
     },
     "dms_clipboard_search": {
       "trigger": "cb"
+    },
+    "dms_qr_generator": {
+      "trigger": "qrg"
+    },
+    "dms_power": {
+      "trigger": "pw"
     }
   },
   "configVersion": 29

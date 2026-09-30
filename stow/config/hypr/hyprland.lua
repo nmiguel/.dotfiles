@@ -1,3 +1,6 @@
+-- DMS Include Configs
+require("dms.layout")
+
 require("config.monitors")
 require("config.keybinds")
 require("config.env")

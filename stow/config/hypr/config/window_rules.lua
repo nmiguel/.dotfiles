@@ -265,3 +265,4 @@ hl.window_rule({
 	opacity = "1.0 override 1.0 override",
 	pin = true,
 })
+
