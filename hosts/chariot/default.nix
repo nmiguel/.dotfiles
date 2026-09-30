@@ -7,6 +7,8 @@
     ./llm.nix
 
     ../../modules/system
+
+    inputs.sops-nix.nixosModules.sops
   ];
 
   home-manager.useGlobalPkgs = true;

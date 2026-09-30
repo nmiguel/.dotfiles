@@ -1,24 +1,24 @@
 {
+  config,
   lib,
   pkgs,
   ...
 }:
 let
   dataRoot = "/mnt/data";
-  secretRoot = "${dataRoot}/secrets/chariot";
-  cloudflareDnsToken = "${secretRoot}/ddclient-cloudflare-token";
+  cloudflareDnsToken = config.sops.secrets."chariot/cloudflare-dns-token".path;
   lanInterface = "enp0s31f6";
   lanSubnet = "192.168.1.0/24";
   gitHost = "git.getthybearings.xyz";
   driveHost = "drive.getthybearings.xyz";
   jellyfinHost = "jellyfin.getthybearings.xyz";
   jellyseerrHost = "jellyseerr.getthybearings.xyz";
-  tailscaleAuthKey = "${secretRoot}/tailscale-auth-key";
+  tailscaleAuthKey = config.sops.secrets."chariot/tailscale-auth-key".path;
   tailscaleStateDir = "${dataRoot}/services/tailscale";
   sshHostKeyFiles = [
-    "${secretRoot}/openssh/ssh_host_ed25519_key"
-    "${secretRoot}/openssh/ssh_host_ecdsa_key"
-    "${secretRoot}/openssh/ssh_host_rsa_key"
+    config.sops.secrets."chariot/openssh/ssh_host_ed25519_key".path
+    config.sops.secrets."chariot/openssh/ssh_host_ecdsa_key".path
+    config.sops.secrets."chariot/openssh/ssh_host_rsa_key".path
   ];
   giteaStateDir = "${dataRoot}/services/gitea-native";
   giteaReady = "${giteaStateDir}/.nixos-ready";
@@ -31,8 +31,8 @@ let
   seafileRoot = "${dataRoot}/services/seafile";
   seafileDataDir = "${seafileRoot}/seafile-data";
   seafileMysqlDataDir = "${seafileRoot}/seafile-mysql/db";
-  seafileSecretEnv = "${secretRoot}/seafile.env";
-  seafileMysqlSecretEnv = "${secretRoot}/seafile-mysql.env";
+  seafileSecretEnv = config.sops.secrets."chariot/seafile.env".path;
+  seafileMysqlSecretEnv = config.sops.secrets."chariot/seafile-mysql.env".path;
   seafileRequiredFiles = [
     seafileMysqlSecretEnv
     seafileSecretEnv
@@ -86,6 +86,51 @@ let
   };
 in
 {
+  sops = {
+    age = {
+      keyFile = "/home/nomig/.config/sops/age/keys.txt";
+      generateKey = false;
+    };
+
+    secrets = {
+      "chariot/cloudflare-dns-token" = {
+        sopsFile = ../../secrets/chariot/cloudflare-dns-token.sops;
+        format = "binary";
+        mode = "0400";
+      };
+      "chariot/tailscale-auth-key" = {
+        sopsFile = ../../secrets/chariot/tailscale-auth-key.sops;
+        format = "binary";
+        mode = "0400";
+      };
+      "chariot/seafile.env" = {
+        sopsFile = ../../secrets/chariot/seafile.env.sops;
+        format = "binary";
+        mode = "0400";
+      };
+      "chariot/seafile-mysql.env" = {
+        sopsFile = ../../secrets/chariot/seafile-mysql.env.sops;
+        format = "binary";
+        mode = "0400";
+      };
+      "chariot/openssh/ssh_host_ed25519_key" = {
+        sopsFile = ../../secrets/chariot/ssh-host-ed25519-key.sops;
+        format = "binary";
+        mode = "0400";
+      };
+      "chariot/openssh/ssh_host_ecdsa_key" = {
+        sopsFile = ../../secrets/chariot/ssh-host-ecdsa-key.sops;
+        format = "binary";
+        mode = "0400";
+      };
+      "chariot/openssh/ssh_host_rsa_key" = {
+        sopsFile = ../../secrets/chariot/ssh-host-rsa-key.sops;
+        format = "binary";
+        mode = "0400";
+      };
+    };
+  };
+
   systemSettings = {
     fish.enable = true;
     jellyfin = {
@@ -159,15 +204,15 @@ in
     openFirewall = false;
     hostKeys = [
       {
-        path = "${secretRoot}/openssh/ssh_host_ed25519_key";
+        path = config.sops.secrets."chariot/openssh/ssh_host_ed25519_key".path;
         type = "ed25519";
       }
       {
-        path = "${secretRoot}/openssh/ssh_host_ecdsa_key";
+        path = config.sops.secrets."chariot/openssh/ssh_host_ecdsa_key".path;
         type = "ecdsa";
       }
       {
-        path = "${secretRoot}/openssh/ssh_host_rsa_key";
+        path = config.sops.secrets."chariot/openssh/ssh_host_rsa_key".path;
         type = "rsa";
         bits = 3072;
       }
@@ -503,7 +548,6 @@ in
         ${pkgs.coreutils}/bin/install -d -m 0750 -o gitea -g gitea ${giteaStateDir} ${giteaStateDir}/git
         ${pkgs.coreutils}/bin/install -d -m 0755 -o root -g root ${mediaStateRoot}
         ${pkgs.coreutils}/bin/install -d -m 0700 -o root -g root ${mediaStateRoot}/prowlarr
-        ${pkgs.coreutils}/bin/install -d -m 0700 -o root -g root ${secretRoot}
         ${pkgs.coreutils}/bin/install -d -m 0711 -o root -g root ${dataRoot}/backups
         ${pkgs.coreutils}/bin/install -d -m 0750 -o gitea -g gitea ${dataRoot}/backups/gitea
         ${pkgs.coreutils}/bin/install -d -m 0700 -o postgres -g postgres ${dataRoot}/backups/postgresql
@@ -511,12 +555,7 @@ in
     };
 
     sshd = {
-      after = [ persistentDirectoriesService ];
-      requires = [ persistentDirectoriesService ];
-      unitConfig = {
-        RequiresMountsFor = dataRoot;
-        ConditionFileNotEmpty = sshHostKeyFiles;
-      };
+      unitConfig.ConditionFileNotEmpty = sshHostKeyFiles;
     };
     caddy = {
       after = [ persistentDirectoriesService ];

@@ -1,0 +1,10 @@
+keys:
+  - &nomig age1vwat59kwe96ua7uxa4w524fg0dh7cg8qxgx38gzd8na4f8rrxqys6n508l
+  - &chariot age1we5t87qyzvmjcsjjnyq5aewlnc3dugnkenxdkg6n33jcxtahy95sjzkn9z
+
+creation_rules:
+  - path_regex: secrets/chariot/.*\.sops$
+    key_groups:
+      - age:
+          - *nomig
+          - *chariot
