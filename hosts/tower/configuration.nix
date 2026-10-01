@@ -18,7 +18,7 @@ in
   modules.games.enable = true;
 
   systemSettings = {
-    dms.enable = true;
+    noctalia.enable = true;
     fonts.enable = true;
     hyprland.enable = true;
     hyprland.monitorsFile = ./monitors.lua;

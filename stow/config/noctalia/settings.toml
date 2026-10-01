@@ -1,162 +1,216 @@
+# Noctalia 5.1: DMS's layout and theme, using native widgets and services.
+# Every root-level TOML file is loaded; this is the curated configuration layer.
+
 [bar.default]
-background_opacity = 0.79999998211860657
-center = [ "workspaces" ]
-end = [ "group:g2", "tray", "weather", "clock" ]
+enabled = false
+position = "top"
+background_opacity = 0.5
+radius = 0
+concave_edge_corners = false
 margin_edge = 4
 margin_ends = 4
-start = [ "session", "launcher", "clipboard", "wallpaper", "group:g1" ]
+padding = 4
+widget_spacing = 0
+shadow = false
+auto_hide = false
+reserve_space = true
+capsule = true
+capsule_fill = "hover"
+capsule_padding = 8
+capsule_opacity = 1.0
+start = [ "session", "launcher", "cpu", "ram", "group:network" ]
+center = [ "taskbar" ]
+end = [ "tray", "weather", "notifications", "group:controls", "clock" ]
 
-    [bar.default.monitor.DP-3]
-    center = [ "workspaces", "media" ]
-    end = [ "output_volume", "clock" ]
-    margin_edge = 4
-    margin_ends = 4
-    padding = 10
-    start = [ "notifications", "date" ]
+[bar.default.monitor.DP-1]
+enabled = true
 
-    [[bar.default.capsule_group]]
-    fill = "surface_variant"
-    id = "g1"
-    members = [ "sysmon", "ram" ]
-    opacity = 0.0
-    padding = 20.0
+[bar.default.monitor.DP-2]
+enabled = true
 
-    [[bar.default.capsule_group]]
-    fill = "surface_variant"
-    id = "g2"
-    members = [ "network_rx", "network_tx" ]
-    opacity = 0.0
-    padding = 20.0
+[bar.default.monitor.DP-3]
+enabled = true
+start = [ "cpu", "ram", "gpu" ]
+center = [ "media", "taskbar" ]
+end = [ "volume", "notifications", "clock" ]
 
-[control_center]
-shortcuts = []
+[[bar.default.capsule_group]]
+id = "network"
+members = [ "network_rx", "network_tx" ]
+fill = "hover"
+padding = 8
+widget_spacing = 4
 
-[location]
-address = "Lisbon, Portugal"
+[[bar.default.capsule_group]]
+id = "controls"
+members = [ "microphone", "control-center" ]
+fill = "hover"
+padding = 8
+widget_spacing = 4
 
-[lockscreen_widgets]
-enabled = false
-schema_version = 2
-widget_order = [ "lockscreen-login-box@DP-3", "lockscreen-login-box@DP-2" ]
+[widget.cpu]
+type = "sysmon"
+stat = "cpu_usage"
+visualization = "none"
+label_min_width = 32
 
-    [lockscreen_widgets.grid]
-    cell_size = 16
-    major_interval = 4
-    visible = true
+[widget.ram]
+type = "sysmon"
+stat = "ram_pct"
+visualization = "none"
+label_min_width = 32
 
-    [lockscreen_widgets.widget."lockscreen-login-box@DP-2"]
-    box_height = 0.0
-    box_width = 0.0
-    cx = 1280.0
-    cy = 1317.0
-    output = "DP-2"
-    rotation = 0.0
-    type = "login_box"
+[widget.gpu]
+type = "sysmon"
+stat = "gpu_usage"
+visualization = "none"
+label_min_width = 32
 
-        [lockscreen_widgets.widget."lockscreen-login-box@DP-2".settings]
-        background_color = "surface_variant"
-        background_opacity = 0.88
-        background_radius = 12.0
-        input_opacity = 1.0
-        input_radius = 6.0
-        show_login_button = true
+[widget.network_rx]
+type = "sysmon"
+stat = "net_rx"
+visualization = "none"
+network_speed_compact = true
 
-    [lockscreen_widgets.widget."lockscreen-login-box@DP-3"]
-    box_height = 0.0
-    box_width = 0.0
-    cx = 540.0
-    cy = 1797.0
-    output = "DP-3"
-    rotation = 0.0
-    type = "login_box"
+[widget.network_tx]
+type = "sysmon"
+stat = "net_tx"
+visualization = "none"
+network_speed_compact = true
 
-        [lockscreen_widgets.widget."lockscreen-login-box@DP-3".settings]
-        background_color = "surface_variant"
-        background_opacity = 0.88
-        background_radius = 12.0
-        input_opacity = 1.0
-        input_radius = 6.0
-        show_login_button = true
+[widget.launcher]
+custom_image = "/run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg"
 
-[notification]
-monitors = [ "DP-3" ]
+# The workspaces widget cannot show every app icon; grouped taskbar can.
+[widget.taskbar]
+group_by_workspace = true
+show_workspace_label = true
+workspace_label_placement = "inside"
+hide_empty_workspaces = true
+group_single_icon_per_app = false
+only_active_workspace = false
+show_all_outputs = false
+occupied_color = "surface_variant"
 
-[osd]
-monitors = [ "DP-3" ]
-position = "top_right"
+[widget.taskbar.actions]
+scroll_up = "workspace-switch prev"
+scroll_down = "workspace-switch next"
 
-[shell]
-avatar_path = "/home/nomig/.face"
-settings_show_advanced = true
-show_location = false
+[widget.microphone]
+type = "volume"
+device = "input"
+show_label = true
+hide_when_inactive = false
 
-    [shell.panel]
-    launcher_categories = false
-    open_near_click_control_center = false
-    session_placement = "centered"
+# Left-click opens the native Audio tab, including per-application streams.
+[widget.volume]
+device = "output"
+show_label = true
 
-    [[shell.session.actions]]
-    action = "shutdown"
-    enabled = true
-    shortcut = "5"
-    variant = "destructive"
-
-    [[shell.session.actions]]
-    action = "reboot"
-    enabled = true
-    shortcut = "4"
-    variant = "default"
-
-    [[shell.session.actions]]
-    action = "lock"
-    enabled = true
-    shortcut = "1"
-    variant = "default"
-
-    [[shell.session.actions]]
-    action = "logout"
-    enabled = true
-    shortcut = "2"
-    variant = "default"
-
-    [[shell.session.actions]]
-    action = "lock_and_suspend"
-    enabled = true
-    shortcut = "3"
-    variant = "default"
-
-[theme]
-builtin = "Catppuccin"
-mode = "dark"
-wallpaper_scheme = "m3-content"
-
-[wallpaper]
-directory = "/home/nomig/Pictures/Wallpapers"
-per_monitor_directories = false
-transition = [ "fade" ]
-transition_on_startup = true
-
-    [wallpaper.last]
-    path = "/home/nomig/Pictures/Wallpapers/wallhaven_3zgdd3.jpg"
-
-    [wallpaper.monitor.DP-2]
-    directory = ""
-
-    [wallpaper.monitor.DP-3]
-    directory_dark = "/home/nomig/Pictures/wallpapers/vertical"
-    directory_light = "/home/nomig/Pictures/wallpapers/vertical"
-
-    [wallpaper.monitors.DP-2]
-    path = "/home/nomig/Pictures/Wallpapers/wallhaven_3zgdd3.jpg"
-
-    [wallpaper.monitors.DP-3]
-    path = "/home/nomig/Pictures/Wallpapers/vertical/wallhaven-xelykl.jpg"
+[widget.clock]
+format = "{:%H:%M}"
 
 [widget.media]
 hide_when_no_media = true
 
-[widget.workspaces]
-font_weight = 400
-hide_when_empty = false
-occupied_color = "surface_variant"
-scale = 1.1000000000000001
+[widget.tray]
+color = "on_surface"
+
+[shell]
+avatar_path = "/home/nomig/.face"
+time_format = "{:%H:%M}"
+settings_show_advanced = true
+setup_wizard_enabled = false
+show_location = false
+launch_apps_as_systemd_services = true
+clipboard_enabled = true
+clipboard_auto_paste = "ctrl_v"
+
+[shell.panel]
+transparency_mode = "soft"
+open_near_click_control_center = false
+session_placement = "floating"
+session_position = "center"
+
+[shell.launcher]
+categories = false
+app_grid = false
+
+[shell.launcher.providers.calculator]
+global = true
+
+# Match DMS's action order; keep the familiar numeric shortcuts.
+[[shell.session.actions]]
+action = "reboot"
+shortcut = "4"
+
+[[shell.session.actions]]
+action = "shutdown"
+shortcut = "5"
+variant = "destructive"
+
+[[shell.session.actions]]
+action = "lock"
+shortcut = "1"
+
+[[shell.session.actions]]
+action = "suspend"
+shortcut = "3"
+
+[[shell.session.actions]]
+action = "logout"
+shortcut = "2"
+
+[control_center]
+shortcuts = []
+
+[system.monitor]
+enabled = true
+
+[calendar]
+enabled = true
+event_time_format = "%H:%M"
+
+[location]
+address = "Lisbon, Portugal"
+
+[weather]
+enabled = true
+unit = "celsius"
+
+[dock]
+enabled = false
+
+[notification]
+enable_daemon = true
+monitors = [ "DP-3" ]
+background_opacity = 0.93
+
+[osd]
+monitors = [ "DP-3" ]
+position = "top_center"
+
+[osd.kinds]
+volume = false
+media = false
+brightness = false
+power_profile = true
+
+[lockscreen]
+monitors = [ "DP-2" ]
+lock_before_suspend = true
+
+[lockscreen_widgets]
+enabled = false
+
+[wallpaper]
+directory = "/home/nomig/Pictures/Wallpapers"
+per_monitor_directories = true
+transition = [ "fade" ]
+transition_on_startup = true
+
+[wallpaper.default]
+path = "/home/nomig/Pictures/Wallpapers/Green Forest.jpg"
+
+[wallpaper.monitor.DP-3]
+directory = "/home/nomig/Pictures/Wallpapers/vertical"

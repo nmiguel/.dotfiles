@@ -6,10 +6,6 @@ hl.bind(mod .. " + Return", hl.dsp.exec_cmd(vars.terminal))
 hl.bind(mod .. " + BackSpace", hl.dsp.window.close())
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("thunar"))
 hl.bind(mod .. " + V", hl.dsp.window.float())
-hl.bind(
-	mod .. " + SHIFT + V",
-	hl.dsp.exec_cmd("cliphist list | rofi -dmenu | cliphist decode | wl-copy && wtype -M ctrl -k v -m ctrl")
-)
 hl.bind(mod .. " + B", hl.dsp.exec_cmd(vars.browser))
 
 -- Which desktop shell is active is decided in the NixOS config
@@ -21,6 +17,11 @@ if not ok then
 	shell = nil
 end
 
+local clipboard_cmd = "cliphist list | rofi -dmenu | cliphist decode | wl-copy && wtype -M ctrl -k v -m ctrl"
+local mixer_cmd = 'pkill rofi || true && rofi -modi "vol:'
+	.. scriptsDir
+	.. '/volume_mixer.py" -show vol -kb-custom-1 "Alt+Left" -kb-custom-2 "Alt+Right"'
+
 if shell == "dms" then
 	hl.bind(mod .. " + Space", hl.dsp.exec_cmd("dms ipc call spotlight toggle"))
 	hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("dms ipc call settings focusOrToggle"))
@@ -29,7 +30,11 @@ elseif shell == "noctalia" then
 	hl.bind(mod .. " + Space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
 	hl.bind(mod .. " + Comma", hl.dsp.exec_cmd("noctalia msg settings-toggle"))
 	hl.bind(mod .. " + R", hl.dsp.exec_cmd("noctalia msg panel-toggle session"))
+	clipboard_cmd = "noctalia msg panel-toggle clipboard"
+	mixer_cmd = "noctalia msg panel-toggle control-center audio"
 end
+
+hl.bind(mod .. " + SHIFT + V", hl.dsp.exec_cmd(clipboard_cmd))
 
 hl.bind(mod .. " + F", function()
 	if hl.get_active_workspace().tiled_layout == "scrolling" then
@@ -66,14 +71,7 @@ hl.bind(
 	mod .. " + SHIFT + S",
 	hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | satty -f - -o "~/Pictures/Screenshots/%Y%m%d_%H%M%S.png"')
 )
-hl.bind(
-	mod .. " + T",
-	hl.dsp.exec_cmd(
-		'pkill rofi || true && rofi -modi "vol:'
-			.. scriptsDir
-			.. '/volume_mixer.py" -show vol -kb-custom-1 "Alt+Left" -kb-custom-2 "Alt+Right"'
-	)
-)
+hl.bind(mod .. " + T", hl.dsp.exec_cmd(mixer_cmd))
 
 hl.bind(mod .. " + A", hl.dsp.exec_cmd(scriptsDir .. "/audio_switch.sh"))
 
