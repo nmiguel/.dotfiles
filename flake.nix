@@ -46,10 +46,6 @@
       flake = false;
     };
 
-    # steam-pr = {
-    #     url = "github:NixOS/nixpkgs/backport-524488-to-release-26.05";
-    #     flake = false;
-    # };
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
@@ -58,6 +54,17 @@
       darwinSystem = "aarch64-darwin";
       overlaysFor = system: [
         inputs.neovim-nightly-overlay.overlays.default
+        (_final: prev: {
+          tmux = prev.tmux.overrideAttrs (finalAttrs: _previousAttrs: {
+            version = "3.8-rc3";
+            src = prev.fetchFromGitHub {
+              owner = "tmux";
+              repo = "tmux";
+              tag = finalAttrs.version;
+              hash = "sha256-dWUD62onx4cSwngtZTlF9pggA/9Z/Vmn77nD53luld0=";
+            };
+          });
+        })
         (_final: _prev:
           let
             opencode = inputs.opencode.packages.${system}.default;

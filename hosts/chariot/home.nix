@@ -19,9 +19,9 @@
         "rsync"
         "starship.toml"
         "television"
-        "tmux"
       ];
     };
+    tmux.enable = true;
     theming.enable = false;
     packages.cli.enable = true;
     packages.gui.enable = false;

@@ -12,6 +12,7 @@
   userSettings = {
     # Shared feature modules.
     dotfiles.enable = true;
+    tmux.enable = true;
     defaultApps.enable = true;
     theming.enable = true;
     packages.cli.enable = true;

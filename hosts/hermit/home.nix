@@ -17,6 +17,7 @@
   userSettings = {
     # Shared feature modules.
     dotfiles.enable = true;
+    tmux.enable = true;
     dotfiles.repoRoot = "/home/coder/projects/personal/.dotfiles";
     theming.enable = false;
     packages.cli.enable = true;

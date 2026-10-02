@@ -52,7 +52,6 @@ in
         nixd
         starship
         television
-        tmux
         tokei
         tree
         silicon

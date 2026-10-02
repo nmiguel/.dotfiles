@@ -17,7 +17,8 @@ let
   configDir = ../../stow/config;
   homeDir = ../../stow/home;
   availableEntries = lib.unique (
-    builtins.attrNames (builtins.readDir configDir) ++ [ "nvim" ]
+    # tmux.nix deploys individual files alongside its generated tmux.conf.
+    lib.filter (name: name != "tmux") (builtins.attrNames (builtins.readDir configDir)) ++ [ "nvim" ]
   );
   selectedEntries = if cfg.entries == null then availableEntries else cfg.entries;
 

@@ -19,10 +19,10 @@
         "rsync"
         "starship.toml"
         "television"
-        "tmux"
       ];
     };
 
+    tmux.enable = true;
     packages.cli.enable = true;
 
     python.enable = true;
