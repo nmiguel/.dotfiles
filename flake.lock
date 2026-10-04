@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "ai-usagebar": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790890764,
+        "narHash": "sha256-GXaihoaOhXWLkeAUvUM4E9o4oHyP+EcZ4AJK4DRps30=",
+        "owner": "akitaonrails",
+        "repo": "ai-usagebar",
+        "rev": "ad28ba6118b6ac391ea54b76a0498c76d814de22",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akitaonrails",
+        "repo": "ai-usagebar",
+        "type": "github"
+      }
+    },
     "dank-calculator": {
       "flake": false,
       "locked": {
@@ -224,6 +244,7 @@
     },
     "root": {
       "inputs": {
+        "ai-usagebar": "ai-usagebar",
         "dank-calculator": "dank-calculator",
         "dms": "dms",
         "dms-volume-mixer": "dms-volume-mixer",

@@ -46,6 +46,11 @@
       flake = false;
     };
 
+    ai-usagebar = {
+      url = "github:akitaonrails/ai-usagebar";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:

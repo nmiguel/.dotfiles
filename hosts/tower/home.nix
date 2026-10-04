@@ -3,11 +3,15 @@
 # tower is a full NixOS desktop, so it opts into everything: the shared
 # dotfiles, theming and package sets live in modules/user (reusable by other
 # hosts), and are switched on here via userSettings.
-{ ... }:
+{ inputs, pkgs, ... }:
 
 {
   # Auto-imports every user (home-manager) module under modules/user.
   imports = [ ../../modules/user ];
+
+  home.packages = [
+    inputs.ai-usagebar.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
 
   userSettings = {
     # Shared feature modules.
