@@ -39,10 +39,8 @@ in
         fzf # A command-line fuzzy finder
         stdenv.cc
         gh
-        git
         gnutar
         iftop # network monitoring
-        jujutsu
         jq
         lazydocker
         lazygit

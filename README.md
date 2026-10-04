@@ -60,3 +60,21 @@ home-manager switch --flake .#hermit
 | `chariot` | NixOS | Home server |
 | `magician` | Home Manager (`aarch64-darwin`) | macOS work laptop |
 | `hermit` | Home Manager (`x86_64-linux`) | Headless VM |
+
+# Git and Jujutsu identity
+
+`modules/user/vcs.nix` configures both Git and Jujutsu (`jj`). It is enabled
+with the CLI package set and defaults to tower's identity: `Nuno Ramos`
+and `nmiguel123@gmail.com`.
+
+Override the shared identity in a host's `home.nix`, for example on `magician`:
+
+```nix
+userSettings.vcs = {
+  name = "Your Name";
+  email = "you@work.example";
+};
+```
+
+Both programs use these values. Git no longer includes `~/.gitconfig_local`;
+set host-specific identity through these options instead.

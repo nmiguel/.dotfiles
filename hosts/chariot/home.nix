@@ -28,6 +28,7 @@
     lua.enable = true;
     go.enable = true;
     js.enable = true;
+    vcs.enable = true;
   };
 
   home.username = "nomig";

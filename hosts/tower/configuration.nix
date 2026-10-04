@@ -52,7 +52,6 @@ in
     openrgb = {
       enable = true;
     };
-    jellyfin.enable = false;
   };
 
   # Bootloader.
