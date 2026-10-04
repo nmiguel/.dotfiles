@@ -17,6 +17,7 @@
     # Shared feature modules.
     dotfiles.enable = true;
     tmux.enable = true;
+    ghostty.enable = true;
     defaultApps.enable = true;
     theming.enable = true;
     packages.cli.enable = true;

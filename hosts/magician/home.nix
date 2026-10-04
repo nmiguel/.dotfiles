@@ -10,19 +10,15 @@
       entries = [
         "btop"
         "fastfetch"
-        "fish"
-        "ghostty"
         "lazygit"
         "nix"
         "nvim"
         "opencode"
-        "rsync"
-        "starship.toml"
-        "television"
       ];
     };
 
     tmux.enable = true;
+    ghostty.enable = true;
     packages.cli.enable = true;
 
     python.enable = true;

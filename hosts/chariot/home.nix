@@ -11,14 +11,10 @@
         "bin"
         "btop"
         "fastfetch"
-        "fish"
         "lazygit"
         "nix"
         "nvim"
         "opencode"
-        "rsync"
-        "starship.toml"
-        "television"
       ];
     };
     tmux.enable = true;

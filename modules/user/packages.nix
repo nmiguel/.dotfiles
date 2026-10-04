@@ -36,22 +36,22 @@ in
         fastfetch
         fd
         file
-        fish
         fzf # A command-line fuzzy finder
         stdenv.cc
         gh
         git
         gnutar
         iftop # network monitoring
+        jujutsu
         jq
         lazydocker
         lazygit
         lsof
         neovim
+        nix-index
+        nix-search-cli
         ripgrep
         nixd
-        starship
-        television
         tokei
         tree
         silicon
@@ -61,7 +61,6 @@ in
         which
         xz
         zip
-        zoxide
         zstd
         yazi
       ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
@@ -82,7 +81,6 @@ in
         evince
         firefox
         file-roller
-        ghostty
         gimp
         gnome-calendar
         gnome-disk-utility
@@ -103,7 +101,6 @@ in
         papirus-icon-theme
         playerctl
         qalculate-gtk
-        rofi
         satty
         slurp
         wev

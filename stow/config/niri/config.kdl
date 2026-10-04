@@ -219,7 +219,7 @@ spawn-at-startup "xdg-desktop-portal-gnome"
 spawn-at-startup "blueman-applet"
 
 spawn-at-startup "thunar" "--daemon"
-spawn-at-startup "elephant"
+// spawn-at-startup "elephant"
 spawn-at-startup "openrgb" "-p" "Default"
 spawn-at-startup "xwayland-satellite"
 // spawn-at-startup "qs" "-c" "noctalia-shell"

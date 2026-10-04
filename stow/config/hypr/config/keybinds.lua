@@ -17,10 +17,8 @@ if not ok then
 	shell = nil
 end
 
-local clipboard_cmd = "cliphist list | rofi -dmenu | cliphist decode | wl-copy && wtype -M ctrl -k v -m ctrl"
-local mixer_cmd = 'pkill rofi || true && rofi -modi "vol:'
-	.. scriptsDir
-	.. '/volume_mixer.py" -show vol -kb-custom-1 "Alt+Left" -kb-custom-2 "Alt+Right"'
+local clipboard_cmd
+local mixer_cmd
 
 if shell == "dms" then
 	hl.bind(mod .. " + Space", hl.dsp.exec_cmd("dms ipc call spotlight toggle"))
@@ -34,7 +32,9 @@ elseif shell == "noctalia" then
 	mixer_cmd = "noctalia msg panel-toggle control-center audio"
 end
 
-hl.bind(mod .. " + SHIFT + V", hl.dsp.exec_cmd(clipboard_cmd))
+if clipboard_cmd then
+	hl.bind(mod .. " + SHIFT + V", hl.dsp.exec_cmd(clipboard_cmd))
+end
 
 hl.bind(mod .. " + F", function()
 	if hl.get_active_workspace().tiled_layout == "scrolling" then
@@ -71,7 +71,9 @@ hl.bind(
 	mod .. " + SHIFT + S",
 	hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | satty -f - -o "~/Pictures/Screenshots/%Y%m%d_%H%M%S.png"')
 )
-hl.bind(mod .. " + T", hl.dsp.exec_cmd(mixer_cmd))
+if mixer_cmd then
+	hl.bind(mod .. " + T", hl.dsp.exec_cmd(mixer_cmd))
+end
 
 hl.bind(mod .. " + A", hl.dsp.exec_cmd(scriptsDir .. "/audio_switch.sh"))
 
