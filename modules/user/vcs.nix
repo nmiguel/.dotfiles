@@ -1,5 +1,10 @@
 # Git and Jujutsu share a per-host commit identity.
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.userSettings.vcs;
   identity = {
@@ -52,21 +57,48 @@ in
         user = identity;
         revset-aliases."closest_bookmark(to)" = "heads(::to & bookmarks())";
         aliases = {
-          tug = [ "bookmark" "move" "--from" "closest_bookmark(@-)" "--to" "@-" ];
+          tug = [
+            "bookmark"
+            "move"
+            "--from"
+            "closest_bookmark(@-)"
+            "--to"
+            "@-"
+          ];
           c = [ "commit" ];
-          ci = [ "commit" "--interactive" ];
+          ci = [
+            "commit"
+            "--interactive"
+          ];
           e = [ "edit" ];
-          i = [ "git" "init" "--colocate" ];
-          nb = [ "bookmark" "create" "-r @-" ]; # New bookmark.
-          pull = [ "git" "fetch" ];
-          push = [ "git" "push" "--allow-new" ];
+          i = [
+            "git"
+            "init"
+            "--colocate"
+          ];
+          nb = [
+            "bookmark"
+            "create"
+            "-r @-"
+          ]; # New bookmark.
+          pull = [
+            "git"
+            "fetch"
+          ];
+          push = [
+            "git"
+            "push"
+            "--allow-new"
+          ];
           r = [ "rebase" ];
           s = [ "squash" ];
-          si = [ "squash" "--interactive" ];
+          si = [
+            "squash"
+            "--interactive"
+          ];
         };
       };
     };
-
 
     home.packages = with pkgs; [
       jjui

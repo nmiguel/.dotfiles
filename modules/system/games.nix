@@ -11,8 +11,7 @@ let
   cfg = config.modules.games;
 in
 {
-  options.modules.games.enable =
-    lib.mkEnableOption "system-level gaming support";
+  options.modules.games.enable = lib.mkEnableOption "system-level gaming support";
 
   config = lib.mkIf cfg.enable {
     programs.steam = {

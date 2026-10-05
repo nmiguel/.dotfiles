@@ -1,5 +1,10 @@
 # Shared Ghostty settings; macOS uses a separately installed native app.
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   options.userSettings.ghostty.enable = lib.mkEnableOption "the shared Ghostty configuration";
 

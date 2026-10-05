@@ -53,39 +53,50 @@
 
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs:
     let
       linuxSystem = "x86_64-linux";
       darwinSystem = "aarch64-darwin";
       overlaysFor = system: [
         inputs.neovim-nightly-overlay.overlays.default
         (_final: prev: {
-          tmux = prev.tmux.overrideAttrs (finalAttrs: _previousAttrs: {
-            version = "3.8-rc3";
-            src = prev.fetchFromGitHub {
-              owner = "tmux";
-              repo = "tmux";
-              tag = finalAttrs.version;
-              hash = "sha256-dWUD62onx4cSwngtZTlF9pggA/9Z/Vmn77nD53luld0=";
-            };
-          });
+          tmux = prev.tmux.overrideAttrs (
+            finalAttrs: _previousAttrs: {
+              version = "3.8-rc3";
+              src = prev.fetchFromGitHub {
+                owner = "tmux";
+                repo = "tmux";
+                tag = finalAttrs.version;
+                hash = "sha256-dWUD62onx4cSwngtZTlF9pggA/9Z/Vmn77nD53luld0=";
+              };
+            }
+          );
         })
-        (_final: _prev:
+        (
+          _final: _prev:
           let
             opencode = inputs.opencode.packages.${system}.default;
           in
           {
-            opencode = if system == linuxSystem then
-              let
-                node_modules = opencode.node_modules.override {
-                  # The synthetic merge changes workspace files without updating this hash.
-                  hash = "sha256-eeEW91TWHQOFL0vI/FtpmekRQDnUeJAhxe4/ZVVroT4=";
-                };
-              in
-              opencode.override { inherit node_modules; }
-            else
-              opencode;
-          })
+            opencode =
+              if system == linuxSystem then
+                let
+                  node_modules = opencode.node_modules.override {
+                    # The synthetic merge changes workspace files without updating this hash.
+                    hash = "sha256-eeEW91TWHQOFL0vI/FtpmekRQDnUeJAhxe4/ZVVroT4=";
+                  };
+                in
+                opencode.override { inherit node_modules; }
+              else
+                opencode;
+          }
+        )
       ];
     in
     {

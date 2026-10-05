@@ -9,14 +9,16 @@ let
   cfg = config.userSettings.tmux;
   tmuxConfig = "${config.xdg.configHome}/tmux/tmux.conf";
   sessionizer = "${config.xdg.configHome}/tmux/tmux-sessionizer";
-  copyCommand = if pkgs.stdenv.hostPlatform.isDarwin then
-    "/usr/bin/pbcopy"
-  else
-    "${lib.getExe pkgs.xclip} -selection clipboard";
-  openCommand = if pkgs.stdenv.hostPlatform.isDarwin then
-    "/usr/bin/open"
-  else
-    lib.getExe' pkgs.xdg-utils "xdg-open";
+  copyCommand =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "/usr/bin/pbcopy"
+    else
+      "${lib.getExe pkgs.xclip} -selection clipboard";
+  openCommand =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "/usr/bin/open"
+    else
+      lib.getExe' pkgs.xdg-utils "xdg-open";
 
   # Draw the curves in the tab's fill color without reversing the background.
   roundedSeparator = color: glyph: "#[fg=#{E:${color}},bg=terminal]${glyph}#[none]";
@@ -35,9 +37,11 @@ let
     "@catppuccin_window_left_separator" = roundedSeparator "@catppuccin_window_text_color" "";
     "@catppuccin_window_middle_separator" = " ";
     "@catppuccin_window_right_separator" = roundedSeparator "@catppuccin_window_number_color" "";
-    "@catppuccin_window_current_left_separator" = roundedSeparator "@catppuccin_window_current_text_color" "";
+    "@catppuccin_window_current_left_separator" =
+      roundedSeparator "@catppuccin_window_current_text_color" "";
     "@catppuccin_window_current_middle_separator" = " ";
-    "@catppuccin_window_current_right_separator" = roundedSeparator "@catppuccin_window_current_number_color" "";
+    "@catppuccin_window_current_right_separator" =
+      roundedSeparator "@catppuccin_window_current_number_color" "";
   };
   themeConfig = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (name: value: "set -g ${name} ${lib.escapeShellArg value}") themeOptions
@@ -48,15 +52,14 @@ in
 
   config = lib.mkIf cfg.enable {
     # Replace the old whole-directory link before deploying individual files.
-    home.activation.migrateTmuxDirectory = lib.hm.dag.entryBetween
-      [ "linkGeneration" ]
-      [ "writeBoundary" ]
-      ''
-        tmuxDir=${lib.escapeShellArg "${config.xdg.configHome}/tmux"}
-        if [[ -L "$tmuxDir" && "$(readlink -f "$tmuxDir")" == ${lib.escapeShellArg "${config.userSettings.dotfiles.repoRoot}/stow/config/tmux"} ]]; then
-          run unlink "$tmuxDir"
-        fi
-      '';
+    home.activation.migrateTmuxDirectory =
+      lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
+        ''
+          tmuxDir=${lib.escapeShellArg "${config.xdg.configHome}/tmux"}
+          if [[ -L "$tmuxDir" && "$(readlink -f "$tmuxDir")" == ${lib.escapeShellArg "${config.userSettings.dotfiles.repoRoot}/stow/config/tmux"} ]]; then
+            run unlink "$tmuxDir"
+          fi
+        '';
 
     xdg.configFile."tmux/tmux-sessionizer" = {
       source = ../../stow/config/tmux/tmux-sessionizer;

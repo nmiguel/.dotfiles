@@ -51,8 +51,8 @@ in
     port = 11434;
     openFirewall = false;
     loadModels = [
-            "qwen3:14b"
-            "qwen3-vl:8b"
+      "qwen3:14b"
+      "qwen3-vl:8b"
     ];
     syncModels = true;
     environmentVariables = {

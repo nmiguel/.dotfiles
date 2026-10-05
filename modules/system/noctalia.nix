@@ -19,8 +19,7 @@ in
 {
   imports = [ inputs.noctalia.nixosModules.default ];
 
-  options.systemSettings.noctalia.enable =
-    lib.mkEnableOption "the Noctalia desktop shell";
+  options.systemSettings.noctalia.enable = lib.mkEnableOption "the Noctalia desktop shell";
 
   config = lib.mkIf cfg.enable {
     # Publish the active shell for the Hyprland config to branch on, mirroring

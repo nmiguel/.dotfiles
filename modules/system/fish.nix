@@ -12,8 +12,7 @@ let
   cfg = config.systemSettings.fish;
 in
 {
-  options.systemSettings.fish.enable =
-    lib.mkEnableOption "the Fish shell as the login shell";
+  options.systemSettings.fish.enable = lib.mkEnableOption "the Fish shell as the login shell";
 
   config = lib.mkIf cfg.enable {
     programs.fish.enable = true;

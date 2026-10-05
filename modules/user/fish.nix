@@ -1,5 +1,10 @@
 # Shared shell configuration and declaratively installed Fish plugins.
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 in
@@ -11,7 +16,12 @@ in
   config = lib.mkIf config.userSettings.fish.enable {
     programs.fish = {
       enable = true;
-      plugins = [ { name = "nvm"; src = pkgs.fishPlugins.nvm.src; } ];
+      plugins = [
+        {
+          name = "nvm";
+          src = pkgs.fishPlugins.nvm.src;
+        }
+      ];
 
       shellAbbrs = {
         v = "nvim";
@@ -19,29 +29,62 @@ in
         sv = "command sudo -e -s nvim";
         docker-compose = "docker compose";
         svenv = ". (fd -t d -u -d 2 'venv')/bin/activate.fish";
-        "~pw" = { position = "anywhere"; expansion = "~/projects/work"; };
-        "~pp" = { position = "anywhere"; expansion = "~/projects/personal"; };
-        nx-shell = { setCursor = "%"; expansion = "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p % --run fish"; };
+        "~pw" = {
+          position = "anywhere";
+          expansion = "~/projects/work";
+        };
+        "~pp" = {
+          position = "anywhere";
+          expansion = "~/projects/personal";
+        };
+        nx-shell = {
+          setCursor = "%";
+          expansion = "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p % --run fish";
+        };
         exp = if isDarwin then "open ." else "nohup xdg-open . >/dev/null 2>&1 & disown";
         wiztree = "sudo ncdu / --exclude " + (if isDarwin then "/Volumes" else "/mnt");
-        nx-switch = if isDarwin then
-          "home-manager switch --flake .#(hostname -s)"
-        else
-          "sudo nixos-rebuild switch --flake .#(hostname)";
-        hlexec = { setCursor = "%"; expansion = "hyprctl dispatch 'hl.dsp.exec_cmd(\"%\")'"; };
+        nx-switch =
+          if isDarwin then
+            "home-manager switch --flake .#(hostname -s)"
+          else
+            "sudo nixos-rebuild switch --flake .#(hostname)";
+        hlexec = {
+          setCursor = "%";
+          expansion = "hyprctl dispatch 'hl.dsp.exec_cmd(\"%\")'";
+        };
         lg = "lazygit";
         ld = "lazydocker";
-        dotdot = { regex = ''^\.\.+$''; function = "multicd"; };
+        dotdot = {
+          regex = ''^\.\.+$'';
+          function = "multicd";
+        };
       };
 
       binds = {
-        "ctrl-h" = { mode = "insert"; command = "backward-kill-word"; };
-        "ctrl-y" = { mode = "insert"; command = "accept-autosuggestion"; };
+        "ctrl-h" = {
+          mode = "insert";
+          command = "backward-kill-word";
+        };
+        "ctrl-y" = {
+          mode = "insert";
+          command = "accept-autosuggestion";
+        };
         "ctrl-r".command = "search_history";
-        history-insert = { name = "ctrl-r"; mode = "insert"; command = "search_history"; };
-        "!" = { mode = "insert"; command = "bind_bang"; };
+        history-insert = {
+          name = "ctrl-r";
+          mode = "insert";
+          command = "search_history";
+        };
+        "!" = {
+          mode = "insert";
+          command = "bind_bang";
+        };
         # The pinned HM generator emits bind names without shell quoting.
-        "$" = { name = "\\$"; mode = "insert"; command = "bind_dollar"; };
+        "$" = {
+          name = "\\$";
+          mode = "insert";
+          command = "bind_dollar";
+        };
       };
 
       functions = {
@@ -119,29 +162,35 @@ in
         fish_add_path --path ~/.nix-profile/bin
       '';
 
-      interactiveShellInit = lib.mkMerge [ (lib.mkBefore ''
-        set fish_greeting
-        set -g fish_key_bindings fish_vi_key_bindings
-        if type -q paru && not type -q yay
-          abbr yay paru
-          alias yay paru
-        end
-        if type -q yay && not type -q paru
-          abbr paru yay
-          alias paru yay
-        end
-      '') (lib.mkAfter ''
-        select_venv
-        if test -f local.fish
-          source local.fish
-        end
-      '') ];
+      interactiveShellInit = lib.mkMerge [
+        (lib.mkBefore ''
+          set fish_greeting
+          set -g fish_key_bindings fish_vi_key_bindings
+          if type -q paru && not type -q yay
+            abbr yay paru
+            alias yay paru
+          end
+          if type -q yay && not type -q paru
+            abbr paru yay
+            alias paru yay
+          end
+        '')
+        (lib.mkAfter ''
+          select_venv
+          if test -f local.fish
+            source local.fish
+          end
+        '')
+      ];
     };
 
     programs.zoxide = {
       enable = true;
       enableFishIntegration = true;
-      options = [ "--cmd" "cd" ];
+      options = [
+        "--cmd"
+        "cd"
+      ];
     };
   };
 }

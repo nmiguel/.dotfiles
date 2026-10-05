@@ -14,8 +14,7 @@ let
   gtk3Schemas = "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}";
 in
 {
-  options.userSettings.theming.enable =
-    lib.mkEnableOption "the dark GTK/Qt desktop theme and cursor";
+  options.userSettings.theming.enable = lib.mkEnableOption "the dark GTK/Qt desktop theme and cursor";
 
   config = lib.mkIf cfg.enable {
     dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";

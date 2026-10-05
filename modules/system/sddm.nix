@@ -12,8 +12,7 @@ let
   cfg = config.systemSettings.sddm;
 in
 {
-  options.systemSettings.sddm.enable =
-    lib.mkEnableOption "the SDDM display manager";
+  options.systemSettings.sddm.enable = lib.mkEnableOption "the SDDM display manager";
 
   config = lib.mkIf cfg.enable {
     services.displayManager.sddm = {

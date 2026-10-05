@@ -13,8 +13,7 @@ let
   cfg = config.userSettings.lua;
 in
 {
-  options.userSettings.lua.enable =
-    lib.mkEnableOption "the Lua development toolchain";
+  options.userSettings.lua.enable = lib.mkEnableOption "the Lua development toolchain";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

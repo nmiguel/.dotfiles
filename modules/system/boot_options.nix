@@ -12,8 +12,7 @@ let
   cfg = config.systemSettings.boot_options;
 in
 {
-  options.systemSettings.boot_options.enable =
-    lib.mkEnableOption "the Plymouth boot splash and silent boot";
+  options.systemSettings.boot_options.enable = lib.mkEnableOption "the Plymouth boot splash and silent boot";
 
   config = lib.mkIf cfg.enable {
     boot = {

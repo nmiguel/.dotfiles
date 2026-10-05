@@ -23,49 +23,52 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.cli.enable {
-      home.packages = with pkgs; [
-        opencode
+      home.packages =
+        with pkgs;
+        [
+          opencode
 
-        bat
-        ncdu
-        borgmatic
-        btop
-        curl
-        dnsutils # `dig` + `nslookup`
-        eza
-        fastfetch
-        fd
-        file
-        fzf # A command-line fuzzy finder
-        stdenv.cc
-        gh
-        gnutar
-        iftop # network monitoring
-        jq
-        lazydocker
-        lazygit
-        lsof
-        neovim
-        nix-index
-        nix-search-cli
-        ripgrep
-        nixd
-        tokei
-        tree
-        silicon
-        tree-sitter
-        unzip
-        wget
-        which
-        xz
-        zip
-        zstd
-        yazi
-      ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
-        ethtool
-        pciutils
-        usbutils # lsusb
-      ];
+          bat
+          ncdu
+          borgmatic
+          btop
+          curl
+          dnsutils # `dig` + `nslookup`
+          eza
+          fastfetch
+          fd
+          file
+          fzf # A command-line fuzzy finder
+          stdenv.cc
+          gh
+          gnutar
+          iftop # network monitoring
+          jq
+          lazydocker
+          lazygit
+          lsof
+          neovim
+          nix-index
+          nix-search-cli
+          ripgrep
+          nixd
+          tokei
+          tree
+          silicon
+          tree-sitter
+          unzip
+          wget
+          which
+          xz
+          zip
+          zstd
+          yazi
+        ]
+        ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+          ethtool
+          pciutils
+          usbutils # lsusb
+        ];
     })
 
     (lib.mkIf cfg.gui.enable {

@@ -13,8 +13,7 @@ let
   cfg = config.userSettings.js;
 in
 {
-  options.userSettings.js.enable =
-    lib.mkEnableOption "the JavaScript and TypeScript development toolchain";
+  options.userSettings.js.enable = lib.mkEnableOption "the JavaScript and TypeScript development toolchain";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

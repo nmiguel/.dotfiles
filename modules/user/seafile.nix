@@ -14,8 +14,7 @@ let
   });
 in
 {
-  options.userSettings.seafile.enable =
-    lib.mkEnableOption "the Seafile desktop sync client";
+  options.userSettings.seafile.enable = lib.mkEnableOption "the Seafile desktop sync client";
 
   config = lib.mkIf cfg.enable {
     home.packages = [ seafileClient ];

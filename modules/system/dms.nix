@@ -4,11 +4,12 @@
 # inert until a host flips it on. The upstream NixOS module is always imported
 # (so its options exist) but nothing it provides activates unless the flag is
 # set. dms is configured entirely on the NixOS side.
-{ inputs
-, pkgs
-, config
-, lib
-, ...
+{
+  inputs,
+  pkgs,
+  config,
+  lib,
+  ...
 }:
 let
   cfg = config.systemSettings.dms;
@@ -18,8 +19,7 @@ in
     inputs.dms.nixosModules.dank-material-shell
   ];
 
-  options.systemSettings.dms.enable =
-    lib.mkEnableOption "the DankMaterialShell desktop shell";
+  options.systemSettings.dms.enable = lib.mkEnableOption "the DankMaterialShell desktop shell";
 
   config = lib.mkIf cfg.enable {
     # Publish the active shell for the Hyprland config to branch on, mirroring

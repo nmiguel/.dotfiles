@@ -13,8 +13,7 @@ let
   cfg = config.userSettings.go;
 in
 {
-  options.userSettings.go.enable =
-    lib.mkEnableOption "the Go development toolchain";
+  options.userSettings.go.enable = lib.mkEnableOption "the Go development toolchain";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

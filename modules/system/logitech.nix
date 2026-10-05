@@ -11,8 +11,7 @@ let
   cfg = config.systemSettings.logitech;
 in
 {
-  options.systemSettings.logitech.enable =
-    lib.mkEnableOption "the LogiOps driver for Logitech devices";
+  options.systemSettings.logitech.enable = lib.mkEnableOption "the LogiOps driver for Logitech devices";
 
   config = lib.mkIf cfg.enable {
     services.logiops = {

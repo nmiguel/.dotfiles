@@ -13,8 +13,7 @@ let
   cfg = config.userSettings.python;
 in
 {
-  options.userSettings.python.enable =
-    lib.mkEnableOption "the Python development toolchain";
+  options.userSettings.python.enable = lib.mkEnableOption "the Python development toolchain";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

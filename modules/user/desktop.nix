@@ -17,8 +17,7 @@ let
   '';
 in
 {
-  options.userSettings.desktop.enable =
-    lib.mkEnableOption "web application desktop entries";
+  options.userSettings.desktop.enable = lib.mkEnableOption "web application desktop entries";
 
   config = lib.mkIf cfg.enable {
     xdg.desktopEntries.claude = {

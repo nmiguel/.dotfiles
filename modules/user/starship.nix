@@ -1,5 +1,10 @@
 # Nerd Font symbols come from the preset; only overrides are maintained here.
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   options.userSettings.starship.enable = lib.mkEnableOption "the shared Starship prompt" // {
     default = config.userSettings.packages.cli.enable;
