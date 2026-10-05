@@ -1,5 +1,5 @@
 # Nerd Font symbols come from the preset; only overrides are maintained here.
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 {
   options.userSettings.starship.enable = lib.mkEnableOption "the shared Starship prompt" // {
     default = config.userSettings.packages.cli.enable;
@@ -9,6 +9,7 @@
     programs.starship = {
       enable = true;
       enableFishIntegration = true;
+      extraPackages = [ pkgs.jj-starship ];
       presets = [ "nerd-font-symbols" ];
       settings = {
         palette = "custom";
@@ -26,31 +27,24 @@
           show_milliseconds = true;
           format = "[ 󱎫 $duration ]($style)";
         };
-        aws.disabled = true;
-        conda.symbol = " ";
-        dart.symbol = " ";
         directory.style = "bold blue";
+        custom.jj = {
+          when = "${lib.getExe pkgs.jj-starship} detect";
+          shell = [ (lib.getExe pkgs.jj-starship) ];
+          format = "$output ";
+        };
+        # jj-starship renders repository information for both Git and JJ.
+        git_branch.disabled = true;
+        git_commit.disabled = true;
+        git_state.disabled = true;
+        git_metrics.disabled = true;
         git_status = {
-          windows_starship = "/mnt/c/Program Files/starship/bin/starship";
-          style = "purple";
+          disabled = true;
         };
         hostname.format = "[$ssh_symbol]($style) ";
-        java.symbol = " ";
-        nim.symbol = "󰆥 ";
-        os.symbols = {
-          Emscripten = " ";
-          EndeavourOS = " ";
-          Garuda = "󰛓 ";
-          Illumos = "󰈸 ";
-          OpenBSD = "󰈺 ";
-          OracleLinux = "󰌷 ";
-          Redhat = " ";
-          RedHatEnterprise = " ";
-          Solus = "󰠳 ";
-        };
         package.disabled = true;
         python.style = "fg:#499de4";
-        rust.symbol = " ";
+        rust.symbol = "🦀 ";
         username.disabled = true;
       };
     };
