@@ -66,5 +66,10 @@ in
         };
       };
     };
+
+
+    home.packages = with pkgs; [
+      jjui
+    ];
   };
 }
