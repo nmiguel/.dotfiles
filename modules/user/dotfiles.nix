@@ -25,6 +25,7 @@ let
         "tmux"
         "fish"
         "ghostty"
+        "opencode"
         "starship.toml"
       ])
     ) (builtins.attrNames (builtins.readDir configDir))
@@ -110,11 +111,17 @@ in
                     run ${pkgs.coreutils}/bin/cp -n "$repoDir/themes/dankcolors" "$configDir/themes/dankcolors"
                   fi
                 ''}
+                ${lib.optionalString (name == "opencode") ''
+                  # Retain local plugins and dependencies from the old directory
+                  # link; subsequent activations leave this writable directory alone.
+                  run ${pkgs.coreutils}/bin/cp -a -n "$repoDir/." "$configDir/"
+                ''}
               fi
             '')
             (
               lib.optional config.userSettings.fish.enable "fish"
               ++ lib.optional config.userSettings.ghostty.enable "ghostty"
+              ++ lib.optional config.programs.opencode.enable "opencode"
             )
         );
   };

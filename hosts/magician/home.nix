@@ -13,7 +13,6 @@
         "lazygit"
         "nix"
         "nvim"
-        "opencode"
       ];
     };
 

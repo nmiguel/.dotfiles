@@ -14,7 +14,6 @@
         "lazygit"
         "nix"
         "nvim"
-        "opencode"
       ];
     };
     tmux.enable = true;
