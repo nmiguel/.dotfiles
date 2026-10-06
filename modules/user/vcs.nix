@@ -56,6 +56,9 @@ in
       settings = {
         user = identity;
         revset-aliases."closest_bookmark(to)" = "heads(::to & bookmarks())";
+        ui = {
+          default-command = "log";
+        };
         aliases = {
           tug = [
             "bookmark"
@@ -64,11 +67,6 @@ in
             "closest_bookmark(@-)"
             "--to"
             "@-"
-          ];
-          c = [ "commit" ];
-          ci = [
-            "commit"
-            "--interactive"
           ];
           e = [ "edit" ];
           i = [
@@ -81,15 +79,6 @@ in
             "create"
             "-r @-"
           ]; # New bookmark.
-          pull = [
-            "git"
-            "fetch"
-          ];
-          push = [
-            "git"
-            "push"
-            "--allow-new"
-          ];
           r = [ "rebase" ];
           s = [ "squash" ];
           si = [
@@ -100,8 +89,14 @@ in
       };
     };
 
-    home.packages = with pkgs; [
-      jjui
-    ];
+    programs.jjui = {
+      enable = true;
+      settings = {
+        preview = {
+          show_at_start = true;
+        };
+        bookmark.interactive_bookmark_pane = true;
+      };
+    };
   };
 }
