@@ -1,0 +1,238 @@
+config_version = 14
+
+[bar.default]
+capsule_fill = "surface_variant"
+capsule_group = []
+capsule_opacity = 0.4999999888241291
+end = [ "tray", "weather", "notifications", "clock" ]
+radius = 12
+start = [ "session", "launcher", "cpu", "ram", "network_rx", "network_tx" ]
+
+    [bar.default.dead_zone.actions]
+    scroll_down = "workspace-switch next"
+    scroll_up = "workspace-switch prev"
+
+    [bar.default.monitor.DP-1]
+    end = [ "tray", "weather", "clipboard", "notifications", "clock" ]
+
+    [bar.default.monitor.DP-2]
+    background_opacity = 0.74999998323619366
+    end = [ "tray", "weather", "clipboard", "notifications", "clock" ]
+    start = [ "session", "launcher", "group:g1" ]
+
+        [[bar.default.monitor.DP-2.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        enabled = true
+        fill = "surface_variant"
+        id = "g1"
+        members = [ "cpu", "ram", "network_rx", "spacer_2", "network_tx" ]
+        opacity = 0.5
+        padding = 8.0
+
+    [bar.default.monitor.DP-3]
+    background_opacity = 0.74999998323619366
+    start = [ "group:g1" ]
+
+        [[bar.default.monitor.DP-3.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        enabled = true
+        fill = "surface_variant"
+        id = "g1"
+        members = [ "cpu", "ram", "spacer_3", "gpu" ]
+        opacity = 0.0
+        padding = 8.0
+
+[control_center]
+hidden_tabs = [ "monitor", "power", "network" ]
+
+    [[control_center.shortcuts]]
+    type = "caffeine"
+
+    [[control_center.shortcuts]]
+    type = "wallpaper"
+
+    [[control_center.shortcuts]]
+    type = "session"
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@DP-3", "lockscreen-login-box@DP-2" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-2"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1280.0
+    cy = 1258.0
+    output = "DP-2"
+    placement_height = 1440.0
+    placement_width = 2560.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-2".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-3"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 540.0
+    cy = 1738.0
+    output = "DP-3"
+    placement_height = 1920.0
+    placement_width = 1080.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-3".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[osd.kinds]
+brightness = true
+volume = true
+
+[plugins]
+enabled = [ "felipeartur/ai-usagebar" ]
+
+[shell]
+app_icon_color = "on_surface"
+font_family = "Noto Sans"
+
+    [shell.launcher]
+    categories = true
+    fetch_exchange_rates = false
+    pinned = [ "firefox", "1password", "steam", "ghostty" ]
+
+        [shell.launcher.providers.emoji]
+        global = false
+        prefix = "🦀"
+
+    [shell.panel]
+    open_near_click_control_center = true
+    transparency_mode = "solid"
+
+    [[shell.session.actions]]
+    action = "reboot"
+    countdown_seconds = 3.0
+    enabled = true
+    shortcut = "r"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "shutdown"
+    countdown_seconds = 3.0
+    enabled = true
+    shortcut = "p"
+    variant = "destructive"
+
+    [[shell.session.actions]]
+    action = "lock"
+    countdown_seconds = 3.0
+    enabled = true
+    shortcut = "l"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "suspend"
+    countdown_seconds = 3.0
+    enabled = false
+    shortcut = "s"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "logout"
+    countdown_seconds = 0.0
+    enabled = false
+    shortcut = "2"
+    variant = "default"
+
+[theme]
+builtin = "Tokyo-Night"
+community_palette = "Oxocarbon"
+mode = "dark"
+source = "builtin"
+wallpaper_scheme = "m3-content"
+
+[wallpaper.default]
+path = "/home/nomig/Pictures/Wallpapers/Green Forest.jpg"
+
+[wallpaper.last]
+path = "/home/nomig/Pictures/Wallpapers/Green Forest.jpg"
+
+[wallpaper.monitor.DP-3]
+directory = "/home/nomig/Pictures/Wallpapers"
+
+[wallpaper.monitors.DP-2]
+path = "/home/nomig/Pictures/Wallpapers/Green Forest.jpg"
+
+[wallpaper.monitors.DP-3]
+path = "/home/nomig/Pictures/Wallpapers/Green Forest.jpg"
+
+[widget.clock]
+format = "{:%H:%M} {:%d-%m}"
+
+[widget.control-center]
+enabled = false
+
+[widget.media]
+title_scroll = "on_hover"
+
+[widget.network_rx]
+network_speed_compact = false
+
+[widget.network_tx]
+network_speed_compact = false
+
+[widget.spacer_2]
+length = 8
+type = "spacer"
+
+[widget.spacer_3]
+length = 8
+type = "spacer"
+
+[widget.taskbar]
+focused_color = "secondary"
+font_scale = 1.5
+font_weight = 600
+minimal = true
+occupied_color = "on_surface"
+show_active_indicator = false
+workspace_group_capsule = false
+workspace_label_placement = "centered"
+
+[widget.tray]
+icon_color = "primary"

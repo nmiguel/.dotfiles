@@ -46,9 +46,14 @@ in
         systemd.enable = true;
       };
 
-      # Noctalia loads GUI overrides after the stowed TOML. Retire the previous
-      # layout once, preserving it and leaving subsequent GUI changes writable.
-      home.activation.noctaliaDmsMigration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      # GUI overrides load after ~/.config/noctalia/*.toml. Keep them writable
+      # and repo-backed without tracking clipboard history or other runtime state.
+      home.file."${config.xdg.stateHome}/noctalia/settings.toml".source =
+        config.lib.file.mkOutOfStoreSymlink
+          "${config.userSettings.dotfiles.repoRoot}/stow/state/noctalia/settings.toml";
+
+      # Retire the previous layout once, before installing the settings link.
+      home.activation.noctaliaDmsMigration = lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
         stateDir=${lib.escapeShellArg "${config.xdg.stateHome}/noctalia"}
         if [ ! -e "$stateDir/.dms-migration-v1" ]; then
           run mkdir -p "$stateDir"
