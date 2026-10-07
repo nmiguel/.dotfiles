@@ -91,90 +91,101 @@ in
         ls = "eza -lh --group-directories-first --icons=auto $argv";
         lt = "eza --tree --level=2 --long --icons --git $argv";
         ff = "fzf --preview 'bat --style=numbers --color=always {}'";
-        sudo = ''
-          if functions -q $argv[1]
-            set argv fish -c "$argv"
-          end
-          command sudo $argv
-        '';
-        select_venv = ''
-          set venv_path (fd --type d --max-depth 2 --unrestricted 'venv' . | head -n 1)
-          if test -n "$venv_path" -a -f "$venv_path/bin/activate.fish"
-            source "$venv_path/bin/activate.fish"
-          end
-        '';
-        search_history = ''
-          set cmd (history | fzf --no-sort --exact --smart-case)
-          if test -n "$cmd"
-            commandline -r -- $cmd
-          end
-        '';
-        multicd = "echo cd (string repeat -n (math (string length -- $argv[1]) - 1) ../)";
-        notes = ''
-          cd ~/projects/personal/notes
-          if test (count $argv) -gt 0
-            nvim $argv[1].md
-          else
-            nvim .
-          end
-          cd - > /dev/null 2>&1
-        '';
-        bind_bang = ''
-          switch (commandline -t)[-1]
-            case "!"
-              commandline -t -- $history[1]
-              commandline -f repaint
-            case "*"
-              commandline -i !
-          end
-        '';
-        bind_dollar = ''
-          switch (commandline -t)[-1]
-            case "!"
-              commandline -f backward-delete-char history-token-search-backward
-            case "*"
-              commandline -i '$'
-          end
-        '';
-        reload = ''
-          set pwd (pwd)
-          for i in (seq 5)
-            if test -f local.fish || test -d .git
-              fish -C "cd $pwd"
-              break
+        sudo = # fish
+          ''
+            if functions -q $argv[1]
+              set argv fish -c "$argv"
             end
-            cd ..
-          end
-        '';
+            command sudo $argv
+          '';
+        select_venv = # fish
+          ''
+            set venv_path (fd --type d --max-depth 2 --unrestricted 'venv' . | head -n 1)
+            if test -n "$venv_path" -a -f "$venv_path/bin/activate.fish"
+              source "$venv_path/bin/activate.fish"
+            end
+          '';
+        search_history = # fish
+          ''
+            set cmd (history | fzf --no-sort --exact --smart-case)
+            if test -n "$cmd"
+              commandline -r -- $cmd
+            end
+          '';
+        multicd = # fish
+          "echo cd (string repeat -n (math (string length -- $argv[1]) - 1) ../)";
+        notes = # fish
+          ''
+            cd ~/projects/personal/notes
+            if test (count $argv) -gt 0
+              nvim $argv[1].md
+            else
+              nvim .
+            end
+            cd - > /dev/null 2>&1
+          '';
+        bind_bang = # fish
+          ''
+            switch (commandline -t)[-1]
+              case "!"
+                commandline -t -- $history[1]
+                commandline -f repaint
+              case "*"
+                commandline -i !
+            end
+          '';
+        bind_dollar = # fish
+          ''
+            switch (commandline -t)[-1]
+              case "!"
+                commandline -f backward-delete-char history-token-search-backward
+              case "*"
+                commandline -i '$'
+            end
+          '';
+        reload = # fish
+          ''
+            set pwd (pwd)
+            for i in (seq 5)
+              if test -f local.fish || test -d .git
+                fish -C "cd $pwd"
+                break
+              end
+              cd ..
+            end
+          '';
       };
 
-      shellInit = ''
-        set -gx EDITOR (which nvim)
-        set -gx VISUAL $EDITOR
-        set -gx SUDO_EDITOR $EDITOR
-        set -gx MANPAGER "nvim +Man!"
-        set -gx OPENCODE_DB "opencode-stable.db"
-        set -gx FZF_DEFAULT_OPTS "--color=fg:-1,fg+:#aac5e6,bg:-1,bg+:-1 --color=hl:#5f87af,hl+:#5fd7ff,info:#afaf87,marker:#87ff00 --color=prompt:#d7005f,spinner:#af5fff,pointer:#af5fff,header:#87afaf --color=border:#262626,label:#aeaeae,query:#d9d9d9 --preview-window=border-rounded --prompt='> ' --marker='>' --pointer='◆' --separator=''' --scrollbar='│' --info=right"
-        fish_add_path --path ~/.local/bin
-        fish_add_path --path ~/.cargo/bin
-        fish_add_path --path ~/.config/bin
-        fish_add_path --path ~/go/bin
-        fish_add_path --path ~/.nix-profile/bin
-      '';
+      shellInit = # fish
+        ''
+          set -gx EDITOR (which nvim)
+          set -gx VISUAL $EDITOR
+          set -gx SUDO_EDITOR $EDITOR
+          set -gx MANPAGER "nvim +Man!"
+          set -gx OPENCODE_DB "opencode-stable.db"
+          set -gx FZF_DEFAULT_OPTS "--color=fg:-1,fg+:#aac5e6,bg:-1,bg+:-1 --color=hl:#5f87af,hl+:#5fd7ff,info:#afaf87,marker:#87ff00 --color=prompt:#d7005f,spinner:#af5fff,pointer:#af5fff,header:#87afaf --color=border:#262626,label:#aeaeae,query:#d9d9d9 --preview-window=border-rounded --prompt='> ' --marker='>' --pointer='◆' --separator=''' --scrollbar='│' --info=right"
+          fish_add_path --path ~/.local/bin
+          fish_add_path --path ~/.cargo/bin
+          fish_add_path --path ~/.config/bin
+          fish_add_path --path ~/go/bin
+          fish_add_path --path ~/.nix-profile/bin
+        '';
 
       interactiveShellInit = lib.mkMerge [
-        (lib.mkBefore ''
-          set fish_greeting
-          set -g fish_key_bindings fish_vi_key_bindings
-          if type -q paru && not type -q yay
-            abbr yay paru
-            alias yay paru
-          end
-          if type -q yay && not type -q paru
-            abbr paru yay
-            alias paru yay
-          end
-        '')
+        (lib.mkBefore # fish
+          ''
+            set fish_greeting
+            set -g fish_key_bindings fish_vi_key_bindings
+            if type -q paru && not type -q yay
+              abbr yay paru
+              alias yay paru
+            end
+            if type -q yay && not type -q paru
+              abbr paru yay
+              alias paru yay
+            end
+          ''
+        )
         (lib.mkAfter ''
           select_venv
           if test -f local.fish
