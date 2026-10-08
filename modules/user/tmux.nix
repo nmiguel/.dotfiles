@@ -107,7 +107,8 @@ in
         }
       ];
 
-      extraConfig = ''
+      extraConfig = # conf
+        ''
         # Terminal and session behavior.
         set -ga terminal-overrides ',xterm-256color:Tc'
         set -g renumber-windows on
@@ -124,6 +125,8 @@ in
         bind -n M-j select-pane -t :.+
         bind -n M-k select-pane -t :.-
         bind -n M-g new-window '${sessionizer}'
+        bind-key b new-session -A -s bosana-manager -n manager 'exec nvim -c "Bosana --manager"'
+
         bind r source-file '${tmuxConfig}' \; display-message "Reloaded tmux configuration"
 
         # Copy mode and clipboard integration.
