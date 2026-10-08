@@ -1,44 +1,56 @@
 #!/usr/bin/env bash
 
+selected_type=directory
+
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find -L ~/projects -mindepth 2 -maxdepth 2 -type d | fzf \
+    project_root="$HOME/projects"
+    selection=$({
+        tmux list-sessions -F '#{session_name}' 2>/dev/null | while IFS= read -r session; do
+            printf 'session\t%s\t● %s (session)\n' "$session" "$session"
+        done
+        find -L "$project_root" -mindepth 2 -maxdepth 2 -type d | while IFS= read -r directory; do
+            printf 'directory\t%s\t📁 %s\n' "$directory" "${directory#"$project_root"/}"
+        done
+    } | fzf \
+        --delimiter=$'\t' \
+        --with-nth=3.. \
+        --no-sort \
         --color=fg:-1,fg+:#aac5e6,bg:-1,bg+:-1 \
         --color=hl:#5f87af,hl+:#5fd7ff,info:#afaf87,marker:#87ff00 \
         --color=prompt:#d7005f,spinner:#af5fff,pointer:#af5fff,header:#87afaf \
         --color=border:#262626,label:#aeaeae,query:#d9d9d9 \
-        --preview-window="border-rounded" \
         --prompt="> " \
         --marker=">" \
         --pointer="◆" \
+        --gutter=" " \
         --separator="" \
-        --scrollbar="│" \
+        --scrollbar=" " \
         --layout="reverse" \
         --info="right")
+    IFS=$'\t' read -r selected_type selected selected_label <<< "$selection"
 fi
 
 if [[ -z $selected ]]; then
     exit 0
 fi
 
-selected_name=$(basename "$selected" | tr . _)
-tmux_running=$(pgrep tmux)
+if [[ $selected_type == session ]]; then
+    selected_name=$selected
+else
+    selected_name=$(basename "$selected" | tr . _)
 
-# if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-#     tmux new-session -ds $selected_name -c $selected
-#     exit 0
-# fi
+    if ! tmux has-session -t "=$selected_name" 2> /dev/null; then
+        tmux new-session -ds "$selected_name" -c "$selected"
+    fi
 
-if ! tmux has-session -t "=$selected_name" 2> /dev/null; then
-    tmux new-session -ds "$selected_name" -c "$selected"
+    window_count=$(tmux list-windows -t "=$selected_name" -F '#{window_id}' | wc -l)
+    while (( window_count < 3 )); do
+        tmux new-window -d -t "=$selected_name:" -c "$selected"
+        window_count=$((window_count + 1))
+    done
 fi
-
-window_count=$(tmux list-windows -t "=$selected_name" -F '#{window_id}' | wc -l)
-while (( window_count < 3 )); do
-    tmux new-window -d -t "=$selected_name:" -c "$selected"
-    window_count=$((window_count + 1))
-done
 
 if [[ -z $TMUX ]]; then
     tmux attach -t "=$selected_name"
@@ -46,10 +58,12 @@ else
     tmux switch-client -t "=$selected_name"
 fi
 
-# Kill tmux sessions whose names are numbers only
+# Kill tmux sessions whose names are numbers only, except the selected session
 tmux ls 2>/dev/null \
   | cut -d: -f1 \
   | grep -E '^[0-9]+$' \
   | while read -r s; do
-        tmux kill-session -t "$s"
+        if [[ $s != "$selected_name" ]]; then
+            tmux kill-session -t "=$s"
+        fi
     done
