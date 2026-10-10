@@ -22,11 +22,7 @@
     packages.gui.enable = false;
     desktop.enable = false;
 
-    python.enable = true;
-    rust.enable = true;
-    lua.enable = true;
-    go.enable = true;
-    js.enable = true;
+    dev.enabled = true;
     vcs.enable = true;
   };
 

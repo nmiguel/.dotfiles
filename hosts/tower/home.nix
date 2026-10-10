@@ -21,12 +21,8 @@
     seafile.enable = true;
     desktop.enable = true;
 
-    # Per-language development toolchains (see modules/user/<lang>.nix).
-    python.enable = true;
-    rust.enable = true;
-    lua.enable = true;
-    go.enable = true;
-    js.enable = true;
+    # Development toolchains for all languages (see modules/user/dev.nix).
+    dev.enabled = true;
     vcs.enable = true;
   };
 

@@ -20,11 +20,7 @@
     ghostty.enable = true;
     packages.cli.enable = true;
 
-    python.enable = true;
-    rust.enable = true;
-    lua.enable = true;
-    go.enable = true;
-    js.enable = true;
+    dev.enabled = true;
   };
 
   # Home Manager copies supported native app bundles into

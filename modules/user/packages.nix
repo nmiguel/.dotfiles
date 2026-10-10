@@ -49,7 +49,6 @@ in
           nix-index
           nix-search-cli
           ripgrep
-          nixd
           tokei
           tree
           silicon
