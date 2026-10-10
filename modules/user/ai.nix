@@ -8,6 +8,7 @@
 let
   # The pinned OpenCode 1 release needs Quota 4; Quota 5 requires OpenCode 2.
   quotaPlugin = "@slkiser/opencode-quota@4.10.7";
+  opencodeSettings = builtins.fromJSON (builtins.readFile ../../stow/config/opencode/opencode.json);
   jsonFormat = pkgs.formats.json { };
 in
 {
@@ -23,11 +24,12 @@ in
       }
     ];
 
-    # Only these config files belong to Home Manager. OpenCode owns the
-    # writable parent directory, node_modules, package.json, and lockfiles.
     programs.opencode = {
       enable = true;
-      settings.plugin = [ quotaPlugin ];
+      settings = lib.mkMerge [
+        opencodeSettings
+        { plugin = [ quotaPlugin ]; }
+      ];
       tui.plugin = [ quotaPlugin ];
     };
 

@@ -112,9 +112,13 @@ in
                   fi
                 ''}
                 ${lib.optionalString (name == "opencode") ''
-                  # Retain local plugins and dependencies from the old directory
-                  # link; subsequent activations leave this writable directory alone.
-                  run ${pkgs.coreutils}/bin/cp -a -n "$repoDir/." "$configDir/"
+                  for entry in "$repoDir"/* "$repoDir"/.[!.]* "$repoDir"/..?*; do
+                    [[ -e "$entry" || -L "$entry" ]] || continue
+                    case "''${entry##*/}" in
+                      opencode.json|opencode.jsonc|tui.json|tui.jsonc) continue ;;
+                    esac
+                    run ${pkgs.coreutils}/bin/cp -a -n "$entry" "$configDir/"
+                  done
                 ''}
               fi
             '')

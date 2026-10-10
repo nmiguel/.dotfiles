@@ -1,0 +1,43 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "formatter": {
+    "prettier": {
+      "command": ["prettier", "--write", "$FILE"],
+      "extensions": [".md", ".markdown", ".mdown", ".mkd", ".mkdn", ".js", ".mjs", ".cjs", ".yaml", ".yml", ".css"]
+    },
+    "stylua": {
+      "command": ["stylua", "$FILE"],
+      "extensions": [".lua"]
+    },
+    "ruff": {
+      "command": [
+        "sh",
+        "-c",
+        "ruff format --force-exclude \"$1\" && ruff check --fix --force-exclude --select=I001 --exit-zero --no-cache \"$1\"",
+        "ruff",
+        "$FILE"
+      ],
+      "extensions": [".py", ".pyi", ".pyw"]
+    },
+    "jq": {
+      "command": ["sh", "-c", "formatted=$(jq . \"$1\") && printf '%s\\n' \"$formatted\" > \"$1\"", "jq", "$FILE"],
+      "extensions": [".json"]
+    },
+    "rustfmt": {
+      "command": ["rustfmt", "$FILE"],
+      "extensions": [".rs"]
+    },
+    "gofumpt": {
+      "command": ["gofumpt", "-w", "$FILE"],
+      "extensions": [".go"]
+    },
+    "kulala-fmt": {
+      "command": ["kulala-fmt", "format", "$FILE"],
+      "extensions": [".http"]
+    },
+    "nixfmt": {
+      "command": ["nixfmt", "$FILE"],
+      "extensions": [".nix"]
+    }
+  }
+}
