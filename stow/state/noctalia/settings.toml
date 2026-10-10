@@ -5,7 +5,8 @@ capsule_fill = "surface_variant"
 capsule_group = []
 capsule_opacity = 0.4999999888241291
 end = [ "tray", "weather", "notifications", "clock" ]
-radius = 12
+margin_edge = 0
+margin_ends = 0
 start = [ "session", "launcher", "cpu", "ram", "network_rx", "network_tx" ]
 
     [bar.default.dead_zone.actions]
