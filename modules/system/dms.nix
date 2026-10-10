@@ -1,9 +1,8 @@
 # DankMaterialShell (dms) desktop shell.
 #
 # Two-layer module: declares the `systemSettings.dms.enable` flag and stays
-# inert until a host flips it on. The upstream NixOS module is always imported
-# (so its options exist) but nothing it provides activates unless the flag is
-# set. dms is configured entirely on the NixOS side.
+# inert until a host flips it on. Uses the native nixpkgs module and is
+# configured entirely on the NixOS side.
 {
   inputs,
   pkgs,
@@ -15,10 +14,6 @@ let
   cfg = config.systemSettings.dms;
 in
 {
-  imports = [
-    inputs.dms.nixosModules.dank-material-shell
-  ];
-
   options.systemSettings.dms.enable = lib.mkEnableOption "the DankMaterialShell desktop shell";
 
   config = lib.mkIf cfg.enable {
@@ -26,29 +21,32 @@ in
     # the monitors.lua pattern. A Lua module so it can be read with dofile.
     environment.etc."hypr/shell.lua".text = ''return "dms"'';
 
-    environment.systemPackages = [ pkgs.papirus-icon-theme ];
+    environment.systemPackages = [
+      pkgs.papirus-icon-theme
+      pkgs.khal # Calendar backend; select it in DMS settings.
+    ];
+
+    services.power-profiles-daemon.enable = lib.mkDefault true;
+    services.geoclue2.enable = lib.mkDefault true;
+    security.polkit.enable = lib.mkDefault true;
 
     systemd.user.services.dms.environment = {
       QT_QPA_PLATFORMTHEME = "gtk3";
       QS_ICON_THEME = "Papirus-Dark";
     };
 
-    programs.dank-material-shell = {
+    programs.dms-shell = {
       enable = true;
-      package = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      package = pkgs.dms-shell;
 
       systemd = {
         enable = true; # Systemd service for auto-start
         restartIfChanged = true; # Auto-restart dms.service when dms-shell changes
       };
 
-      # Core features
-      enableSystemMonitoring = true; # System monitoring widgets (dgop)
-      enableVPN = false; # VPN management widget
-      enableDynamicTheming = true; # Wallpaper-based theming (matugen)
-      enableAudioWavelength = false; # Audio visualizer (cava)
-      enableCalendarEvents = true; # Calendar integration (khal)
-      enableClipboardPaste = true; # Pasting from the clipboard history (wtype)
+      # Monitoring and clipboard support are built in; matugen is included
+      # by the native module. Keep the optional audio visualizer excluded.
+      excludePackages = [ pkgs.cava ];
 
       plugins = {
         volumeMixer.src = inputs.dms-volume-mixer;

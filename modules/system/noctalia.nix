@@ -6,7 +6,6 @@
 # per-user (home-manager) side — so flipping the single flag is all that's
 # needed.
 {
-  inputs,
   pkgs,
   config,
   lib,
@@ -14,11 +13,9 @@
 }:
 let
   cfg = config.systemSettings.noctalia;
-  package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  package = pkgs.noctalia;
 in
 {
-  imports = [ inputs.noctalia.nixosModules.default ];
-
   options.systemSettings.noctalia.enable = lib.mkEnableOption "the Noctalia desktop shell";
 
   config = lib.mkIf cfg.enable {
@@ -33,13 +30,13 @@ in
     };
 
     environment.systemPackages = [ pkgs.nixos-icons ];
+    hardware.graphics.enable = lib.mkDefault true;
 
     # Native clipboard history and calendar storage use Secret Service.
     services.gnome.gnome-keyring.enable = true;
 
     # Drive the home-manager side from here so the whole shell toggles as a unit.
     home-manager.users.nomig = { config, lib, ... }: {
-      imports = [ inputs.noctalia.homeModules.default ];
       programs.noctalia = {
         enable = true;
         inherit package;
