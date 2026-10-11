@@ -6,8 +6,8 @@
   ...
 }:
 let
-  # The pinned OpenCode 1 release needs Quota 4; Quota 5 requires OpenCode 2.
-  quotaPlugin = "@slkiser/opencode-quota@4.10.7";
+  # Quota 5 uses the OpenCode 2 server and TUI plugin APIs.
+  quotaPlugin = "@slkiser/opencode-quota@5.0.2";
   opencodeSettings = builtins.fromJSON (builtins.readFile ../../stow/config/opencode/opencode.json);
   jsonFormat = pkgs.formats.json { };
 in
@@ -28,10 +28,12 @@ in
       enable = true;
       settings = lib.mkMerge [
         opencodeSettings
-        { plugin = [ quotaPlugin ]; }
+        { plugins = [ quotaPlugin ]; }
       ];
-      tui.plugin = [ quotaPlugin ];
     };
+
+    xdg.configFile."opencode/themes/one-dark-transparent.json".source =
+      ../../stow/config/opencode/themes/one-dark-transparent.json;
 
     xdg.configFile."opencode/opencode-quota/quota-toast.json".source =
       jsonFormat.generate "quota-toast.json"
