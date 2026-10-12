@@ -16,7 +16,6 @@
 
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     opencode = {
@@ -48,7 +47,6 @@
       linuxSystem = "x86_64-linux";
       darwinSystem = "aarch64-darwin";
       overlaysFor = system: [
-        inputs.neovim-nightly-overlay.overlays.default
         (_final: prev: {
           tmux = prev.tmux.overrideAttrs (
             finalAttrs: _previousAttrs: {

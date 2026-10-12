@@ -8,6 +8,7 @@
 # while a full desktop (tower) enables both.
 {
   config,
+  inputs,
   pkgs,
   lib,
   ...
@@ -45,7 +46,8 @@ in
           lazydocker
           lazygit
           lsof
-          neovim
+          # Use nightly's own dependency set to avoid Tree-sitter vendor hash mismatches.
+          inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
           nix-index
           nix-search-cli
           ripgrep
