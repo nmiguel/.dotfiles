@@ -3,6 +3,7 @@
   config,
   lib,
   pkgs,
+  graphicalRuntimeLibraries ? [ ],
   ...
 }:
 let
@@ -169,6 +170,10 @@ in
           fish_add_path --path ~/.config/bin
           fish_add_path --path ~/go/bin
           fish_add_path --path ~/.nix-profile/bin
+
+          ${lib.optionalString (graphicalRuntimeLibraries != [ ]) ''
+            set -gx PKG_CONFIG_PATH ${pkgs.lib.makeSearchPath "lib/pkgconfig" (map pkgs.lib.getDev graphicalRuntimeLibraries)} $PKG_CONFIG_PATH
+          ''}
         '';
 
       interactiveShellInit = lib.mkMerge [

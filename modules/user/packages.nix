@@ -46,10 +46,10 @@ in
           lazydocker
           lazygit
           lsof
-          # Use nightly's own dependency set to avoid Tree-sitter vendor hash mismatches.
           inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
           nix-index
           nix-search-cli
+          pkg-config
           ripgrep
           tokei
           tree

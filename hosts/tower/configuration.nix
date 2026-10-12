@@ -12,9 +12,12 @@ let
     libXrandr
     libxkbcommon
     vulkan-loader
+    wayland
   ];
 in
 {
+  home-manager.extraSpecialArgs = { inherit graphicalRuntimeLibraries; };
+
   modules.games.enable = true;
 
   systemSettings = {
