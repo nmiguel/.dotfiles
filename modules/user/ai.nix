@@ -32,6 +32,9 @@ in
       ];
     };
 
+    xdg.configFile."opencode/cli.json".source =
+      ../../stow/config/opencode/cli.json;
+
     xdg.configFile."opencode/themes/one-dark-transparent.json".source =
       ../../stow/config/opencode/themes/one-dark-transparent.json;
 
