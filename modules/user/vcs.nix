@@ -55,7 +55,8 @@ in
       enable = true;
       settings = {
         user = identity;
-        revset-aliases."closest_bookmark(to)" = "heads(::to & bookmarks())";
+        revset-aliases."branch(to)" = "heads(::to & bookmarks())";
+        revsets.log = "builtin_log() | ancestors(@, 6)";
         ui = {
           default-command = "log";
         };
