@@ -137,6 +137,11 @@ in
       enable = true;
       openFirewall = false;
       stateRoot = mediaStateRoot;
+      libraryDirectories = [
+        "${dataRoot}/Media"
+        "${dataRoot}/Media/Movies"
+        "${dataRoot}/Media/Shows"
+      ];
     };
     openrgb = {
       enable = true;

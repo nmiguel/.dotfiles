@@ -38,6 +38,16 @@ in
       description = "Persistent root for media-service state; null uses each service's default location.";
     };
 
+    libraryDirectories = lib.mkOption {
+      type = lib.types.listOf lib.types.path;
+      default = [
+        "/var/lib/media"
+        "/var/lib/media/movies"
+        "/var/lib/media/tv"
+      ];
+      description = "Shared media-library directories, independent of private service state.";
+    };
+
     openFirewall = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -46,9 +56,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # Shared group so Transmission's completed downloads are readable by
-    # Radarr/Sonarr, and the finished library is readable by Jellyfin. Without
-    # this, each service can only see its own files and imports silently fail.
+    # Shared library access also lets Bazarr save subtitles and Jellyfin delete
+    # media. Keep private service state owned by each service's own group.
     users.groups.media = { };
     users.users = {
       jellyfin.extraGroups = [ "media" ];
@@ -66,22 +75,25 @@ in
     };
     users.groups.seerr = lib.mkIf persistentState { };
 
-    # Library layout. The setgid bit (leading 2) makes new files inherit the
-    # `media` group so Jellyfin can always read what Radarr/Sonarr drop in.
+    # Apply library rules with or without persistent service state. Setgid
+    # preserves the media group; default ACLs preserve shared write access even
+    # for writers with a restrictive umask (Jellyfin keeps its private 0077).
+    # Existing nested content is repaired separately, not recursively at boot.
     systemd.tmpfiles.rules =
-      if persistentState then
-        [
-          "d ${cfg.stateRoot} 0755 root root - -"
-          "d ${serviceState "seerr"} 0700 seerr seerr - -"
-          "d ${serviceState "sonarr"} 0700 sonarr sonarr - -"
-          "d ${serviceState "transmission"} 0750 transmission media - -"
-        ]
-      else
-        [
-          "d /var/lib/media 0775 root media - -"
-          "d /var/lib/media/movies 2775 radarr media - -"
-          "d /var/lib/media/tv 2775 sonarr media - -"
-        ];
+      (lib.concatMap (directory: [
+        "d ${directory} 2775 - media - -"
+        "a+ ${directory} - - - - d:u::rwx,d:g::rwx,d:g:media:rwx,d:m::rwx,d:o::r-x"
+      ]) cfg.libraryDirectories)
+      ++ lib.optionals persistentState [
+        "d ${cfg.stateRoot} 0755 root root - -"
+        "d ${serviceState "seerr"} 0700 seerr seerr - -"
+        "d ${serviceState "sonarr"} 0700 sonarr sonarr - -"
+        "d ${serviceState "transmission"} 0750 transmission media - -"
+      ];
+
+    systemd.services.radarr.serviceConfig.UMask = lib.mkForce "0002";
+    systemd.services.sonarr.serviceConfig.UMask = lib.mkForce "0002";
+    systemd.services.bazarr.serviceConfig.UMask = "0002";
 
     # Jellyfin media server. Runs under its own `jellyfin` user and auto-starts
     # on boot. Firewall exposure includes HTTP 8096 / HTTPS 8920 plus the
