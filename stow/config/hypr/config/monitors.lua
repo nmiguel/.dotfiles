@@ -1,4 +1,172 @@
--- Host-specific monitor layout, provided by the system at /etc/hypr/monitors.lua.
--- Kept out of the dotfiles so each machine ships its own monitor setup; see the
--- host's configuration.nix (systemSettings.hyprland.monitorsFile).
-return dofile("/etc/hypr/monitors.lua")
+-- Case-insensitive, literal substring of the description.
+local TV_MODEL = "Samsung S95"
+local MAIN_MONITOR_MODEL = "Aorus"
+-- Prefer 1440p when supported; the left monitor is rotated below.
+local LEFT_MONITOR_RESOLUTIONS = {
+	{ width = 2560, height = 1440 },
+	{ width = 1920, height = 1080 },
+}
+
+local M = {}
+local disabled_outputs = {}
+local portrait_rule
+
+local function matches(monitor, text)
+	return text ~= "" and (monitor.description or ""):lower():find(text:lower(), 1, true) ~= nil
+end
+
+local function is_laptop(monitor)
+	local name = monitor.name:lower()
+	return name:match("^edp%-") or name:match("^lvds%-") or name:match("^dsi%-")
+end
+
+local function find(monitors, predicate)
+	for _, monitor in ipairs(monitors) do
+		if predicate(monitor) then
+			return monitor
+		end
+	end
+end
+
+local function left_resolution(monitor)
+	for _, resolution in ipairs(LEFT_MONITOR_RESOLUTIONS) do
+		for _, mode in ipairs(monitor.available_modes or {}) do
+			if mode.width == resolution.width and mode.height == resolution.height then
+				return resolution
+			end
+		end
+	end
+	-- Retain the current resolution if the output does not report either mode.
+	return { width = monitor.width or 1920, height = monitor.height or 1080 }
+end
+
+local function set_roles(primary, secondary, portrait)
+	M.main = primary.name
+	M.aux = secondary and secondary.name or M.main
+	hl.config({ cursor = { default_monitor = M.main } })
+
+	-- Keep routing valid on one screen, and update it after docking/undocking.
+	for _, workspace in ipairs({ 1, 4, 5 }) do
+		hl.workspace_rule({ workspace = tostring(workspace), monitor = M.main })
+	end
+	for _, workspace in ipairs({ 2, 3, 6 }) do
+		hl.workspace_rule({ workspace = tostring(workspace), monitor = M.aux })
+	end
+
+	if portrait_rule then
+		portrait_rule:set_enabled(false)
+		portrait_rule = nil
+	end
+	if portrait then
+		portrait_rule = hl.workspace_rule({ workspace = "m[" .. M.aux .. "]", layout_opts = { direction = "up" } })
+	end
+end
+
+local function configure()
+	local monitors = {}
+	for _, monitor in ipairs(hl.get_monitors()) do
+		if monitor.name ~= "FALLBACK" then
+			table.insert(monitors, monitor)
+		end
+	end
+	table.sort(monitors, function(a, b)
+		return a.name < b.name
+	end)
+
+	local tv = find(monitors, function(monitor)
+		return matches(monitor, TV_MODEL)
+	end)
+
+	-- hl.get_monitors() only includes enabled outputs. Remember the ones we
+	-- disabled so removing the TV can bring them back (and trigger monitor.added).
+	if not tv then
+		for output in pairs(disabled_outputs) do
+			hl.monitor({ output = output, disabled = false })
+		end
+		disabled_outputs = {}
+	end
+	if #monitors == 0 then
+		return
+	end
+
+	local main = find(monitors, function(monitor)
+		return matches(monitor, MAIN_MONITOR_MODEL)
+	end)
+	local laptop = find(monitors, is_laptop)
+	local primary = tv or main or laptop or monitors[1]
+	local secondary
+	if not tv then
+		secondary = find(monitors, function(monitor)
+			return monitor ~= primary and is_laptop(monitor)
+		end) or find(monitors, function(monitor)
+			return monitor ~= primary and monitor.name:match("^DP%-")
+		end) or find(monitors, function(monitor)
+			return monitor ~= primary
+		end)
+	end
+	local portrait = primary == main and secondary ~= nil and secondary.name:match("^DP%-") ~= nil
+	local left = portrait and left_resolution(secondary)
+  local left_scale = left.width == 2560 and 1.25 or 1
+
+	hl.monitor({
+		output = primary.name,
+		disabled = false,
+		mode = primary == main and "2560x1440@165" or "preferred",
+		-- Rotation swaps width/height. Keep the bottoms of both screens aligned.
+		position = left and string.format("%dx%d", left.height / left_scale, (left.width - 1440) / left_scale) or "0x0",
+		scale = 1,
+		transform = 0,
+	})
+	if secondary then
+		hl.monitor({
+			output = secondary.name,
+			disabled = false,
+			mode = left and string.format("%dx%d", left.width, left.height) or "preferred",
+			position = portrait and "0x0" or (primary == main and "2560x0" or "auto-right"),
+			scale = left_scale,
+			transform = portrait and 3 or 0,
+		})
+	end
+	for _, monitor in ipairs(monitors) do
+		if monitor ~= primary and monitor ~= secondary then
+			if tv then
+				disabled_outputs[monitor.name] = true
+				hl.monitor({ output = monitor.name, disabled = true })
+			else
+				hl.monitor({
+					output = monitor.name,
+					disabled = false,
+					mode = "preferred",
+					position = "auto-right",
+					scale = 1,
+					transform = 0,
+				})
+			end
+		end
+	end
+	set_roles(primary, secondary, portrait)
+end
+
+-- A safe default also enables outputs before the initial startup query, and
+-- restores previously disabled outputs when reloading the config.
+hl.monitor({ output = "", disabled = false, mode = "preferred", position = "auto", scale = 1, transform = 0 })
+configure()
+hl.on("hyprland.start", configure)
+
+-- Wait until Hyprland has finished updating its output list. Coalesce the
+-- events generated by applying a layout, rather than reacting recursively.
+local pending = false
+local function schedule_configure()
+	if pending then
+		return
+	end
+	pending = true
+	hl.timer(function()
+		pending = false
+		configure()
+	end, { timeout = 100, type = "oneshot" })
+end
+hl.on("monitor.added", schedule_configure)
+hl.on("monitor.removed", schedule_configure)
+
+return M

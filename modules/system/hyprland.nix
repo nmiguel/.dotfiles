@@ -15,24 +15,9 @@ in
 {
   options.systemSettings.hyprland = {
     enable = lib.mkEnableOption "the Hyprland Wayland compositor";
-
-    monitorsFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
-      description = ''
-        Host-specific Hyprland monitor layout (a Lua file). When set, it is
-        installed to /etc/hypr/monitors.lua, where the shared dotfiles config
-        loads it. Keeps the per-machine monitor setup out of the dotfiles and
-        in the host config.
-      '';
-    };
   };
 
   config = lib.mkIf cfg.enable {
-    environment.etc = lib.mkIf (cfg.monitorsFile != null) {
-      "hypr/monitors.lua".source = cfg.monitorsFile;
-    };
-
     programs.hyprland = {
       enable = true;
       withUWSM = true; # recommended for most users

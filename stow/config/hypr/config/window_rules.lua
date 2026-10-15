@@ -81,7 +81,7 @@ apply_tag("music", {
 
 tagged_rule("music", {
 	workspace = "3 silent",
-	opacity = "0.95 0.85",
+	opacity = "1 1",
 })
 
 hl.window_rule({
@@ -128,7 +128,7 @@ apply_tag("im", {
 
 tagged_rule("im", {
 	workspace = "3 silent",
-	opacity = "0.95 0.93",
+	opacity = "1 1",
 })
 
 -- AI
@@ -153,7 +153,7 @@ tagged_rule("games", {
 	no_blur = true,
 	fullscreen = true,
 	fullscreen_state = "3 3",
-	opacity = "1.0 override 1.0 override",
+	opacity = "1 1",
     monitor = vars.monitor_main,
 })
 
@@ -175,7 +175,7 @@ apply_tag("file-manager", {
 })
 
 tagged_rule("file-manager", {
-	opacity = "0.85 0.85",
+	opacity = "1 1",
 })
 
 -- Wallpaper
@@ -199,7 +199,7 @@ apply_tag("multimedia_video", {
 
 tagged_rule("multimedia_video", {
 	no_blur = true,
-	opacity = "1.0 override 1.0 override",
+	opacity = "1 1",
 })
 
 -- Settings
@@ -250,7 +250,7 @@ apply_tag("floating-window", {
 tagged_rule("floating-window", {
 	float = true,
 	center = true,
-	opacity = "1 override 1 override",
+	opacity = "1 1",
 	size = { "monitor_w*0.8", "monitor_h*0.8" },
 })
 
@@ -263,7 +263,7 @@ apply_tag("pop-up", {
 
 tagged_rule("pop-up", {
 	float = true,
-	opacity = "1 override 1 override",
+	opacity = "1 1",
 	size = { 400, 140 },
 	move = { "(cursor_x-(window_w*0.5))", "(cursor_y-(window_h*0.5))" },
 	-- focus = true,
@@ -280,6 +280,6 @@ hl.window_rule({
 hl.window_rule({
 	name = "picture-in-picture",
 	match = { title = "^(Picture-in-Picture)$" },
-	opacity = "1.0 override 1.0 override",
+	opacity = "1 1",
 	pin = true,
 })

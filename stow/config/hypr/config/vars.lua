@@ -2,12 +2,16 @@ local M = {}
 
 local monitors = require("config.monitors")
 
-M.monitor_main = monitors.main
-M.monitor_aux = monitors.aux
--- hl.notification.create({ text = M.monitor_main, duration = 1000})
-
--- M.monitor_main = "DP-3"
--- M.monitor_aux = "DP-2"
+-- Resolve roles when used, since docking can change the selected outputs.
+setmetatable(M, {
+	__index = function(_, key)
+		if key == "monitor_main" then
+			return monitors.main
+		elseif key == "monitor_aux" then
+			return monitors.aux
+		end
+	end,
+})
 
 M.terminal = "ghostty"
 M.mod = "SUPER"

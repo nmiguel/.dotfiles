@@ -16,8 +16,8 @@ local UTILITIES = {
 }
 
 local MAIN_APPS = {
-	{ cmd = vars.terminal, opts = { workspace = "1", monitor = vars.monitor_main } },
-	{ cmd = vars.browser, opts = { workspace = "2", monitor = vars.monitor_aux } },
+	{ cmd = vars.terminal, opts = { workspace = "1", monitor = "monitor_main" } },
+	{ cmd = vars.browser, opts = { workspace = "2", monitor = "monitor_aux" } },
 }
 
 local ROUTED_APPS = {
@@ -25,21 +25,21 @@ local ROUTED_APPS = {
 		name = "startup-steam",
 		match = { class = "^(steam)$" },
 		workspace = "5",
-		monitor = vars.monitor_main,
+		monitor = "monitor_main",
 		command = "setpriv --ambient-caps -all steam",
 	},
 	{
 		name = "startup-youtube-music",
 		match = { class = "^(com.github.th-ch.youtube-music)$" },
 		workspace = "3",
-		monitor = vars.monitor_aux,
+		monitor = "monitor_aux",
 		command = "pear-desktop",
 	},
 	{
 		name = "startup-whatsapp",
 		match = { initial_title = "^(web\\.whatsapp\\.com.*)$" },
 		workspace = "3",
-		monitor = vars.monitor_aux,
+		monitor = "monitor_aux",
 		command = "chromium --app=https://web.whatsapp.com",
 	},
 	{
@@ -47,7 +47,7 @@ local ROUTED_APPS = {
 		-- match   = { initial_title = "^(claude.ai_/)$" },
 		match = { title = "^(ChatGPT)$" },
 		workspace = "6",
-		monitor = vars.monitor_aux,
+		monitor = "monitor_aux",
 		-- command = "chromium --app=https://claude.ai",
 		command = "chromium --app=https://chatgpt.com",
 		delay = 1500,
@@ -63,11 +63,11 @@ local function launch_routed(app)
 		name = app.name,
 		match = app.match,
 		workspace = app.workspace .. " silent",
-		monitor = app.monitor,
+		monitor = vars[app.monitor],
 	})
 	hl.exec_cmd(app.command, {
 		workspace = app.workspace .. " silent",
-		monitor = app.monitor,
+		monitor = vars[app.monitor],
 	})
 	hl.timer(function()
 		rule:set_enabled(false)
@@ -82,7 +82,7 @@ hl.on("hyprland.start", function()
 	end
 
 	for _, app in ipairs(MAIN_APPS) do
-		hl.exec_cmd(app.cmd, app.opts)
+		hl.exec_cmd(app.cmd, { workspace = app.opts.workspace, monitor = vars[app.opts.monitor] })
 	end
 	for _, app in ipairs(ROUTED_APPS) do
 		if app.delay then

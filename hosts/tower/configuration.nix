@@ -24,7 +24,6 @@ in
     noctalia.enable = true;
     fonts.enable = true;
     hyprland.enable = true;
-    hyprland.monitorsFile = ./monitors.lua;
     sddm.enable = true;
     boot_options.enable = true;
     audio = {

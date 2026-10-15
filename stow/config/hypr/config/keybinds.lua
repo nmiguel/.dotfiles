@@ -10,7 +10,7 @@ hl.bind(mod .. " + B", hl.dsp.exec_cmd(vars.browser))
 
 -- Which desktop shell is active is decided in the NixOS config
 -- (systemSettings.dms.enable / noctalia.enable), which writes the name to
--- /etc/hypr/shell.lua. Mirrors the monitors.lua pattern. The file is absent
+-- /etc/hypr/shell.lua. The file is absent
 -- when no shell is enabled, so guard the dofile.
 local ok, shell = pcall(dofile, "/etc/hypr/shell.lua")
 if not ok then
@@ -66,7 +66,11 @@ end)
 hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
 
 hl.bind(mod .. " + M", hl.dsp.workspace.move({ monitor = "+1" }))
-hl.bind(mod .. " + S", hl.dsp.workspace.swap_monitors({ monitor1 = vars.monitor_main, monitor2 = vars.monitor_aux }))
+hl.bind(mod .. " + S", function()
+	if vars.monitor_main and vars.monitor_aux and vars.monitor_main ~= vars.monitor_aux then
+		hl.dispatch(hl.dsp.workspace.swap_monitors({ monitor1 = vars.monitor_main, monitor2 = vars.monitor_aux }))
+	end
+end)
 hl.bind(
 	mod .. " + SHIFT + S",
 	hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | satty -f - -o "~/Pictures/Screenshots/%Y%m%d_%H%M%S.png"')
@@ -80,18 +84,18 @@ hl.bind(mod .. " + A", hl.dsp.exec_cmd(scriptsDir .. "/audio_switch.sh"))
 -- Move focus
 local directions = { left = "H", right = "L", up = "K", down = "J" }
 for direction, key in pairs(directions) do
-    hl.bind(mod .. " + " .. key, hl.dsp.focus({ direction = direction }))
+	hl.bind(mod .. " + " .. key, hl.dsp.focus({ direction = direction }))
 end
 
 -- Move windows
 for direction, key in pairs(directions) do
-    hl.bind(mod .. " + CTRL + " .. key, hl.dsp.window.move({ direction = direction }))
+	hl.bind(mod .. " + CTRL + " .. key, hl.dsp.window.move({ direction = direction }))
 end
 
 local expel_directions = { Left = "prev", Right = "next" }
 for key, direction in pairs(expel_directions) do
-    hl.bind(mod .. " + CTRL + Bracket" .. key, hl.dsp.layout("consume_or_expel " .. direction))
-    hl.bind(mod .. " + Bracket" .. key, hl.dsp.layout("consume_or_expel " .. direction))
+	hl.bind(mod .. " + CTRL + Bracket" .. key, hl.dsp.layout("consume_or_expel " .. direction))
+	hl.bind(mod .. " + Bracket" .. key, hl.dsp.layout("consume_or_expel " .. direction))
 end
 
 hl.bind(mod .. " + BracketLeft", function()
